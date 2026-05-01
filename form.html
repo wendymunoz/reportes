@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Reporte de Casa</title>
-<style> 
+<title>Reporte de Célula</title>
+<style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -41,9 +41,6 @@ input,select,textarea{width:100%;padding:13px 15px;border:2px solid var(--border
 input:focus,select:focus,textarea:focus{border-color:var(--g2);box-shadow:0 0 0 3px rgba(5,150,105,.1);}
 input::placeholder{color:#c4c9d4;}
 textarea{resize:none;font-size:13px;line-height:1.6;}
-.sel-w{position:relative;}
-.sel-w::after{content:'▾';position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none;}
-.sel-w select{padding-right:36px;cursor:pointer;}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
 .rc input{display:none;}
@@ -55,7 +52,7 @@ textarea{resize:none;font-size:13px;line-height:1.6;}
 .field.err input,.field.err select,.field.err textarea{border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.1);}
 .ferr{font-size:11px;color:#ef4444;margin-top:4px;display:none;font-weight:600;}
 .field.err .ferr{display:block;}
-/* Grupo dropdown */
+/* Casa dropdown */
 .gdd{position:relative;}
 .gtrig{width:100%;padding:13px 15px;border:2px solid var(--border);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#c4c9d4;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .2s;user-select:none;}
 .gtrig.sel{color:var(--txt);}
@@ -73,73 +70,73 @@ textarea{resize:none;font-size:13px;line-height:1.6;}
 .gopt.sel{background:var(--g5);color:var(--g1);}
 .gopt .gck{margin-left:auto;color:var(--g2);opacity:0;}
 .gopt.sel .gck{opacity:1;}
-/* Asistentes */
-.att-card{background:#f8fafc;border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;position:relative;}
+/* Célula toggle */
+.cel-toggle{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.cel-opt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:14px 10px;border:2px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all .22s;background:#fff;font-family:'Plus Jakarta Sans',sans-serif;text-align:center;}
+.cel-opt:hover{border-color:var(--g3);background:var(--g5);}
+.cel-opt.active{border-color:var(--g2);background:var(--g5);box-shadow:0 0 0 3px rgba(5,150,105,.1);}
+.cel-ico{font-size:22px;line-height:1;}
+.cel-nm{font-size:13px;font-weight:800;color:var(--muted);transition:color .2s;}
+.cel-opt.active .cel-nm{color:var(--g1);}
+.cel-desc{font-size:10px;color:var(--light);font-weight:500;line-height:1.3;}
+.cel-opt.active .cel-desc{color:var(--g2);}
+/* Nuevo/Recurrente toggle row */
+.nt-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.nuevo-toggle{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 10px;border:2px solid var(--border);border-radius:12px;background:#f8fafc;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .22s;width:100%;}
+.nuevo-toggle:active{transform:scale(.97);}
+.nuevo-toggle.on-rec{border-color:#64748b;background:#f1f5f9;}
+.nuevo-toggle.on-nvo{border-color:var(--g2);background:linear-gradient(135deg,var(--g5),#bbf7d0);box-shadow:0 2px 10px rgba(5,150,105,.18);}
+.nt-ico{font-size:17px;line-height:1;}
+.nt-txt{font-size:12px;font-weight:700;color:var(--muted);transition:color .2s;}
+.nuevo-toggle.on-rec .nt-txt{color:#334155;}
+.nuevo-toggle.on-nvo .nt-txt{color:var(--g1);}
 .att-num{position:absolute;top:10px;right:12px;width:22px;height:22px;background:var(--g2);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;}
-.att-name{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:8px;}
-.att-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px;}
-.new-badge{display:inline-flex;align-items:center;gap:4px;background:#dcfce7;color:#166534;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;margin-top:4px;}
+.del-btn{position:absolute;top:10px;right:40px;width:24px;height:24px;border:none;background:#fee2e2;border-radius:6px;color:#dc2626;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;}
 .add-btn{width:100%;padding:12px;border:2px dashed var(--g3);border-radius:12px;background:var(--g5);color:var(--g2);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;}
 .add-btn:hover{background:var(--g4);}
-.del-btn{position:absolute;top:10px;right:40px;width:24px;height:24px;border:none;background:#fee2e2;border-radius:6px;color:#dc2626;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;}
-/* Buttons */
 .btn-row{display:flex;gap:10px;margin-top:16px;}
 .btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:14px 20px;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;flex:1;}
 .btn-p{background:linear-gradient(135deg,var(--g2),var(--g1));color:#fff;box-shadow:0 4px 16px rgba(5,150,105,.3);}
 .btn-p:active{transform:scale(.97);}
 .btn-b{background:#f3f4f6;color:var(--muted);flex:0 0 auto;padding:14px 18px;}
-/* Resumen */
 .res-card{background:var(--g5);border:2px solid var(--g4);border-radius:16px;padding:18px;margin-bottom:16px;}
 .res-row{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--g4);}
 .res-row:last-child{border-bottom:none;}
 .res-k{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--g2);min-width:85px;flex-shrink:0;padding-top:1px;}
 .res-v{font-size:13px;color:var(--txt);font-weight:600;line-height:1.4;}
-/* Success */
 .suc{text-align:center;padding:16px 0 36px;display:none;}
 .suc-anim{width:76px;height:76px;background:linear-gradient(135deg,var(--g2),var(--g3));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;animation:pop .5s cubic-bezier(.34,1.56,.64,1) both;}
 @keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
 .suc-title{font-size:22px;font-weight:800;margin-bottom:6px;}
 .suc-msg{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:22px;}
-.copy-box{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;padding:12px 14px;font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:12px;white-space:pre-wrap;word-break:break-word;font-family:monospace;max-height:180px;overflow-y:auto;}
-.btn-wa{display:flex;align-items:center;justify-content:center;gap:9px;background:#25D366;color:#fff;padding:14px;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;border:none;width:100%;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 4px 14px rgba(37,211,102,.35);margin-bottom:8px;}
-.btn-wa:active{transform:scale(.97);}
+.btn-wa{display:flex;align-items:center;justify-content:center;gap:9px;color:#fff;padding:14px;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;border:none;width:100%;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 4px 14px rgba(5,150,105,.3);}
 .btn-sec{width:100%;padding:12px;background:#f3f4f6;color:var(--muted);border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:8px;}
-.link-box{background:#f0fdf4;border:2px dashed #6ee7b7;border-radius:14px;padding:14px;margin-top:8px;}
-.link-url{font-size:11px;color:var(--muted);font-family:monospace;word-break:break-all;background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin:8px 0;}
-.link-btns{display:flex;gap:8px;}
-.link-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:9px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
-.link-btn.copy{background:var(--g2);color:#fff;}
-.link-btn.wa{background:#25D366;color:#fff;}
-.send-status.sending{background:#fffbeb;border:1px solid #fde68a;color:#92400e;}
-.send-status.ok{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;}
-.send-status.error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;}
-@keyframes spin2{to{transform:rotate(360deg)}}
-.spin-s{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin2 .7s linear infinite;flex-shrink:0;}
+.hint{display:flex;align-items:center;gap:8px;background:rgba(5,150,105,.08);border:1px solid rgba(5,150,105,.22);border-radius:9px;padding:9px 13px;margin-bottom:16px;font-size:11px;color:#065f46;font-weight:500;}
+.send-status{border-radius:10px;padding:11px 15px;font-size:12px;font-weight:600;align-items:center;gap:8px;margin-bottom:16px;}
+.send-status.sending{background:#fffbeb;border:1px solid #fde68a;color:#92400e;display:flex;}
+.send-status.ok{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;display:flex;}
+.send-status.error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;display:flex;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin-s{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
 .step-page{display:none;}
 .step-page.active{display:block;}
-.att-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-@media(min-width:480px){
-  .card{border-radius:var(--r-xl);margin:28px auto;max-width:460px;min-height:auto;}
-  body{display:flex;align-items:flex-start;justify-content:center;padding:16px;}
-  .app-header,.steps{width:100%;max-width:460px;}
-  .steps{margin:24px auto 0;}
-}
+@media(min-width:480px){.card{border-radius:var(--r-xl);margin:28px auto;max-width:460px;min-height:auto;}body{display:flex;align-items:flex-start;justify-content:center;padding:16px;}.app-header,.steps{width:100%;max-width:460px;}.steps{margin:24px auto 0;}}
 </style>
 </head>
 <body>
 
 <div class="app-header">
   <div class="wa-circle">
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.119 1.532 5.845L.057 23.572a.5.5 0 0 0 .614.614l5.757-1.48A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.94 9.94 0 0 1-5.031-1.36l-.36-.214-3.736.96.98-3.617-.235-.373A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><circle cx="19" cy="8" r="2.5" fill="#25D366" stroke="none"/><line x1="19" y1="5.5" x2="19" y2="10.5" stroke="white" stroke-width="1.5"/><line x1="16.5" y1="8" x2="21.5" y2="8" stroke="white" stroke-width="1.5"/></svg>
   </div>
-  <h1>Reporte de Casa</h1>
-  <p id="sub-txt">Completa el reporte de tu reunión</p>
+  <h1>Reporte de Célula</h1>
+  <p id="sub-txt">Registra la célula de tu casa</p>
 </div>
 
 <div class="steps" id="steps-bar">
   <div class="step-item">
     <div class="step-dot active" id="d1">1</div>
-    <span class="step-lbl" style="left:50%;transform:translateX(-50%)">Casa</span>
+    <span class="step-lbl" style="left:50%;transform:translateX(-50%)">Célula</span>
   </div>
   <div class="step-line" id="l1"></div>
   <div class="step-item">
@@ -156,19 +153,20 @@ textarea{resize:none;font-size:13px;line-height:1.6;}
 <div class="card">
   <div class="prog-wrap"><div class="prog" id="prog" style="width:33%"></div></div>
 
-  <!-- PASO 1: DATOS DE LA CASA -->
+  <!-- PASO 1: DATOS DE LA CÉLULA -->
   <div class="step-page active" id="p1">
     <div class="sec-head">
-      <div class="sec-icon">🏠</div>
-      <div class="sec-title">Datos de la Casa</div>
-      <div class="sec-desc">Información de la reunión de tu casa.</div>
+      <div class="sec-icon">⛪</div>
+      <div class="sec-title">Datos de la Célula</div>
+      <div class="sec-desc">Información de la célula que vas a reportar.</div>
     </div>
 
+    <!-- CASA -->
     <div class="field" id="fw-casa">
-      <div class="lbl">Nombre de la Casa <span class="req">*</span></div>
+      <div class="lbl">Casa <span class="req">*</span></div>
       <div class="gdd" id="gdd">
         <div class="gtrig" id="gtrig" onclick="toggleDD()">
-          <span id="gtrig-txt">Selecciona tu casa...</span>
+          <span id="gtrig-txt">Selecciona la casa...</span>
           <span class="arr">▾</span>
         </div>
         <div class="glist" id="glist"></div>
@@ -176,18 +174,40 @@ textarea{resize:none;font-size:13px;line-height:1.6;}
       <div class="ferr">Por favor selecciona una casa</div>
     </div>
 
-    <div class="field" id="fw-lider">
-      <div class="lbl">Nombre del Líder <span class="req">*</span></div>
-      <input id="f-lider" placeholder="Nombre completo del líder" />
-      <div class="ferr">Ingresa el nombre del líder</div>
+    <!-- NOMBRE DE LA CÉLULA -->
+    <div class="field" id="fw-celula">
+      <div class="lbl">Tipo de Célula <span class="req">*</span></div>
+      <div class="cel-toggle" id="cel-toggle">
+        <button type="button" class="cel-opt active" id="cel-abierta" onclick="selCelula('Abierta')">
+          <span class="cel-ico">🔓</span>
+          <span class="cel-nm">Abierta</span>
+          <span class="cel-desc">Pueden unirse nuevas personas</span>
+        </button>
+        <button type="button" class="cel-opt" id="cel-cerrada" onclick="selCelula('Cerrada')">
+          <span class="cel-ico">🔒</span>
+          <span class="cel-nm">Cerrada</span>
+          <span class="cel-desc">Solo miembros activos</span>
+        </button>
+      </div>
+      <input type="hidden" id="f-celula" value="Abierta"/>
+      <div class="ferr">Selecciona el tipo de célula</div>
     </div>
 
+    <!-- PASTOR / LÍDER -->
+    <div class="field" id="fw-lider">
+      <div class="lbl">Pastor / Líder <span class="req">*</span></div>
+      <input id="f-lider" placeholder="Nombre completo del pastor o líder" />
+      <div class="ferr">Ingresa el nombre del pastor o líder</div>
+    </div>
+
+    <!-- TEMA -->
     <div class="field" id="fw-tema">
-      <div class="lbl">Tema de la Reunión <span class="req">*</span></div>
+      <div class="lbl">Tema de la Célula <span class="req">*</span></div>
       <input id="f-tema" placeholder="Ej: Fe que mueve montañas" />
       <div class="ferr">Ingresa el tema</div>
     </div>
 
+    <!-- FECHA / HORA -->
     <div class="g2">
       <div class="field" id="fw-fecha">
         <div class="lbl">Fecha <span class="req">*</span></div>
@@ -200,11 +220,13 @@ textarea{resize:none;font-size:13px;line-height:1.6;}
       </div>
     </div>
 
+    <!-- DIRECCIÓN -->
     <div class="field">
-      <div class="lbl">Dirección / Enlace</div>
+      <div class="lbl">Dirección de la célula</div>
       <input id="f-dir" placeholder="Jr. Las Orquídeas 342 o link Zoom" />
     </div>
 
+    <!-- MODALIDAD -->
     <div class="field">
       <div class="lbl">Modalidad</div>
       <div class="g3">
@@ -214,11 +236,12 @@ textarea{resize:none;font-size:13px;line-height:1.6;}
       </div>
     </div>
 
-    <div class="field" id="fw-nueva">
-      <div class="lbl">¿Es una casa nueva?</div>
+    <!-- CÉLULA NUEVA -->
+    <div class="field">
+      <div class="lbl">¿Es una célula nueva?</div>
       <div class="g2">
-        <div class="rc"><input type="radio" name="nueva" id="ns" value="si"><label for="ns"><span class="ico">🆕</span><span class="lbl2">Casa nueva</span></label></div>
-        <div class="rc"><input type="radio" name="nueva" id="nn" value="no" checked><label for="nn"><span class="ico">✅</span><span class="lbl2">Casa activa</span></label></div>
+        <div class="rc"><input type="radio" name="nueva" id="ns" value="si"><label for="ns"><span class="ico">🆕</span><span class="lbl2">Célula nueva</span></label></div>
+        <div class="rc"><input type="radio" name="nueva" id="nn" value="no" checked><label for="nn"><span class="ico">✅</span><span class="lbl2">Célula activa</span></label></div>
       </div>
     </div>
 
@@ -232,21 +255,17 @@ textarea{resize:none;font-size:13px;line-height:1.6;}
     <div class="sec-head">
       <div class="sec-icon">👥</div>
       <div class="sec-title">Asistentes</div>
-      <div class="sec-desc">Registra a todos los que asistieron a la reunión.</div>
+      <div class="sec-desc">Registra a todos los que asistieron a la célula.</div>
     </div>
-
     <div class="hint">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       Marca "Nuevo" si es la primera vez que asiste.
     </div>
-
     <div id="atts-cont"></div>
-
     <button class="add-btn" onclick="addAtt()">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Agregar asistente
     </button>
-
     <div class="btn-row" style="margin-top:16px">
       <button class="btn btn-b" onclick="ant(2)"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
       <button class="btn btn-p" onclick="sig(2)">Continuar <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
@@ -258,12 +277,12 @@ textarea{resize:none;font-size:13px;line-height:1.6;}
     <div class="sec-head">
       <div class="sec-icon">✅</div>
       <div class="sec-title">Confirmar Reporte</div>
-      <div class="sec-desc">Revisa antes de enviar al grupo central.</div>
+      <div class="sec-desc">Revisa antes de enviar al dashboard central.</div>
     </div>
     <div class="res-card" id="resumen"></div>
     <div class="field">
       <div class="lbl">Observaciones</div>
-      <textarea id="f-obs" rows="3" placeholder="Peticiones, novedades de la casa..." oninput="this.value=this.value.substring(0,300)"></textarea>
+      <textarea id="f-obs" rows="3" placeholder="Peticiones, novedades de la célula..." oninput="this.value=this.value.substring(0,300)"></textarea>
     </div>
     <div class="btn-row">
       <button class="btn btn-b" onclick="ant(3)"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
@@ -274,34 +293,30 @@ textarea{resize:none;font-size:13px;line-height:1.6;}
   <!-- ÉXITO -->
   <div class="suc" id="p-suc">
     <div class="suc-anim"><svg width="34" height="34" fill="none" stroke="white" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-    <div class="suc-title">¡Reporte registrado! 🎉</div>
-    <div class="suc-msg">El reporte de tu casa fue enviado<br>al dashboard central.</div>
-
-    <div id="send-status" style="display:none;margin-bottom:16px;padding:11px 15px;border-radius:10px;font-size:12px;font-weight:600;align-items:center;gap:8px"></div>
-
+    <div class="suc-title">¡Reporte enviado! 🎉</div>
+    <div class="suc-msg">El reporte de tu célula fue enviado<br>al dashboard central.</div>
+    <div id="send-status" style="display:none" class="send-status"></div>
     <div class="res-card" id="suc-card"></div>
-
     <div style="background:var(--g5);border:2px solid var(--g4);border-radius:14px;padding:16px;margin-bottom:16px;text-align:center">
       <div style="font-size:32px;margin-bottom:8px">📊</div>
       <div style="font-size:13px;font-weight:700;color:var(--g1);margin-bottom:4px">Reporte disponible en el Dashboard</div>
-      <div style="font-size:12px;color:var(--muted)">El coordinador ya puede ver tu reporte en tiempo real.</div>
+      <div style="font-size:12px;color:var(--muted)">El coordinador ya puede ver tu célula.</div>
     </div>
-
-    <button class="btn-wa" style="background:linear-gradient(135deg,var(--g2),var(--g1));box-shadow:0 4px 14px rgba(5,150,105,.3)" onclick="nuevoReporte()">
+    <button class="btn-wa" style="background:linear-gradient(135deg,var(--g2),var(--g1));" onclick="nuevoReporte()">
       <svg width="18" height="18" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      Registrar nueva reunión
+      Registrar nueva célula
     </button>
   </div>
-
 </div>
 
 <script>
 const CASAS=['AMOR','GOZO','PAZ','PACIENCIA','BENIGNIDAD','TEMPLANZA','FE','BONDAD','MANSEDUMBRE','MISERICORDIA','GRACIA','PODER','PROSPERIDAD','REMANENTE'];
-const EMOJIS={'AMOR':'❤️','GOZO':'😊','PAZ':'🕊️','PACIENCIA':'⏳','BENIGNIDAD':'🌿','TEMPLANZA':'⚖️','FE':'🙏','BONDAD':'💛','MANSEDUMBRE':'🌸','MISERICORDIA':'🤝','GRACIA':'✨','PODER':'⚡','PROSPERIDAD':'🌱','REMANENTE':'🔥'};
+const EMOJIS={AMOR:'❤️',GOZO:'😊',PAZ:'🕊️',PACIENCIA:'⏳',BENIGNIDAD:'🌿',TEMPLANZA:'⚖️',FE:'🙏',BONDAD:'💛',MANSEDUMBRE:'🌸',MISERICORDIA:'🤝',GRACIA:'✨',PODER:'⚡',PROSPERIDAD:'🌱',REMANENTE:'🔥'};
+const SHEETS_URL='https://script.google.com/macros/s/AKfycbzhAUirtJ1JJuhcQ4R6h5H3Bg0SsENi_xNEZE-fPfYGoZbyTgLi--atUGE1xOy8jrWF/exec';
 
 let casaSel='', fd={}, rdSaved={};
 
-// Build dropdown
+// Build casa dropdown
 (()=>{
   const list=document.getElementById('glist');
   CASAS.forEach(c=>{
@@ -320,21 +335,41 @@ function toggleDD(){
 function selCasa(c){
   casaSel=c;
   document.getElementById('gtrig-txt').textContent=`${EMOJIS[c]||'🏠'} ${c}`;
-  document.getElementById('gtrig').classList.add('sel','open');
+  document.getElementById('gtrig').classList.add('sel'); document.getElementById('gtrig').classList.remove('open');
   document.getElementById('glist').classList.remove('open');
-  document.getElementById('gtrig').classList.remove('open');
   document.querySelectorAll('.gopt').forEach(el=>el.classList.toggle('sel',el.dataset.v===c));
   document.getElementById('fw-casa').classList.remove('err');
 }
 document.addEventListener('click',e=>{if(!document.getElementById('gdd').contains(e.target)){document.getElementById('gtrig').classList.remove('open');document.getElementById('glist').classList.remove('open');}});
 
-function fmtFecha(f){if(!f)return'—';try{const[y,m,d]=f.split('-');const ms=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return`${parseInt(d)} ${ms[parseInt(m)-1]} ${y}`;}catch{return f;}}
+function selCelula(val){
+  document.getElementById('f-celula').value=val;
+  document.getElementById('cel-abierta').classList.toggle('active', val==='Abierta');
+  document.getElementById('cel-cerrada').classList.toggle('active', val==='Cerrada');
+  document.getElementById('fw-celula').classList.remove('err');
+}
+
+function toggleNuevo(btn, side){
+  const card=btn.closest('.att-card');
+  const recBtn=card.querySelector('[data-side="rec"]');
+  const nvoBtn=card.querySelector('[data-side="nvo"]');
+  const isNvo = side==='nvo';
+  // Update both buttons
+  recBtn.classList.toggle('on-rec', !isNvo);
+  recBtn.classList.remove('on-nvo');
+  nvoBtn.classList.toggle('on-nvo', isNvo);
+  nvoBtn.classList.remove('on-rec');
+  // Store value on both so collect() can read either
+  recBtn.dataset.nuevo = isNvo ? 'true' : 'false';
+  nvoBtn.dataset.nuevo = isNvo ? 'true' : 'false';
+}
 function setErr(id,e){document.getElementById(id)?.classList.toggle('err',e);}
 
 function validate(step){
   let ok=true;
   if(step===1){
     setErr('fw-casa',!casaSel); if(!casaSel)ok=false;
+    setErr('fw-celula',!document.getElementById('f-celula').value.trim()); if(!document.getElementById('f-celula').value.trim())ok=false;
     setErr('fw-lider',!document.getElementById('f-lider').value.trim()); if(!document.getElementById('f-lider').value.trim())ok=false;
     setErr('fw-tema',!document.getElementById('f-tema').value.trim()); if(!document.getElementById('f-tema').value.trim())ok=false;
     setErr('fw-fecha',!document.getElementById('f-fecha').value); if(!document.getElementById('f-fecha').value)ok=false;
@@ -347,12 +382,7 @@ function validate(step){
   return ok;
 }
 
-function sig(step){
-  if(!validate(step))return;
-  collect(step);
-  if(step===2)buildResumen();
-  goStep(step+1);
-}
+function sig(step){if(!validate(step))return;collect(step);if(step===2)buildResumen();goStep(step+1);}
 function ant(step){goStep(step-1);}
 function goStep(n){
   document.querySelectorAll('.step-page').forEach(p=>p.classList.remove('active'));
@@ -362,17 +392,23 @@ function goStep(n){
 function updProg(n){
   const pct={1:33,2:66,3:100}[n]||100;
   document.getElementById('prog').style.width=pct+'%';
-  for(let i=1;i<=3;i++){
-    const d=document.getElementById('d'+i);
-    d.classList.remove('active','done');
-    if(i<n)d.classList.add('done'); else if(i===n)d.classList.add('active');
-  }
+  for(let i=1;i<=3;i++){const d=document.getElementById('d'+i);d.classList.remove('active','done');if(i<n)d.classList.add('done');else if(i===n)d.classList.add('active');}
   for(let i=1;i<=2;i++) document.getElementById('l'+i).classList.toggle('done',i<n);
 }
 
 function collect(step){
   if(step===1){
-    rdSaved={casa:casaSel,lider:document.getElementById('f-lider').value.trim(),tema:document.getElementById('f-tema').value.trim(),fecha:document.getElementById('f-fecha').value,hora:document.getElementById('f-hora').value,dir:document.getElementById('f-dir').value.trim(),modalidad:document.querySelector('input[name=mod]:checked')?.value||'presencial',nueva:document.querySelector('input[name=nueva]:checked')?.value||'no'};
+    rdSaved={
+      casa:casaSel,
+      celula:document.getElementById('f-celula').value.trim(),
+      lider:document.getElementById('f-lider').value.trim(),
+      tema:document.getElementById('f-tema').value.trim(),
+      fecha:document.getElementById('f-fecha').value,
+      hora:document.getElementById('f-hora').value,
+      dir:document.getElementById('f-dir').value.trim(),
+      modalidad:document.querySelector('input[name=mod]:checked')?.value||'presencial',
+      nueva:document.querySelector('input[name=nueva]:checked')?.value||'no'
+    };
     Object.assign(fd,rdSaved);
   }
   if(step===2){
@@ -380,7 +416,7 @@ function collect(step){
     document.querySelectorAll('.att-card').forEach(r=>{
       const nom=r.querySelector('.att-nombre').value.trim();
       const dist=r.querySelector('.att-dist').value.trim();
-      const nvo=r.querySelector('.att-nuevo').checked;
+      const nvo=r.querySelector('[data-side="nvo"]').dataset.nuevo==='true';
       if(nom) fd.asistentes.push({nombre:nom,distrito:dist,nuevo:nvo});
     });
   }
@@ -396,26 +432,27 @@ function addAtt(nom='',dist='',nvo=false){
   d.innerHTML=`
     <div class="att-num">${c.children.length+1}</div>
     ${c.children.length>0?`<button class="del-btn" onclick="delAtt('att-${n}')">×</button>`:''}
-    <div style="margin-bottom:8px">
+    <div style="margin-bottom:10px">
       <div class="lbl" style="margin-bottom:5px">Nombre completo</div>
       <input class="att-nombre" placeholder="Nombres y apellidos" value="${nom}" style="margin:0"/>
     </div>
-    <div class="g2">
-      <div>
-        <div class="lbl" style="margin-bottom:5px">Distrito</div>
-        <input class="att-dist" placeholder="Ej: SJL" value="${dist}" style="margin:0"/>
-      </div>
-      <div style="display:flex;flex-direction:column;justify-content:flex-end">
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:12px 0">
-          <input type="checkbox" class="att-nuevo" style="width:18px;height:18px;margin:0;accent-color:var(--g2)" ${nvo?'checked':''}/>
-          <span style="font-size:13px;font-weight:600;color:var(--muted)">Nuevo 🆕</span>
-        </label>
-      </div>
+    <div style="margin-bottom:10px">
+      <div class="lbl" style="margin-bottom:5px">Distrito</div>
+      <input class="att-dist" placeholder="Ej: SJL, Comas, Miraflores..." value="${dist}" style="margin:0"/>
+    </div>
+    <div class="nt-row">
+      <button type="button" class="nuevo-toggle on-rec" onclick="toggleNuevo(this,'rec')" data-nuevo="${nvo?'true':'false'}" data-side="rec">
+        <span class="nt-ico">✅</span>
+        <span class="nt-txt">Recurrente</span>
+      </button>
+      <button type="button" class="nuevo-toggle nuevo-side ${nvo?'on-nvo':''}" onclick="toggleNuevo(this,'nvo')" data-nuevo="${nvo?'true':'false'}" data-side="nvo">
+        <span class="nt-ico">⭐</span>
+        <span class="nt-txt">Nuevo</span>
+      </button>
     </div>`;
   c.appendChild(d);
   renumAtt();
 }
-
 function delAtt(id){document.getElementById(id)?.remove();renumAtt();}
 function renumAtt(){document.querySelectorAll('.att-card .att-num').forEach((el,i)=>el.textContent=i+1);}
 
@@ -425,84 +462,73 @@ function buildResumen(){
   const emoji=EMOJIS[fd.casa]||'🏠';
   document.getElementById('resumen').innerHTML=[
     ['Casa',`${emoji} ${fd.casa}`],
-    ['Líder',fd.lider],
+    ['Tipo célula',fd.celula],
+    ['Pastor / Líder',fd.lider],
     ['Tema',fd.tema],
     ['Fecha',fmtFecha(fd.fecha)+(fd.hora?' · '+fd.hora:'')],
-    ['Lugar',fd.dir||'—'],
+    ['Dirección',fd.dir||'—'],
     ['Modalidad',ml],
-    ['Casa nueva',fd.nueva==='si'?'🆕 Sí':'✅ No'],
-    ['Total asistentes',`${fd.asistentes.length} personas`],
-    ['Nuevos',`${nuevos} persona${nuevos!==1?'s':''} 🆕`],
+    ['Célula nueva',fd.nueva==='si'?'🆕 Sí':'✅ No'],
+    ['Total',`${fd.asistentes.length} asistentes`],
+    ['Nuevos',`${nuevos} 🆕`],
   ].map(([k,v])=>`<div class="res-row"><div class="res-k">${k}</div><div class="res-v">${v}</div></div>`).join('');
 }
 
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzhAUirtJ1JJuhcQ4R6h5H3Bg0SsENi_xNEZE-fPfYGoZbyTgLi--atUGE1xOy8jrWF/exec';
-
 async function enviar(){
-  fd.obs = document.getElementById('f-obs').value.trim();
-  fd.id = Date.now();
-  fd.ts = new Date().toISOString();
+  fd.obs=document.getElementById('f-obs').value.trim();
+  fd.id=Date.now(); fd.ts=new Date().toISOString();
 
-  // Mostrar pantalla de éxito inmediatamente
+  // Mostrar pantalla de éxito
   document.querySelectorAll('.step-page').forEach(p=>p.style.display='none');
   document.getElementById('steps-bar').style.display='none';
   document.getElementById('prog').parentElement.style.display='none';
   document.getElementById('p-suc').style.display='block';
   document.getElementById('suc-card').innerHTML=document.getElementById('resumen').innerHTML;
-  document.getElementById('sub-txt').textContent='¡Reporte completado!';
+  document.getElementById('sub-txt').textContent='¡Célula completada!';
   window.scrollTo({top:0,behavior:'smooth'});
 
-  // Mostrar estado de envío
-  const statusEl = document.getElementById('send-status');
-  statusEl.style.display='flex';
-  statusEl.className='send-status sending';
-  statusEl.innerHTML='<div class="spin-s"></div><span>Enviando al dashboard...</span>';
+  // Status
+  const st=document.getElementById('send-status');
+  st.style.display='flex'; st.className='send-status sending';
+  st.innerHTML='<div class="spin-s"></div><span>Enviando al dashboard...</span>';
 
-  // Guardar también en localStorage como respaldo
+  // Guardar localStorage respaldo
   const db=JSON.parse(localStorage.getItem('casas_db')||'[]');
-  db.push({...fd});
-  localStorage.setItem('casas_db',JSON.stringify(db));
+  db.push({...fd}); localStorage.setItem('casas_db',JSON.stringify(db));
 
   // Enviar a Google Sheets
   try{
-    await fetch(SHEETS_URL, {
-      method:'POST',
-      mode:'no-cors',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({...fd})
-    });
-    statusEl.className='send-status ok';
-    statusEl.innerHTML='<span>✅ Reporte guardado en el dashboard correctamente</span>';
-  } catch(err){
-    statusEl.className='send-status error';
-    statusEl.innerHTML='<span>⚠️ Error de conexión — guardado localmente como respaldo</span>';
+    await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({...fd})});
+    st.className='send-status ok';
+    st.innerHTML='<span>✅ Reporte guardado en el dashboard</span>';
+  }catch(err){
+    st.className='send-status error';
+    st.innerHTML='<span>⚠️ Error de conexión — guardado localmente</span>';
   }
 }
 
 function nuevoReporte(){
-  // Reset todo
   fd={}; rdSaved={}; casaSel=''; attCount=0;
   document.querySelectorAll('.step-page').forEach(p=>{p.style.display='';p.classList.remove('active');});
   document.getElementById('p1').classList.add('active');
   document.getElementById('p-suc').style.display='none';
   document.getElementById('steps-bar').style.display='';
   document.getElementById('prog').parentElement.style.display='';
-  document.getElementById('sub-txt').textContent='Completa el reporte de tu reunión';
-  // Limpiar campos
+  document.getElementById('sub-txt').textContent='Registra la célula de tu casa';
   ['f-lider','f-tema','f-hora','f-dir','f-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-celula').value='Abierta';
+  selCelula('Abierta');
   document.getElementById('f-fecha').value=new Date().toISOString().split('T')[0];
-  document.getElementById('gtrig-txt').textContent='Selecciona tu casa...';
+  document.getElementById('gtrig-txt').textContent='Selecciona la casa...';
   document.getElementById('gtrig').classList.remove('sel','open');
   document.querySelectorAll('.gopt').forEach(el=>el.classList.remove('sel'));
   document.querySelector('input[name=mod][value=presencial]').checked=true;
   document.querySelector('input[name=nueva][value=no]').checked=true;
   document.getElementById('atts-cont').innerHTML='';
-  addAtt();
-  updProg(1);
+  addAtt(); updProg(1);
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// Preload first attendee
 addAtt();
 document.getElementById('f-fecha').value=new Date().toISOString().split('T')[0];
 </script>
