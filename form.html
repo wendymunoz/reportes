@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Reporte de Casa</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g1:#064e3b;--g2:#059669;--g3:#34d399;--g4:#d1fae5;--g5:#ecfdf5;
+  --txt:#111827;--muted:#6b7280;--light:#9ca3af;--border:#e5e7eb;--surf:#fff;
+  --r:14px;--r-lg:20px;--r-xl:28px;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:linear-gradient(160deg,#064e3b 0%,#065f46 40%,#047857 100%);min-height:100vh;color:var(--txt);}
+.app-header{text-align:center;padding:32px 24px 0;color:white;}
+.wa-circle{width:64px;height:64px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;backdrop-filter:blur(8px);}
+.app-header h1{font-size:24px;font-weight:800;line-height:1.2;}
+.app-header p{font-size:13px;opacity:.75;margin-top:5px;}
+.steps{display:flex;align-items:center;margin:24px 24px 0;}
+.step-item{display:flex;align-items:center;flex:1;justify-content:center;position:relative;}
+.step-dot{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s;z-index:1;}
+.step-dot.done{background:#25D366;border-color:#25D366;color:#fff;}
+.step-dot.active{background:#fff;border-color:#fff;color:var(--g1);}
+.step-line{height:2px;background:rgba(255,255,255,.2);flex:1;margin:0 -2px;transition:background .3s;}
+.step-line.done{background:#25D366;}
+.step-lbl{position:absolute;top:36px;font-size:9px;font-weight:600;color:rgba(255,255,255,.55);white-space:nowrap;text-transform:uppercase;letter-spacing:.3px;}
+.step-dot.active~.step-lbl,.step-dot.done~.step-lbl{color:rgba(255,255,255,.9);}
+.card{background:var(--surf);border-radius:var(--r-xl) var(--r-xl) 0 0;margin-top:50px;min-height:calc(100vh - 200px);padding:28px 22px 40px;box-shadow:0 -8px 40px rgba(0,0,0,.2);animation:up .4s cubic-bezier(.22,.68,0,1.2) both;}
+@keyframes up{from{transform:translateY(28px);opacity:0}to{transform:translateY(0);opacity:1}}
+.prog-wrap{height:4px;background:#f3f4f6;border-radius:2px;margin-bottom:24px;overflow:hidden;}
+.prog{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--g2),var(--g3));transition:width .4s;}
+.sec-icon{width:42px;height:42px;background:var(--g5);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-size:19px;}
+.sec-title{font-size:19px;font-weight:800;color:var(--txt);}
+.sec-desc{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
+.sec-head{margin-bottom:20px;}
+.field{margin-bottom:16px;}
+.lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:4px;}
+.req{color:var(--g2);font-size:13px;}
+input,select,textarea{width:100%;padding:13px 15px;border:2px solid var(--border);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--txt);background:#fff;transition:all .2s;outline:none;-webkit-appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--g2);box-shadow:0 0 0 3px rgba(5,150,105,.1);}
+input::placeholder{color:#c4c9d4;}
+textarea{resize:none;font-size:13px;line-height:1.6;}
+.sel-w{position:relative;}
+.sel-w::after{content:'▾';position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none;}
+.sel-w select{padding-right:36px;cursor:pointer;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.rc input{display:none;}
+.rc label{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:2px solid var(--border);border-radius:var(--r);padding:12px 8px;cursor:pointer;transition:all .2s;text-align:center;}
+.rc label .ico{font-size:20px;}
+.rc label .lbl2{font-size:11px;font-weight:700;color:var(--muted);}
+.rc input:checked+label{border-color:var(--g2);background:var(--g5);}
+.rc input:checked+label .lbl2{color:var(--g1);}
+.field.err input,.field.err select,.field.err textarea{border-color:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.1);}
+.ferr{font-size:11px;color:#ef4444;margin-top:4px;display:none;font-weight:600;}
+.field.err .ferr{display:block;}
+/* Grupo dropdown */
+.gdd{position:relative;}
+.gtrig{width:100%;padding:13px 15px;border:2px solid var(--border);border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#c4c9d4;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:all .2s;user-select:none;}
+.gtrig.sel{color:var(--txt);}
+.gtrig.open{border-color:var(--g2);box-shadow:0 0 0 3px rgba(5,150,105,.1);}
+.gtrig .arr{font-size:12px;color:var(--muted);transition:transform .25s;flex-shrink:0;}
+.gtrig.open .arr{transform:rotate(180deg);}
+.glist{position:absolute;top:calc(100% + 5px);left:0;right:0;background:#fff;border:2px solid var(--g2);border-radius:var(--r);box-shadow:0 8px 28px rgba(0,0,0,.12);z-index:50;max-height:240px;overflow-y:auto;display:none;animation:dd .2s cubic-bezier(.22,.68,0,1.2);}
+@keyframes dd{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.glist.open{display:block;}
+.glist::-webkit-scrollbar{width:4px;}
+.glist::-webkit-scrollbar-thumb{background:var(--g3);border-radius:2px;}
+.gopt{display:flex;align-items:center;gap:11px;padding:12px 15px;cursor:pointer;font-size:13px;font-weight:600;color:var(--txt);transition:background .15s;border-bottom:1px solid var(--g4);}
+.gopt:last-child{border-bottom:none;}
+.gopt:hover{background:var(--g5);}
+.gopt.sel{background:var(--g5);color:var(--g1);}
+.gopt .gck{margin-left:auto;color:var(--g2);opacity:0;}
+.gopt.sel .gck{opacity:1;}
+/* Asistentes */
+.att-card{background:#f8fafc;border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;position:relative;}
+.att-num{position:absolute;top:10px;right:12px;width:22px;height:22px;background:var(--g2);color:#fff;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.att-name{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:8px;}
+.att-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px;}
+.new-badge{display:inline-flex;align-items:center;gap:4px;background:#dcfce7;color:#166534;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;margin-top:4px;}
+.add-btn{width:100%;padding:12px;border:2px dashed var(--g3);border-radius:12px;background:var(--g5);color:var(--g2);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.add-btn:hover{background:var(--g4);}
+.del-btn{position:absolute;top:10px;right:40px;width:24px;height:24px;border:none;background:#fee2e2;border-radius:6px;color:#dc2626;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;}
+/* Buttons */
+.btn-row{display:flex;gap:10px;margin-top:16px;}
+.btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:14px 20px;border:none;border-radius:var(--r);font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;flex:1;}
+.btn-p{background:linear-gradient(135deg,var(--g2),var(--g1));color:#fff;box-shadow:0 4px 16px rgba(5,150,105,.3);}
+.btn-p:active{transform:scale(.97);}
+.btn-b{background:#f3f4f6;color:var(--muted);flex:0 0 auto;padding:14px 18px;}
+/* Resumen */
+.res-card{background:var(--g5);border:2px solid var(--g4);border-radius:16px;padding:18px;margin-bottom:16px;}
+.res-row{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--g4);}
+.res-row:last-child{border-bottom:none;}
+.res-k{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--g2);min-width:85px;flex-shrink:0;padding-top:1px;}
+.res-v{font-size:13px;color:var(--txt);font-weight:600;line-height:1.4;}
+/* Success */
+.suc{text-align:center;padding:16px 0 36px;display:none;}
+.suc-anim{width:76px;height:76px;background:linear-gradient(135deg,var(--g2),var(--g3));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;animation:pop .5s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.suc-title{font-size:22px;font-weight:800;margin-bottom:6px;}
+.suc-msg{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:22px;}
+.copy-box{background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;padding:12px 14px;font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:12px;white-space:pre-wrap;word-break:break-word;font-family:monospace;max-height:180px;overflow-y:auto;}
+.btn-wa{display:flex;align-items:center;justify-content:center;gap:9px;background:#25D366;color:#fff;padding:14px;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;border:none;width:100%;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 4px 14px rgba(37,211,102,.35);margin-bottom:8px;}
+.btn-wa:active{transform:scale(.97);}
+.btn-sec{width:100%;padding:12px;background:#f3f4f6;color:var(--muted);border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:8px;}
+.link-box{background:#f0fdf4;border:2px dashed #6ee7b7;border-radius:14px;padding:14px;margin-top:8px;}
+.link-url{font-size:11px;color:var(--muted);font-family:monospace;word-break:break-all;background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 12px;margin:8px 0;}
+.link-btns{display:flex;gap:8px;}
+.link-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:9px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
+.link-btn.copy{background:var(--g2);color:#fff;}
+.link-btn.wa{background:#25D366;color:#fff;}
+.hint{display:flex;align-items:center;gap:8px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);border-radius:9px;padding:9px 13px;margin-bottom:16px;font-size:11px;color:#065f46;font-weight:500;}
+.step-page{display:none;}
+.step-page.active{display:block;}
+.att-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(min-width:480px){
+  .card{border-radius:var(--r-xl);margin:28px auto;max-width:460px;min-height:auto;}
+  body{display:flex;align-items:flex-start;justify-content:center;padding:16px;}
+  .app-header,.steps{width:100%;max-width:460px;}
+  .steps{margin:24px auto 0;}
+}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="wa-circle">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.119 1.532 5.845L.057 23.572a.5.5 0 0 0 .614.614l5.757-1.48A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.94 9.94 0 0 1-5.031-1.36l-.36-.214-3.736.96.98-3.617-.235-.373A9.944 9.944 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+  </div>
+  <h1>Reporte de Casa</h1>
+  <p id="sub-txt">Completa el reporte de tu reunión</p>
+</div>
+
+<div class="steps" id="steps-bar">
+  <div class="step-item">
+    <div class="step-dot active" id="d1">1</div>
+    <span class="step-lbl" style="left:50%;transform:translateX(-50%)">Casa</span>
+  </div>
+  <div class="step-line" id="l1"></div>
+  <div class="step-item">
+    <div class="step-dot" id="d2">2</div>
+    <span class="step-lbl" style="left:50%;transform:translateX(-50%)">Asistentes</span>
+  </div>
+  <div class="step-line" id="l2"></div>
+  <div class="step-item">
+    <div class="step-dot" id="d3">3</div>
+    <span class="step-lbl" style="left:50%;transform:translateX(-50%)">Confirmar</span>
+  </div>
+</div>
+
+<div class="card">
+  <div class="prog-wrap"><div class="prog" id="prog" style="width:33%"></div></div>
+
+  <!-- PASO 1: DATOS DE LA CASA -->
+  <div class="step-page active" id="p1">
+    <div class="sec-head">
+      <div class="sec-icon">🏠</div>
+      <div class="sec-title">Datos de la Casa</div>
+      <div class="sec-desc">Información de la reunión de tu casa.</div>
+    </div>
+
+    <div class="field" id="fw-casa">
+      <div class="lbl">Nombre de la Casa <span class="req">*</span></div>
+      <div class="gdd" id="gdd">
+        <div class="gtrig" id="gtrig" onclick="toggleDD()">
+          <span id="gtrig-txt">Selecciona tu casa...</span>
+          <span class="arr">▾</span>
+        </div>
+        <div class="glist" id="glist"></div>
+      </div>
+      <div class="ferr">Por favor selecciona una casa</div>
+    </div>
+
+    <div class="field" id="fw-lider">
+      <div class="lbl">Nombre del Líder <span class="req">*</span></div>
+      <input id="f-lider" placeholder="Nombre completo del líder" />
+      <div class="ferr">Ingresa el nombre del líder</div>
+    </div>
+
+    <div class="field" id="fw-tema">
+      <div class="lbl">Tema de la Reunión <span class="req">*</span></div>
+      <input id="f-tema" placeholder="Ej: Fe que mueve montañas" />
+      <div class="ferr">Ingresa el tema</div>
+    </div>
+
+    <div class="g2">
+      <div class="field" id="fw-fecha">
+        <div class="lbl">Fecha <span class="req">*</span></div>
+        <input type="date" id="f-fecha" />
+        <div class="ferr">Selecciona la fecha</div>
+      </div>
+      <div class="field">
+        <div class="lbl">Hora</div>
+        <input type="time" id="f-hora" />
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="lbl">Dirección / Enlace</div>
+      <input id="f-dir" placeholder="Jr. Las Orquídeas 342 o link Zoom" />
+    </div>
+
+    <div class="field">
+      <div class="lbl">Modalidad</div>
+      <div class="g3">
+        <div class="rc"><input type="radio" name="mod" id="mp" value="presencial" checked><label for="mp"><span class="ico">🏠</span><span class="lbl2">Presencial</span></label></div>
+        <div class="rc"><input type="radio" name="mod" id="mv" value="virtual"><label for="mv"><span class="ico">💻</span><span class="lbl2">Virtual</span></label></div>
+        <div class="rc"><input type="radio" name="mod" id="mh" value="hibrida"><label for="mh"><span class="ico">🔀</span><span class="lbl2">Híbrida</span></label></div>
+      </div>
+    </div>
+
+    <div class="field" id="fw-nueva">
+      <div class="lbl">¿Es una casa nueva?</div>
+      <div class="g2">
+        <div class="rc"><input type="radio" name="nueva" id="ns" value="si"><label for="ns"><span class="ico">🆕</span><span class="lbl2">Casa nueva</span></label></div>
+        <div class="rc"><input type="radio" name="nueva" id="nn" value="no" checked><label for="nn"><span class="ico">✅</span><span class="lbl2">Casa activa</span></label></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-p" onclick="sig(1)">Siguiente <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+
+  <!-- PASO 2: ASISTENTES -->
+  <div class="step-page" id="p2">
+    <div class="sec-head">
+      <div class="sec-icon">👥</div>
+      <div class="sec-title">Asistentes</div>
+      <div class="sec-desc">Registra a todos los que asistieron a la reunión.</div>
+    </div>
+
+    <div class="hint">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Marca "Nuevo" si es la primera vez que asiste.
+    </div>
+
+    <div id="atts-cont"></div>
+
+    <button class="add-btn" onclick="addAtt()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Agregar asistente
+    </button>
+
+    <div class="btn-row" style="margin-top:16px">
+      <button class="btn btn-b" onclick="ant(2)"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+      <button class="btn btn-p" onclick="sig(2)">Continuar <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+
+  <!-- PASO 3: CONFIRMAR -->
+  <div class="step-page" id="p3">
+    <div class="sec-head">
+      <div class="sec-icon">✅</div>
+      <div class="sec-title">Confirmar Reporte</div>
+      <div class="sec-desc">Revisa antes de enviar al grupo central.</div>
+    </div>
+    <div class="res-card" id="resumen"></div>
+    <div class="field">
+      <div class="lbl">Observaciones</div>
+      <textarea id="f-obs" rows="3" placeholder="Peticiones, novedades de la casa..." oninput="this.value=this.value.substring(0,300)"></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-b" onclick="ant(3)"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+      <button class="btn btn-p" onclick="enviar()"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Enviar Reporte</button>
+    </div>
+  </div>
+
+  <!-- ÉXITO -->
+  <div class="suc" id="p-suc">
+    <div class="suc-anim"><svg width="34" height="34" fill="none" stroke="white" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <div class="suc-title">¡Reporte registrado! 🎉</div>
+    <div class="suc-msg">El reporte de tu casa se guardó correctamente<br>y ya está visible en el dashboard central.</div>
+
+    <div class="res-card" id="suc-card"></div>
+
+    <div style="background:var(--g5);border:2px solid var(--g4);border-radius:14px;padding:16px;margin-bottom:16px;text-align:center">
+      <div style="font-size:32px;margin-bottom:8px">📊</div>
+      <div style="font-size:13px;font-weight:700;color:var(--g1);margin-bottom:4px">Reporte disponible en el Dashboard</div>
+      <div style="font-size:12px;color:var(--muted)">El coordinador ya puede ver tu reporte en tiempo real.</div>
+    </div>
+
+    <button class="btn-wa" style="background:linear-gradient(135deg,var(--g2),var(--g1));box-shadow:0 4px 14px rgba(5,150,105,.3)" onclick="nuevoReporte()">
+      <svg width="18" height="18" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Registrar nueva reunión
+    </button>
+  </div>
+
+</div>
+
+<script>
+const CASAS=['AMOR','GOZO','PAZ','PACIENCIA','BENIGNIDAD','TEMPLANZA','FE','BONDAD','MANSEDUMBRE','MISERICORDIA','GRACIA','PODER','PROSPERIDAD','REMANENTE'];
+const EMOJIS={'AMOR':'❤️','GOZO':'😊','PAZ':'🕊️','PACIENCIA':'⏳','BENIGNIDAD':'🌿','TEMPLANZA':'⚖️','FE':'🙏','BONDAD':'💛','MANSEDUMBRE':'🌸','MISERICORDIA':'🤝','GRACIA':'✨','PODER':'⚡','PROSPERIDAD':'🌱','REMANENTE':'🔥'};
+
+let casaSel='', fd={}, rdSaved={};
+
+// Build dropdown
+(()=>{
+  const list=document.getElementById('glist');
+  CASAS.forEach(c=>{
+    const d=document.createElement('div');
+    d.className='gopt'; d.dataset.v=c;
+    d.innerHTML=`<span style="font-size:18px">${EMOJIS[c]||'🏠'}</span><span>${c}</span><span class="gck">✓</span>`;
+    d.onclick=()=>selCasa(c);
+    list.appendChild(d);
+  });
+})();
+
+function toggleDD(){
+  const t=document.getElementById('gtrig'),l=document.getElementById('glist'),o=l.classList.contains('open');
+  l.classList.toggle('open',!o); t.classList.toggle('open',!o);
+}
+function selCasa(c){
+  casaSel=c;
+  document.getElementById('gtrig-txt').textContent=`${EMOJIS[c]||'🏠'} ${c}`;
+  document.getElementById('gtrig').classList.add('sel','open');
+  document.getElementById('glist').classList.remove('open');
+  document.getElementById('gtrig').classList.remove('open');
+  document.querySelectorAll('.gopt').forEach(el=>el.classList.toggle('sel',el.dataset.v===c));
+  document.getElementById('fw-casa').classList.remove('err');
+}
+document.addEventListener('click',e=>{if(!document.getElementById('gdd').contains(e.target)){document.getElementById('gtrig').classList.remove('open');document.getElementById('glist').classList.remove('open');}});
+
+function fmtFecha(f){if(!f)return'—';try{const[y,m,d]=f.split('-');const ms=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return`${parseInt(d)} ${ms[parseInt(m)-1]} ${y}`;}catch{return f;}}
+function setErr(id,e){document.getElementById(id)?.classList.toggle('err',e);}
+
+function validate(step){
+  let ok=true;
+  if(step===1){
+    setErr('fw-casa',!casaSel); if(!casaSel)ok=false;
+    setErr('fw-lider',!document.getElementById('f-lider').value.trim()); if(!document.getElementById('f-lider').value.trim())ok=false;
+    setErr('fw-tema',!document.getElementById('f-tema').value.trim()); if(!document.getElementById('f-tema').value.trim())ok=false;
+    setErr('fw-fecha',!document.getElementById('f-fecha').value); if(!document.getElementById('f-fecha').value)ok=false;
+  }
+  if(step===2){
+    const rows=document.querySelectorAll('.att-card');
+    if(!rows.length){alert('Agrega al menos un asistente');ok=false;}
+    rows.forEach(r=>{const n=r.querySelector('.att-nombre');if(!n.value.trim()){n.style.borderColor='#ef4444';ok=false;}else n.style.borderColor='';});
+  }
+  return ok;
+}
+
+function sig(step){
+  if(!validate(step))return;
+  collect(step);
+  if(step===2)buildResumen();
+  goStep(step+1);
+}
+function ant(step){goStep(step-1);}
+function goStep(n){
+  document.querySelectorAll('.step-page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('p'+n).classList.add('active');
+  updProg(n); window.scrollTo({top:0,behavior:'smooth'});
+}
+function updProg(n){
+  const pct={1:33,2:66,3:100}[n]||100;
+  document.getElementById('prog').style.width=pct+'%';
+  for(let i=1;i<=3;i++){
+    const d=document.getElementById('d'+i);
+    d.classList.remove('active','done');
+    if(i<n)d.classList.add('done'); else if(i===n)d.classList.add('active');
+  }
+  for(let i=1;i<=2;i++) document.getElementById('l'+i).classList.toggle('done',i<n);
+}
+
+function collect(step){
+  if(step===1){
+    rdSaved={casa:casaSel,lider:document.getElementById('f-lider').value.trim(),tema:document.getElementById('f-tema').value.trim(),fecha:document.getElementById('f-fecha').value,hora:document.getElementById('f-hora').value,dir:document.getElementById('f-dir').value.trim(),modalidad:document.querySelector('input[name=mod]:checked')?.value||'presencial',nueva:document.querySelector('input[name=nueva]:checked')?.value||'no'};
+    Object.assign(fd,rdSaved);
+  }
+  if(step===2){
+    fd.asistentes=[];
+    document.querySelectorAll('.att-card').forEach(r=>{
+      const nom=r.querySelector('.att-nombre').value.trim();
+      const dist=r.querySelector('.att-dist').value.trim();
+      const nvo=r.querySelector('.att-nuevo').checked;
+      if(nom) fd.asistentes.push({nombre:nom,distrito:dist,nuevo:nvo});
+    });
+  }
+}
+
+let attCount=0;
+function addAtt(nom='',dist='',nvo=false){
+  attCount++;
+  const n=attCount;
+  const c=document.getElementById('atts-cont');
+  const d=document.createElement('div');
+  d.className='att-card'; d.id='att-'+n;
+  d.innerHTML=`
+    <div class="att-num">${c.children.length+1}</div>
+    ${c.children.length>0?`<button class="del-btn" onclick="delAtt('att-${n}')">×</button>`:''}
+    <div style="margin-bottom:8px">
+      <div class="lbl" style="margin-bottom:5px">Nombre completo</div>
+      <input class="att-nombre" placeholder="Nombres y apellidos" value="${nom}" style="margin:0"/>
+    </div>
+    <div class="g2">
+      <div>
+        <div class="lbl" style="margin-bottom:5px">Distrito</div>
+        <input class="att-dist" placeholder="Ej: SJL" value="${dist}" style="margin:0"/>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:flex-end">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:12px 0">
+          <input type="checkbox" class="att-nuevo" style="width:18px;height:18px;margin:0;accent-color:var(--g2)" ${nvo?'checked':''}/>
+          <span style="font-size:13px;font-weight:600;color:var(--muted)">Nuevo 🆕</span>
+        </label>
+      </div>
+    </div>`;
+  c.appendChild(d);
+  renumAtt();
+}
+
+function delAtt(id){document.getElementById(id)?.remove();renumAtt();}
+function renumAtt(){document.querySelectorAll('.att-card .att-num').forEach((el,i)=>el.textContent=i+1);}
+
+function buildResumen(){
+  const ml={presencial:'🏠 Presencial',virtual:'💻 Virtual',hibrida:'🔀 Híbrida'}[fd.modalidad]||fd.modalidad;
+  const nuevos=fd.asistentes.filter(a=>a.nuevo).length;
+  const emoji=EMOJIS[fd.casa]||'🏠';
+  document.getElementById('resumen').innerHTML=[
+    ['Casa',`${emoji} ${fd.casa}`],
+    ['Líder',fd.lider],
+    ['Tema',fd.tema],
+    ['Fecha',fmtFecha(fd.fecha)+(fd.hora?' · '+fd.hora:'')],
+    ['Lugar',fd.dir||'—'],
+    ['Modalidad',ml],
+    ['Casa nueva',fd.nueva==='si'?'🆕 Sí':'✅ No'],
+    ['Total asistentes',`${fd.asistentes.length} personas`],
+    ['Nuevos',`${nuevos} persona${nuevos!==1?'s':''} 🆕`],
+  ].map(([k,v])=>`<div class="res-row"><div class="res-k">${k}</div><div class="res-v">${v}</div></div>`).join('');
+}
+
+function enviar(){
+  fd.obs=document.getElementById('f-obs').value.trim();
+
+  // Guardar directo en dashboard (localStorage compartido)
+  const db=JSON.parse(localStorage.getItem('casas_db')||'[]');
+  db.push({...fd,id:Date.now(),ts:new Date().toISOString()});
+  localStorage.setItem('casas_db',JSON.stringify(db));
+
+  // Mostrar pantalla de éxito
+  document.querySelectorAll('.step-page').forEach(p=>p.style.display='none');
+  document.getElementById('steps-bar').style.display='none';
+  document.getElementById('prog').parentElement.style.display='none';
+  document.getElementById('p-suc').style.display='block';
+  document.getElementById('suc-card').innerHTML=document.getElementById('resumen').innerHTML;
+  document.getElementById('sub-txt').textContent='¡Reporte completado!';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function nuevoReporte(){
+  // Reset todo
+  fd={}; rdSaved={}; casaSel=''; attCount=0;
+  document.querySelectorAll('.step-page').forEach(p=>{p.style.display='';p.classList.remove('active');});
+  document.getElementById('p1').classList.add('active');
+  document.getElementById('p-suc').style.display='none';
+  document.getElementById('steps-bar').style.display='';
+  document.getElementById('prog').parentElement.style.display='';
+  document.getElementById('sub-txt').textContent='Completa el reporte de tu reunión';
+  // Limpiar campos
+  ['f-lider','f-tema','f-hora','f-dir','f-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-fecha').value=new Date().toISOString().split('T')[0];
+  document.getElementById('gtrig-txt').textContent='Selecciona tu casa...';
+  document.getElementById('gtrig').classList.remove('sel','open');
+  document.querySelectorAll('.gopt').forEach(el=>el.classList.remove('sel'));
+  document.querySelector('input[name=mod][value=presencial]').checked=true;
+  document.querySelector('input[name=nueva][value=no]').checked=true;
+  document.getElementById('atts-cont').innerHTML='';
+  addAtt();
+  updProg(1);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Preload first attendee
+addAtt();
+document.getElementById('f-fecha').value=new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>
