@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"> 
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Reporte de Célula</title>
 <style>
@@ -280,6 +280,16 @@ textarea{resize:none;font-size:13px;line-height:1.6;}
       <div class="sec-desc">Revisa antes de enviar al dashboard central.</div>
     </div>
     <div class="res-card" id="resumen"></div>
+
+    <div class="field">
+      <div class="lbl">💰 Ofrenda recibida</div>
+      <div style="position:relative">
+        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px;font-weight:700;color:var(--muted)">S/</span>
+        <input type="number" id="f-ofrenda" placeholder="0.00" min="0" step="0.50" inputmode="decimal" style="padding-left:38px;font-size:16px;font-weight:600" />
+      </div>
+      <div style="font-size:11px;color:var(--light);margin-top:5px">Ingresa el monto en soles. Deja en blanco si no hubo ofrenda.</div>
+    </div>
+
     <div class="field">
       <div class="lbl">Observaciones</div>
       <textarea id="f-obs" rows="3" placeholder="Peticiones, novedades de la célula..." oninput="this.value=this.value.substring(0,300)"></textarea>
@@ -376,18 +386,44 @@ function validate(step){
   }
   if(step===2){
     const rows=document.querySelectorAll('.att-card');
-    if(!rows.length){alert('Agrega al menos un asistente');ok=false;}
-    rows.forEach(r=>{const n=r.querySelector('.att-nombre');if(!n.value.trim()){n.style.borderColor='#ef4444';ok=false;}else n.style.borderColor='';});
+    // Asegura al menos una tarjeta
+    if(!rows.length){ addAtt(); return false; }
+    let vacio=false;
+    rows.forEach(r=>{
+      const n=r.querySelector('.att-nombre');
+      if(!n.value.trim()){
+        n.style.border='2px solid #ef4444';
+        n.style.boxShadow='0 0 0 3px rgba(239,68,68,.1)';
+        vacio=true;
+      } else {
+        n.style.border='';
+        n.style.boxShadow='';
+      }
+    });
+    if(vacio){
+      // Scroll al primer campo vacío
+      const primero=document.querySelector('.att-nombre:placeholder-shown');
+      primero?.scrollIntoView({behavior:'smooth',block:'center'});
+      ok=false;
+    }
   }
   return ok;
 }
 
-function sig(step){if(!validate(step))return;collect(step);if(step===2)buildResumen();goStep(step+1);}
-function ant(step){goStep(step-1);}
+function sig(step){
+  if(!validate(step)) return;
+  collect(step);
+  if(step===2) buildResumen();
+  goStep(step+1);
+}
+function ant(step){ goStep(step-1); }
 function goStep(n){
   document.querySelectorAll('.step-page').forEach(p=>p.classList.remove('active'));
   document.getElementById('p'+n).classList.add('active');
-  updProg(n); window.scrollTo({top:0,behavior:'smooth'});
+  // Garantiza al menos una tarjeta al entrar al paso 2
+  if(n===2 && !document.getElementById('atts-cont').children.length) addAtt();
+  updProg(n);
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 function updProg(n){
   const pct={1:33,2:66,3:100}[n]||100;
@@ -471,11 +507,13 @@ function buildResumen(){
     ['Célula nueva',fd.nueva==='si'?'🆕 Sí':'✅ No'],
     ['Total',`${fd.asistentes.length} asistentes`],
     ['Nuevos',`${nuevos} 🆕`],
-  ].map(([k,v])=>`<div class="res-row"><div class="res-k">${k}</div><div class="res-v">${v}</div></div>`).join('');
+    fd.ofrenda?['Ofrenda',`S/ ${parseFloat(fd.ofrenda).toFixed(2)}`]:null,
+  ].filter(Boolean).map(([k,v])=>`<div class="res-row"><div class="res-k">${k}</div><div class="res-v">${v}</div></div>`).join('');
 }
 
 async function enviar(){
   fd.obs=document.getElementById('f-obs').value.trim();
+  fd.ofrenda=document.getElementById('f-ofrenda').value.trim();
   fd.id=Date.now(); fd.ts=new Date().toISOString();
 
   // Mostrar pantalla de éxito
@@ -515,7 +553,7 @@ function nuevoReporte(){
   document.getElementById('steps-bar').style.display='';
   document.getElementById('prog').parentElement.style.display='';
   document.getElementById('sub-txt').textContent='Registra la célula de tu casa';
-  ['f-lider','f-tema','f-hora','f-dir','f-obs'].forEach(id=>document.getElementById(id).value='');
+  ['f-lider','f-tema','f-hora','f-dir','f-obs','f-ofrenda'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('f-celula').value='Abierta';
   selCelula('Abierta');
   document.getElementById('f-fecha').value=new Date().toISOString().split('T')[0];
