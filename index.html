@@ -195,6 +195,10 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
       <span class="wk-lbl" id="wkl">—</span>
       <button class="wk-btn" onclick="cSem(1)">›</button>
     </div>
+    <button class="btn btn-ghost btn-sm" id="sync-btn" onclick="syncSheets()" style="border-color:#059669;color:#059669">
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      <span id="sync-lbl">Sincronizar</span>
+    </button>
     <button class="btn btn-p btn-sm" onclick="abrirM('mi')"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nuevo reporte</button>
   </div>
 </div>
@@ -323,11 +327,62 @@ Asistentes (5):
 <script>
 const CASAS=['AMOR','GOZO','PAZ','PACIENCIA','BENIGNIDAD','TEMPLANZA','FE','BONDAD','MANSEDUMBRE','MISERICORDIA','GRACIA','PODER','PROSPERIDAD','REMANENTE'];
 const EM={AMOR:'❤️',GOZO:'😊',PAZ:'🕊️',PACIENCIA:'⏳',BENIGNIDAD:'🌿',TEMPLANZA:'⚖️',FE:'🙏',BONDAD:'💛',MANSEDUMBRE:'🌸',MISERICORDIA:'🤝',GRACIA:'✨',PODER:'⚡',PROSPERIDAD:'🌱',REMANENTE:'🔥'};
+const SHEETS_URL='https://script.google.com/macros/s/AKfycbzhAUirtJ1JJuhcQ4R6h5H3Bg0SsENi_xNEZE-fPfYGoZbyTgLi--atUGE1xOy8jrWF/exec';
 
 let db=JSON.parse(localStorage.getItem('casas_db')||'[]');
 let wk=0, ch={};
 
 function sv(){localStorage.setItem('casas_db',JSON.stringify(db));}
+
+// Sync desde Google Sheets
+async function syncSheets(){
+  const btn=document.getElementById('sync-btn');
+  const lbl=document.getElementById('sync-lbl');
+  btn.disabled=true;
+  lbl.textContent='Sincronizando...';
+  try{
+    const res=await fetch(SHEETS_URL+'?t='+Date.now());
+    const rows=await res.json();
+    if(!Array.isArray(rows)||rows.length===0){lbl.textContent='Sin datos en Sheets';btn.disabled=false;return;}
+    // Convertir filas de Sheets al formato del dashboard
+    const nuevos=rows.map((r,i)=>({
+      id: 'sh_'+i+'_'+Date.now(),
+      ts: r['Timestamp']||'',
+      casa: r['Casa']||'',
+      lider: r['Líder']||'',
+      tema: r['Tema']||'',
+      fecha: r['Fecha']||'',
+      hora: r['Hora']||'',
+      dir: r['Dirección']||'',
+      modalidad: (r['Modalidad']||'presencial').toLowerCase(),
+      nueva: r['Casa Nueva']==='Sí'?'si':'no',
+      obs: r['Observaciones']||'',
+      asistentes: parsearAsistentes(r['Lista Asistentes']||''),
+      _fromSheets: true
+    })).filter(r=>r.casa);
+    // Reemplazar registros de Sheets, mantener los locales
+    db=db.filter(r=>!r._fromSheets);
+    db=[...db,...nuevos];
+    sv();
+    renderAll();
+    lbl.textContent=`✅ ${nuevos.length} registros sincronizados`;
+    setTimeout(()=>lbl.textContent='Sincronizar',3000);
+  }catch(e){
+    lbl.textContent='⚠️ Error de conexión';
+    setTimeout(()=>lbl.textContent='Sincronizar',3000);
+  }
+  btn.disabled=false;
+}
+
+function parsearAsistentes(str){
+  if(!str)return[];
+  return str.split(',').map(s=>{
+    const nvo=s.includes('🆕');
+    const dist=(s.match(/\(([^)]+)\)/)||[])[1]||'';
+    const nom=s.replace('🆕','').replace(/\s*\([^)]*\)/,'').trim();
+    return{nombre:nom,distrito:dist,nuevo:nvo};
+  }).filter(a=>a.nombre);
+}
 
 // Populate selects
 CASAS.forEach(c=>{['mc','fil-a-c'].forEach(id=>{const o=document.createElement('option');o.value=c;o.textContent=`${EM[c]||'🏠'} ${c}`;document.getElementById(id)?.appendChild(o);});});
@@ -567,6 +622,8 @@ function limpiar(){if(!confirm('¿Eliminar todos los datos?'))return;db=[];sv();
 document.getElementById('wkl').textContent=fmtWk(0);
 document.getElementById('mf').value=new Date().toISOString().split('T')[0];
 renderAll();
+// Auto-sync al abrir
+syncSheets();
 </script>
 </body>
 </html>
