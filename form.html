@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>  
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Reporte de Casa</title>
@@ -110,7 +110,11 @@ textarea{resize:none;font-size:13px;line-height:1.6;}
 .link-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:9px;padding:11px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;}
 .link-btn.copy{background:var(--g2);color:#fff;}
 .link-btn.wa{background:#25D366;color:#fff;}
-.hint{display:flex;align-items:center;gap:8px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.25);border-radius:9px;padding:9px 13px;margin-bottom:16px;font-size:11px;color:#065f46;font-weight:500;}
+.send-status.sending{background:#fffbeb;border:1px solid #fde68a;color:#92400e;}
+.send-status.ok{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;}
+.send-status.error{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;}
+@keyframes spin2{to{transform:rotate(360deg)}}
+.spin-s{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin2 .7s linear infinite;flex-shrink:0;}
 .step-page{display:none;}
 .step-page.active{display:block;}
 .att-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
@@ -271,7 +275,9 @@ textarea{resize:none;font-size:13px;line-height:1.6;}
   <div class="suc" id="p-suc">
     <div class="suc-anim"><svg width="34" height="34" fill="none" stroke="white" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
     <div class="suc-title">¡Reporte registrado! 🎉</div>
-    <div class="suc-msg">El reporte de tu casa se guardó correctamente<br>y ya está visible en el dashboard central.</div>
+    <div class="suc-msg">El reporte de tu casa fue enviado<br>al dashboard central.</div>
+
+    <div id="send-status" style="display:none;margin-bottom:16px;padding:11px 15px;border-radius:10px;font-size:12px;font-weight:600;align-items:center;gap:8px"></div>
 
     <div class="res-card" id="suc-card"></div>
 
@@ -430,15 +436,14 @@ function buildResumen(){
   ].map(([k,v])=>`<div class="res-row"><div class="res-k">${k}</div><div class="res-v">${v}</div></div>`).join('');
 }
 
-function enviar(){
-  fd.obs=document.getElementById('f-obs').value.trim();
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzhAUirtJ1JJuhcQ4R6h5H3Bg0SsENi_xNEZE-fPfYGoZbyTgLi--atUGE1xOy8jrWF/exec';
 
-  // Guardar directo en dashboard (localStorage compartido)
-  const db=JSON.parse(localStorage.getItem('casas_db')||'[]');
-  db.push({...fd,id:Date.now(),ts:new Date().toISOString()});
-  localStorage.setItem('casas_db',JSON.stringify(db));
+async function enviar(){
+  fd.obs = document.getElementById('f-obs').value.trim();
+  fd.id = Date.now();
+  fd.ts = new Date().toISOString();
 
-  // Mostrar pantalla de éxito
+  // Mostrar pantalla de éxito inmediatamente
   document.querySelectorAll('.step-page').forEach(p=>p.style.display='none');
   document.getElementById('steps-bar').style.display='none';
   document.getElementById('prog').parentElement.style.display='none';
@@ -446,6 +451,32 @@ function enviar(){
   document.getElementById('suc-card').innerHTML=document.getElementById('resumen').innerHTML;
   document.getElementById('sub-txt').textContent='¡Reporte completado!';
   window.scrollTo({top:0,behavior:'smooth'});
+
+  // Mostrar estado de envío
+  const statusEl = document.getElementById('send-status');
+  statusEl.style.display='flex';
+  statusEl.className='send-status sending';
+  statusEl.innerHTML='<div class="spin-s"></div><span>Enviando al dashboard...</span>';
+
+  // Guardar también en localStorage como respaldo
+  const db=JSON.parse(localStorage.getItem('casas_db')||'[]');
+  db.push({...fd});
+  localStorage.setItem('casas_db',JSON.stringify(db));
+
+  // Enviar a Google Sheets
+  try{
+    await fetch(SHEETS_URL, {
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({...fd})
+    });
+    statusEl.className='send-status ok';
+    statusEl.innerHTML='<span>✅ Reporte guardado en el dashboard correctamente</span>';
+  } catch(err){
+    statusEl.className='send-status error';
+    statusEl.innerHTML='<span>⚠️ Error de conexión — guardado localmente como respaldo</span>';
+  }
 }
 
 function nuevoReporte(){
