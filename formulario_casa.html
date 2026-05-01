@@ -374,6 +374,7 @@ function toggleNuevo(btn, side){
   nvoBtn.dataset.nuevo = isNvo ? 'true' : 'false';
 }
 function setErr(id,e){document.getElementById(id)?.classList.toggle('err',e);}
+function fmtFecha(f){if(!f)return'—';try{const[y,m,d]=f.split('-');const ms=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return`${parseInt(d)} ${ms[parseInt(m)-1]} ${y}`;}catch{return f;}}
 
 function validate(step){
   let ok=true;
