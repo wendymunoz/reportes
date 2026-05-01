@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"> 
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Central — Casas</title>
+<title>Dashboard Central — Casas & Células</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -15,24 +15,26 @@
   --border:#e2e8f0;--bg:#eef2ee;--surf:#fff;--surf2:#f8fafc;
   --r:10px;--r-lg:16px;--r-xl:22px;
   --sh:0 1px 3px rgba(0,0,0,.05),0 4px 14px rgba(0,0,0,.06);
-  --sh-lg:0 10px 40px rgba(0,0,0,.12);
+  --sh-lg:0 10px 40px rgba(0,0,0,.13);
 }
 body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;font-size:13px;}
 .layout{display:flex;min-height:100vh;}
+/* SIDEBAR */
 .sb{width:228px;background:var(--g1);color:#fff;display:flex;flex-direction:column;flex-shrink:0;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:20;}
 .sb-top{padding:20px 16px 14px;border-bottom:1px solid rgba(255,255,255,.07);}
-.sb-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.sb-row{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
 .sb-ico{width:36px;height:36px;background:linear-gradient(135deg,var(--g3),var(--g2));border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .sb-name{font-size:13px;font-weight:700;line-height:1.2;}
-.sb-org{font-size:10px;opacity:.35;margin-top:8px;}
+.sb-org{font-size:10px;opacity:.32;margin-top:8px;}
 .sb-nav{padding:8px 8px;flex:1;}
 .sb-grp{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;opacity:.28;padding:14px 10px 5px;}
 .sb-btn{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;opacity:.6;transition:all .18s;margin-bottom:1px;border:none;background:transparent;color:#fff;width:100%;text-align:left;}
 .sb-btn:hover{background:rgba(255,255,255,.08);opacity:1;}
 .sb-btn.on{background:rgba(52,211,153,.16);opacity:1;color:var(--g3);}
 .sb-badge{margin-left:auto;border-radius:10px;padding:1px 7px;font-size:9px;font-weight:700;background:var(--rose);color:#fff;}
-.sb-badge.amber{background:var(--amber);}
+.sb-badge.amb{background:var(--amber);}
 .sb-foot{padding:12px 16px;border-top:1px solid rgba(255,255,255,.06);font-size:10px;opacity:.22;}
+/* MAIN */
 .main{flex:1;margin-left:228px;display:flex;flex-direction:column;}
 .topbar{background:var(--surf);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:15;box-shadow:0 1px 4px rgba(0,0,0,.04);}
 .tb-title{font-size:15px;font-weight:700;}
@@ -42,6 +44,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 .wk-btn{width:26px;height:26px;border:none;border-radius:6px;background:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.08);transition:all .15s;}
 .wk-btn:hover{background:var(--g4);}
 .wk-lbl{font-size:11px;font-weight:600;min-width:160px;text-align:center;color:var(--txt2);}
+/* PAGES */
 .page{padding:22px 24px;display:none;animation:fi .25s ease;}
 .page.on{display:block;}
 @keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
@@ -91,6 +94,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 .ba{background:#fef3c7;color:#92400e;}
 .brose{background:#ffe4e6;color:#9f1239;}
 .bgr{background:#f1f5f9;color:#475569;}
+.bpur{background:#ede9fe;color:#5b21b6;}
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:none;border-radius:8px;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;}
 .btn-p{background:linear-gradient(135deg,var(--g2),var(--g1));color:#fff;box-shadow:0 3px 10px rgba(5,150,105,.22);}
@@ -99,6 +103,8 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 .btn-ghost:hover{background:var(--g5);border-color:var(--g3);color:var(--g1);}
 .btn-danger{background:#fee2e2;color:var(--red);border:none;}
 .btn-danger:hover{background:#fecaca;}
+.btn-sync{background:transparent;border:1.5px solid var(--g2);color:var(--g2);}
+.btn-sync:hover{background:var(--g5);}
 .btn-sm{padding:5px 12px;font-size:11px;}
 /* PROGRESS */
 .pw{background:#f1f5f1;border-radius:4px;height:6px;overflow:hidden;margin-top:4px;}
@@ -106,16 +112,26 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 /* RANKING */
 .rk-item{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);}
 .rk-item:last-child{border-bottom:none;}
-/* CASA CARDS */
+/* CELULA CARDS */
 .cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:13px;}
 .cc{background:var(--surf);border-radius:var(--r-lg);box-shadow:var(--sh);overflow:hidden;border:1.5px solid transparent;transition:all .2s;cursor:pointer;}
 .cc:hover{border-color:var(--g3);transform:translateY(-2px);box-shadow:var(--sh-lg);}
 .cc-top{padding:13px 15px 11px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;}
 .cc-nm{font-size:14px;font-weight:700;}
-.cc-lid{font-size:11px;color:var(--muted);margin-top:2px;}
+.cc-sub{font-size:11px;color:var(--muted);margin-top:2px;}
 .cc-body{padding:10px 15px;}
 .cc-r{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);margin-bottom:4px;}
 .cc-foot{padding:9px 15px;background:var(--surf2);display:flex;align-items:center;justify-content:space-between;}
+/* CASA SUMMARY CARDS */
+.casa-summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:13px;margin-bottom:20px;}
+.csc{background:var(--surf);border-radius:var(--r-lg);box-shadow:var(--sh);padding:16px 18px;border-left:4px solid var(--g2);transition:all .2s;}
+.csc:hover{box-shadow:var(--sh-lg);}
+.csc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.csc-name{font-size:14px;font-weight:800;}
+.csc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px;}
+.csc-stat{text-align:center;background:var(--surf2);border-radius:8px;padding:8px 4px;}
+.csc-stat-val{font-size:18px;font-weight:800;}
+.csc-stat-lbl{font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px;margin-top:2px;}
 /* MODAL */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s;}
 .overlay.on{opacity:1;pointer-events:all;}
@@ -131,7 +147,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 .rc{background:var(--g5);border:1px solid var(--g4);border-radius:var(--r);padding:13px;margin-bottom:11px;}
 .rrow{display:flex;gap:10px;padding:5px 0;border-bottom:1px solid var(--g4);}
 .rrow:last-child{border-bottom:none;}
-.rk{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--g2);min-width:75px;flex-shrink:0;padding-top:1px;}
+.rk2{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--g2);min-width:75px;flex-shrink:0;padding-top:1px;}
 .rv{font-size:12px;font-weight:600;color:var(--txt);}
 /* ATT LIST */
 .al{display:flex;flex-direction:column;gap:4px;}
@@ -163,98 +179,118 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 <!-- SIDEBAR -->
 <aside class="sb">
   <div class="sb-top">
-    <div class="sb-logo-row">
+    <div class="sb-row">
       <div class="sb-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="#064e3b"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
-      <div><div class="sb-name">Dashboard<br>Central Casas</div></div>
+      <div><div class="sb-name">Dashboard<br>Casas & Células</div></div>
     </div>
     <div class="sb-org">Sistema de Seguimiento</div>
   </div>
   <nav class="sb-nav">
     <div class="sb-grp">Principal</div>
     <button class="sb-btn on" id="nb-d" onclick="goPage('dashboard',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</button>
-    <button class="sb-btn" id="nb-c" onclick="goPage('casas',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Casas<span class="sb-badge" id="cnt-c">0</span></button>
-    <button class="sb-btn" id="nb-a" onclick="goPage('asistentes',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Asistentes</button>
-    <button class="sb-btn" id="nb-n" onclick="goPage('nuevos',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Nuevos<span class="sb-badge amber" id="cnt-n">0</span></button>
+    <button class="sb-btn" id="nb-casas" onclick="goPage('casas',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Casas<span class="sb-badge" id="cnt-cas">0</span></button>
+    <button class="sb-btn" id="nb-cel" onclick="goPage('celulas',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M6 20v-3a6 6 0 0 1 12 0v3"/><circle cx="4" cy="9" r="2"/><path d="M2 20v-2a4 4 0 0 1 4-4"/><circle cx="20" cy="9" r="2"/><path d="M22 20v-2a4 4 0 0 0-4-4"/></svg>Células<span class="sb-badge" id="cnt-cel">0</span></button>
+    <button class="sb-btn" id="nb-nvo" onclick="goPage('nuevos',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Nuevos<span class="sb-badge amb" id="cnt-nvo">0</span></button>
     <div class="sb-grp">Acciones</div>
     <button class="sb-btn" onclick="abrirM('mi')"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ingresar reporte</button>
+    <button class="sb-btn" onclick="syncSheets()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg><span id="sync-lbl">Sincronizar</span></button>
     <button class="sb-btn" onclick="demo()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>Cargar demo</button>
     <button class="sb-btn" onclick="limpiar()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>Limpiar datos</button>
     <div class="sb-grp">Exportar</div>
     <button class="sb-btn" onclick="window.print()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimir</button>
   </nav>
-  <div class="sb-foot">v3.0 · Casas</div>
+  <div class="sb-foot">v4.0 · Casas & Células</div>
 </aside>
 
 <!-- MAIN -->
 <div class="main">
 <div class="topbar">
-  <div><div class="tb-title" id="tbt">Dashboard General</div><div class="tb-sub" id="tbs">Vista consolidada de todas las casas</div></div>
+  <div><div class="tb-title" id="tbt">Dashboard General</div><div class="tb-sub" id="tbs">Vista consolidada de casas y células</div></div>
   <div class="tb-r">
     <div class="wk-nav">
       <button class="wk-btn" onclick="cSem(-1)">‹</button>
       <span class="wk-lbl" id="wkl">—</span>
       <button class="wk-btn" onclick="cSem(1)">›</button>
     </div>
-    <button class="btn btn-ghost btn-sm" id="sync-btn" onclick="syncSheets()" style="border-color:#059669;color:#059669">
-      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-      <span id="sync-lbl">Sincronizar</span>
-    </button>
+    <button class="btn btn-sync btn-sm" onclick="syncSheets()"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg><span id="sync-lbl2">Sincronizar</span></button>
     <button class="btn btn-p btn-sm" onclick="abrirM('mi')"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nuevo reporte</button>
   </div>
 </div>
 
-<!-- DASHBOARD -->
+<!-- ══ DASHBOARD ══ -->
 <div id="pg-dashboard" class="page on">
   <div class="s5">
-    <div class="sc c1"><div class="sc-lbl">Reuniones</div><div class="sc-val" id="s-r">0</div><div class="sc-sub" id="s-rs">esta semana</div><div class="sc-ico">📋</div></div>
+    <div class="sc c1"><div class="sc-lbl">Células semana</div><div class="sc-val" id="s-r">0</div><div class="sc-sub" id="s-rs">esta semana</div><div class="sc-ico">⛪</div></div>
     <div class="sc c2"><div class="sc-lbl">Total asistentes</div><div class="sc-val" id="s-a">0</div><div class="sc-sub" id="s-as">personas</div><div class="sc-ico">👥</div></div>
     <div class="sc c3"><div class="sc-lbl">Nuevos</div><div class="sc-val" id="s-n">0</div><div class="sc-sub">primera vez 🆕</div><div class="sc-ico">✨</div></div>
     <div class="sc c4"><div class="sc-lbl">Casas activas</div><div class="sc-val" id="s-ca">0</div><div class="sc-sub">esta semana</div><div class="sc-ico">🏠</div></div>
-    <div class="sc c5"><div class="sc-lbl">Casas nuevas</div><div class="sc-val" id="s-cn">0</div><div class="sc-sub">creadas 🆕</div><div class="sc-ico">🆕</div></div>
+    <div class="sc c5"><div class="sc-lbl">Células nuevas</div><div class="sc-val" id="s-cn">0</div><div class="sc-sub">creadas 🆕</div><div class="sc-ico">🆕</div></div>
   </div>
-  <div class="g21">
-    <div class="card" style="margin:0"><div class="card-hd"><div class="ttl"><span class="pip"></span>Asistencia diaria — semana actual</div></div><div class="ch-w"><canvas id="ch-d" height="200"></canvas></div></div>
-    <div class="card" style="margin:0"><div class="card-hd"><div class="ttl"><span class="pip"></span>Modalidad</div></div><div class="ch-w" style="position:relative"><canvas id="ch-m" height="170"></canvas><div class="dn-c"><div class="dn-big" id="dn1">0</div><div class="dn-sm">reuniones</div></div></div><div id="leg-m" style="display:flex;gap:8px;justify-content:center;margin-top:8px;font-size:10px;font-weight:600;color:var(--muted);flex-wrap:wrap"></div></div>
-  </div>
-  <div class="g3" style="margin-bottom:15px">
-    <div class="card" style="margin:0;grid-column:span 2"><div class="card-hd"><div class="ttl"><span class="pip"></span>Comparativo semanal — últimas 6 semanas</div></div><div class="ch-w"><canvas id="ch-w2" height="185"></canvas></div></div>
-    <div class="card" style="margin:0"><div class="card-hd"><div class="ttl"><span class="pip"></span>Nuevos vs Recurrentes</div></div><div class="ch-w" style="position:relative"><canvas id="ch-nv" height="170"></canvas><div class="dn-c"><div class="dn-big" id="dn2">0</div><div class="dn-sm">asist.</div></div></div></div>
-  </div>
-  <div class="g2" style="margin-bottom:15px">
-    <div class="card" style="margin:0"><div class="card-hd"><div class="ttl"><span class="pip"></span>Asistencia por casa</div></div><div class="ch-w"><canvas id="ch-c" height="195"></canvas></div></div>
-    <div class="card" style="margin:0"><div class="card-hd"><div class="ttl"><span class="pip"></span>🏆 Ranking semanal</div></div><div id="rk" style="max-height:220px;overflow-y:auto"></div></div>
-  </div>
+
+  <!-- GRÁFICO AGRUPADO POR CASA -->
   <div class="card">
-    <div class="card-hd"><div class="ttl"><span class="pip"></span>Últimas reuniones</div><button class="btn btn-ghost btn-sm" onclick="goPage('casas',document.getElementById('nb-c'))">Ver todas →</button></div>
-    <div class="tw"><table class="tbl"><thead><tr><th>Casa</th><th>Tema</th><th>Fecha</th><th>Modalidad</th><th>Asistentes</th><th>Nuevos</th><th>Líder</th><th>¿Nueva?</th><th></th></tr></thead><tbody id="tb-r"></tbody></table></div>
+    <div class="card-hd"><div class="ttl"><span class="pip"></span>Células y nuevos por casa</div></div>
+    <div class="ch-w"><canvas id="ch-agrup" height="220"></canvas></div>
+  </div>
+
+  <div class="g21">
+    <div class="card" style="margin:0">
+      <div class="card-hd"><div class="ttl"><span class="pip"></span>Asistencia diaria — semana actual</div></div>
+      <div class="ch-w"><canvas id="ch-d" height="195"></canvas></div>
+    </div>
+    <div class="card" style="margin:0">
+      <div class="card-hd"><div class="ttl"><span class="pip"></span>Modalidad</div></div>
+      <div class="ch-w" style="position:relative"><canvas id="ch-m" height="165"></canvas><div class="dn-c"><div class="dn-big" id="dn1">0</div><div class="dn-sm">células</div></div></div>
+      <div id="leg-m" style="display:flex;gap:8px;justify-content:center;margin-top:8px;font-size:10px;font-weight:600;color:var(--muted);flex-wrap:wrap"></div>
+    </div>
+  </div>
+
+  <div class="g3" style="margin-bottom:15px">
+    <div class="card" style="margin:0;grid-column:span 2">
+      <div class="card-hd"><div class="ttl"><span class="pip"></span>Comparativo semanal — últimas 6 semanas</div></div>
+      <div class="ch-w"><canvas id="ch-w2" height="180"></canvas></div>
+    </div>
+    <div class="card" style="margin:0">
+      <div class="card-hd"><div class="ttl"><span class="pip"></span>Nuevos vs Recurrentes</div></div>
+      <div class="ch-w" style="position:relative"><canvas id="ch-nv" height="165"></canvas><div class="dn-c"><div class="dn-big" id="dn2">0</div><div class="dn-sm">asist.</div></div></div>
+    </div>
+  </div>
+
+  <!-- TABLA RECIENTES -->
+  <div class="card">
+    <div class="card-hd"><div class="ttl"><span class="pip"></span>Últimas células registradas</div><button class="btn btn-ghost btn-sm" onclick="goPage('celulas',document.getElementById('nb-cel'))">Ver todas →</button></div>
+    <div class="tw"><table class="tbl"><thead><tr><th>Casa</th><th>Célula</th><th>Tema</th><th>Fecha</th><th>Modalidad</th><th>Asistentes</th><th>Nuevos</th><th>Líder</th><th></th></tr></thead><tbody id="tb-r"></tbody></table></div>
+  </div>
+
+  <!-- NUEVOS ESTA SEMANA -->
+  <div class="card">
+    <div class="card-hd"><div class="ttl"><span class="pip"></span>🆕 Nuevos esta semana</div><button class="btn btn-ghost btn-sm" onclick="goPage('nuevos',document.getElementById('nb-nvo'))">Ver todos →</button></div>
+    <div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>Célula</th><th>Líder</th><th>Distrito</th><th>Fecha</th></tr></thead><tbody id="tb-nvo-dash"></tbody></table></div>
   </div>
 </div>
 
-<!-- CASAS -->
+<!-- ══ CASAS ══ -->
 <div id="pg-casas" class="page">
+  <div style="font-size:11px;color:var(--muted);margin-bottom:14px" id="cas-cnt">0 casas</div>
+  <div class="casa-summary-grid" id="casa-summary-grid"></div>
+</div>
+
+<!-- ══ CÉLULAS ══ -->
+<div id="pg-celulas" class="page">
   <div class="sr">
-    <input class="si" id="src-c" placeholder="🔍 Buscar casa, tema o líder..." oninput="renderCasas()"/>
-    <select class="si" style="flex:0 0 150px" id="fil-m" onchange="renderCasas()"><option value="">Todas</option><option value="presencial">🏠 Presencial</option><option value="virtual">💻 Virtual</option><option value="hibrida">🔀 Híbrida</option></select>
+    <input class="si" id="src-c" placeholder="🔍 Buscar célula, casa, tema o líder..." oninput="renderCelulas()"/>
+    <select class="si" style="flex:0 0 150px" id="fil-casa" onchange="renderCelulas()"><option value="">Todas las casas</option></select>
+    <select class="si" style="flex:0 0 150px" id="fil-mod" onchange="renderCelulas()"><option value="">Todas</option><option value="presencial">🏠 Presencial</option><option value="virtual">💻 Virtual</option><option value="hibrida">🔀 Híbrida</option></select>
   </div>
-  <div style="font-size:11px;color:var(--muted);margin-bottom:13px" id="c-cnt">0 reportes</div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:13px" id="cel-cnt">0 células</div>
   <div class="cg" id="cg"></div>
 </div>
 
-<!-- ASISTENTES -->
-<div id="pg-asistentes" class="page">
-  <div class="sr">
-    <input class="si" id="src-a" placeholder="🔍 Buscar asistente..." oninput="renderAtts()"/>
-    <select class="si" style="flex:0 0 160px" id="fil-a-c" onchange="renderAtts()"><option value="">Todas las casas</option></select>
-  </div>
-  <div style="font-size:11px;color:var(--muted);margin-bottom:13px" id="a-cnt">0 personas</div>
-  <div class="card" style="margin:0"><div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>Distrito</th><th>Fecha</th><th>Estado</th></tr></thead><tbody id="tb-a"></tbody></table></div></div>
-</div>
-
-<!-- NUEVOS -->
+<!-- ══ NUEVOS ══ -->
 <div id="pg-nuevos" class="page">
   <div class="hint-b"><svg width="14" height="14" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Personas que asistieron por primera vez esta semana.</div>
-  <div style="font-size:11px;color:var(--muted);margin-bottom:13px" id="n-cnt">0 nuevos</div>
-  <div class="card" style="margin:0"><div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>Líder</th><th>Distrito</th><th>Fecha</th></tr></thead><tbody id="tb-n"></tbody></table></div></div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:13px" id="nvo-cnt">0 nuevos</div>
+  <div class="card" style="margin:0"><div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>Célula</th><th>Líder</th><th>Distrito</th><th>Fecha</th></tr></thead><tbody id="tb-nvo"></tbody></table></div></div>
 </div>
 
 </div><!-- end main -->
@@ -272,49 +308,35 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 <!-- MODAL INGRESO -->
 <div class="overlay" id="mi" onclick="if(event.target===this)cerrarM('mi')">
   <div class="modal">
-    <div class="mhd"><div class="mhd-t">➕ Ingresar reporte de casa</div><button class="xbtn" onclick="cerrarM('mi')">×</button></div>
+    <div class="mhd"><div class="mhd-t">➕ Ingresar reporte de célula</div><button class="xbtn" onclick="cerrarM('mi')">×</button></div>
     <div class="mbody">
       <div style="display:flex;gap:6px;margin-bottom:15px">
         <button class="btn btn-p btn-sm" id="tia-b" onclick="swTab('ia')">🤖 Pegar reporte (IA)</button>
         <button class="btn btn-ghost btn-sm" id="tman-b" onclick="swTab('man')">✏️ Manual</button>
       </div>
-      <!-- TAB IA -->
       <div id="t-ia">
         <div class="hint-b"><svg width="13" height="13" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Pega el reporte del líder y la IA extrae los datos automáticamente.</div>
-        <textarea id="wa-t" class="fi" style="height:155px;font-family:'JetBrains Mono',monospace;font-size:11px;resize:vertical" placeholder="Pega aquí el reporte enviado por el líder...
-
-Ejemplo:
-🏠 REPORTE CASA AMOR
-Líder: Pedro Flores
-Tema: Fe que mueve montañas
-Fecha: 20/01/2025 · 7:00 PM
-Lugar: Jr. Las Orquídeas 342, SJL
-Modalidad: Presencial
-Casa nueva: No
-Asistentes (5):
-1. María López (SJL)
-2. Carlos Ruiz 🆕
-3. Ana Torres (Comas) 🆕
-4. Luis Mendoza
-5. Rosa Quispe (Los Olivos)"></textarea>
+        <textarea id="wa-t" class="fi" style="height:150px;font-family:'JetBrains Mono',monospace;font-size:11px;resize:vertical" placeholder="Pega aquí el reporte de la célula..."></textarea>
         <button class="btn btn-p btn-sm" style="margin-top:10px;width:100%" onclick="procIA()"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Analizar con IA</button>
         <div id="ia-st" style="display:none;margin-top:10px;padding:10px 13px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;font-size:11px;color:#92400e;align-items:center;gap:8px"><div class="spin"></div><span id="ia-msg">Analizando...</span></div>
       </div>
-      <!-- TAB MANUAL -->
       <div id="t-man" style="display:none">
         <div class="fg2">
           <div><div class="fl">Casa *</div><select id="mc" class="fi"><option value="">Seleccionar...</option></select></div>
-          <div><div class="fl">Líder *</div><input id="ml" class="fi" placeholder="Nombre del líder"/></div>
+          <div><div class="fl">Célula *</div><input id="mcel" class="fi" placeholder="Nombre de la célula"/></div>
         </div>
-        <div class="fg"><div class="fl">Tema *</div><input id="mt" class="fi" placeholder="Tema de la reunión"/></div>
+        <div class="fg2">
+          <div><div class="fl">Pastor / Líder *</div><input id="ml" class="fi" placeholder="Nombre del pastor o líder"/></div>
+          <div><div class="fl">Tema *</div><input id="mt" class="fi" placeholder="Tema de la célula"/></div>
+        </div>
         <div class="fg2">
           <div><div class="fl">Fecha *</div><input type="date" id="mf" class="fi"/></div>
           <div><div class="fl">Hora</div><input type="time" id="mh" class="fi"/></div>
         </div>
-        <div class="fg"><div class="fl">Dirección / Lugar</div><input id="md2" class="fi" placeholder="Dirección o enlace virtual"/></div>
+        <div class="fg"><div class="fl">Dirección de la célula</div><input id="md2" class="fi" placeholder="Dirección física o enlace virtual"/></div>
         <div class="fg2">
           <div><div class="fl">Modalidad</div><select id="mmod" class="fi"><option value="presencial">🏠 Presencial</option><option value="virtual">💻 Virtual</option><option value="hibrida">🔀 Híbrida</option></select></div>
-          <div><div class="fl">¿Casa nueva?</div><select id="mnv" class="fi"><option value="no">No</option><option value="si">Sí 🆕</option></select></div>
+          <div><div class="fl">¿Célula nueva?</div><select id="mnv" class="fi"><option value="no">No</option><option value="si">Sí 🆕</option></select></div>
         </div>
         <div class="fg"><div class="fl">Asistentes — uno por línea, agrega 🆕 para nuevos</div><textarea id="ma" class="fi" style="height:90px;font-family:'JetBrains Mono',monospace;font-size:11px" placeholder="María López (SJL)&#10;Carlos Ruiz 🆕&#10;Ana Torres (Comas) 🆕"></textarea></div>
         <button class="btn btn-p btn-sm" style="width:100%" onclick="guardarMan()">💾 Guardar reporte</button>
@@ -328,64 +350,14 @@ Asistentes (5):
 const CASAS=['AMOR','GOZO','PAZ','PACIENCIA','BENIGNIDAD','TEMPLANZA','FE','BONDAD','MANSEDUMBRE','MISERICORDIA','GRACIA','PODER','PROSPERIDAD','REMANENTE'];
 const EM={AMOR:'❤️',GOZO:'😊',PAZ:'🕊️',PACIENCIA:'⏳',BENIGNIDAD:'🌿',TEMPLANZA:'⚖️',FE:'🙏',BONDAD:'💛',MANSEDUMBRE:'🌸',MISERICORDIA:'🤝',GRACIA:'✨',PODER:'⚡',PROSPERIDAD:'🌱',REMANENTE:'🔥'};
 const SHEETS_URL='https://script.google.com/macros/s/AKfycbzhAUirtJ1JJuhcQ4R6h5H3Bg0SsENi_xNEZE-fPfYGoZbyTgLi--atUGE1xOy8jrWF/exec';
+const COLORS=['#059669','#3b82f6','#f59e0b','#8b5cf6','#f43f5e','#06b6d4','#84cc16','#f97316','#ec4899','#6366f1','#14b8a6','#eab308','#ef4444','#a855f7'];
 
 let db=JSON.parse(localStorage.getItem('casas_db')||'[]');
 let wk=0, ch={};
-
 function sv(){localStorage.setItem('casas_db',JSON.stringify(db));}
 
-// Sync desde Google Sheets
-async function syncSheets(){
-  const btn=document.getElementById('sync-btn');
-  const lbl=document.getElementById('sync-lbl');
-  btn.disabled=true;
-  lbl.textContent='Sincronizando...';
-  try{
-    const res=await fetch(SHEETS_URL+'?t='+Date.now());
-    const rows=await res.json();
-    if(!Array.isArray(rows)||rows.length===0){lbl.textContent='Sin datos en Sheets';btn.disabled=false;return;}
-    // Convertir filas de Sheets al formato del dashboard
-    const nuevos=rows.map((r,i)=>({
-      id: 'sh_'+i+'_'+Date.now(),
-      ts: r['Timestamp']||'',
-      casa: r['Casa']||'',
-      lider: r['Líder']||'',
-      tema: r['Tema']||'',
-      fecha: r['Fecha']||'',
-      hora: r['Hora']||'',
-      dir: r['Dirección']||'',
-      modalidad: (r['Modalidad']||'presencial').toLowerCase(),
-      nueva: r['Casa Nueva']==='Sí'?'si':'no',
-      obs: r['Observaciones']||'',
-      asistentes: parsearAsistentes(r['Lista Asistentes']||''),
-      _fromSheets: true
-    })).filter(r=>r.casa);
-    // Reemplazar registros de Sheets, mantener los locales
-    db=db.filter(r=>!r._fromSheets);
-    db=[...db,...nuevos];
-    sv();
-    renderAll();
-    lbl.textContent=`✅ ${nuevos.length} registros sincronizados`;
-    setTimeout(()=>lbl.textContent='Sincronizar',3000);
-  }catch(e){
-    lbl.textContent='⚠️ Error de conexión';
-    setTimeout(()=>lbl.textContent='Sincronizar',3000);
-  }
-  btn.disabled=false;
-}
-
-function parsearAsistentes(str){
-  if(!str)return[];
-  return str.split(',').map(s=>{
-    const nvo=s.includes('🆕');
-    const dist=(s.match(/\(([^)]+)\)/)||[])[1]||'';
-    const nom=s.replace('🆕','').replace(/\s*\([^)]*\)/,'').trim();
-    return{nombre:nom,distrito:dist,nuevo:nvo};
-  }).filter(a=>a.nombre);
-}
-
 // Populate selects
-CASAS.forEach(c=>{['mc','fil-a-c'].forEach(id=>{const o=document.createElement('option');o.value=c;o.textContent=`${EM[c]||'🏠'} ${c}`;document.getElementById(id)?.appendChild(o);});});
+CASAS.forEach(c=>{['mc','fil-casa'].forEach(id=>{const o=document.createElement('option');o.value=c;o.textContent=`${EM[c]||'🏠'} ${c}`;document.getElementById(id)?.appendChild(o);});});
 
 // WEEK
 function getWR(o=0){const n=new Date(),day=n.getDay(),diff=n.getDate()-day+(day===0?-6:1);const m=new Date(n);m.setDate(diff+o*7);m.setHours(0,0,0,0);const s=new Date(m);s.setDate(m.getDate()+6);s.setHours(23,59,59,999);return{start:m,end:s};}
@@ -400,22 +372,24 @@ function goPage(n,btn){
   document.getElementById('pg-'+n).classList.add('on');
   document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('on'));
   btn?.classList.add('on');
-  const ti={dashboard:'Dashboard General',casas:'Casas',asistentes:'Asistentes',nuevos:'Nuevos Asistentes'};
+  const ti={dashboard:'Dashboard General',casas:'Casas',celulas:'Células',nuevos:'Nuevos Asistentes'};
   document.getElementById('tbt').textContent=ti[n]||n;
   if(n==='dashboard')renderDash();
   if(n==='casas')renderCasas();
-  if(n==='asistentes')renderAtts();
+  if(n==='celulas')renderCelulas();
   if(n==='nuevos')renderNuevos();
 }
 
 function renderAll(){renderDash();badges();}
 function badges(){
-  document.getElementById('cnt-c').textContent=db.length;
+  const casasU=new Set(db.map(r=>r.casa)).size;
+  document.getElementById('cnt-cas').textContent=casasU;
+  document.getElementById('cnt-cel').textContent=db.length;
   const nv=db.filter(r=>inWk(r)).reduce((s,r)=>s+(r.asistentes||[]).filter(a=>a.nuevo).length,0);
-  document.getElementById('cnt-n').textContent=nv;
+  document.getElementById('cnt-nvo').textContent=nv;
 }
 
-// DASHBOARD
+// ══ DASHBOARD ══
 function renderDash(){
   const sem=db.filter(r=>inWk(r));
   const tA=sem.reduce((s,r)=>s+(r.asistentes?.length||0),0);
@@ -427,9 +401,77 @@ function renderDash(){
   document.getElementById('s-n').textContent=nv;
   document.getElementById('s-ca').textContent=cU;
   document.getElementById('s-cn').textContent=cN;
-  document.getElementById('s-as').textContent=`prom ${sem.length?Math.round(tA/sem.length):0} por reunión`;
-  document.getElementById('s-rs').textContent=`${sem.filter(r=>r.modalidad==='presencial').length} pres · ${sem.filter(r=>r.modalidad==='virtual').length} virt`;
-  chDaily(sem);chModal(sem);chWeekly();chNvos(tA,nv);chCasas(sem);rkRanking(sem);tbRec();badges();
+  document.getElementById('s-as').textContent=`prom ${sem.length?Math.round(tA/sem.length):0} por célula`;
+  document.getElementById('s-rs').textContent=`en ${cU} casas`;
+
+  chAgrupado(sem);
+  chDaily(sem);
+  chModal(sem);
+  chWeekly();
+  chNvos(tA,nv);
+  tbRec(sem);
+  tbNvosDash(sem);
+  badges();
+}
+
+// GRÁFICO AGRUPADO: barras por casa, cada barra = una célula
+function chAgrupado(sem){
+  // Por casa: cantidad de células y cantidad de nuevos
+  const casaMap={};
+  sem.forEach(r=>{
+    if(!casaMap[r.casa]) casaMap[r.casa]={celulas:0,nuevos:0,asist:0};
+    casaMap[r.casa].celulas++;
+    casaMap[r.casa].nuevos+=(r.asistentes||[]).filter(a=>a.nuevo).length;
+    casaMap[r.casa].asist+=(r.asistentes||[]).length;
+  });
+  const casas=Object.keys(casaMap).sort((a,b)=>casaMap[b].celulas-casaMap[a].celulas);
+  if(!casas.length){if(ch.ag)ch.ag.destroy();return;}
+  const datasets=[
+    {
+      label:'Células realizadas',
+      data:casas.map(c=>casaMap[c].celulas),
+      backgroundColor:'rgba(5,150,105,.8)',
+      borderColor:'#059669',
+      borderWidth:0,
+      borderRadius:7,
+      borderSkipped:false,
+      yAxisID:'y',
+    },
+    {
+      label:'Nuevos asistentes',
+      data:casas.map(c=>casaMap[c].nuevos),
+      backgroundColor:'rgba(244,63,94,.75)',
+      borderColor:'#f43f5e',
+      borderWidth:0,
+      borderRadius:7,
+      borderSkipped:false,
+      yAxisID:'y',
+    }
+  ];
+  if(ch.ag)ch.ag.destroy();
+  ch.ag=new Chart(document.getElementById('ch-agrup'),{
+    type:'bar',
+    data:{labels:casas.map(c=>`${EM[c]||'🏠'} ${c}`),datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index'},
+      plugins:{
+        legend:{position:'top',labels:{font:{family:'Sora',size:11},boxWidth:12,padding:10}},
+        tooltip:{callbacks:{
+          title:ctx=>`${ctx[0].label}`,
+          label:ctx=>{
+            const casa=casas[ctx.dataIndex];
+            if(ctx.datasetIndex===0) return ` Células: ${ctx.parsed.y}  (${casaMap[casa].asist} asistentes total)`;
+            return ` Nuevos: ${ctx.parsed.y} personas`;
+          }
+        }}
+      },
+      scales:{
+        x:{grid:{display:false},ticks:{font:{family:'Sora',size:11}}},
+        y:{beginAtZero:true,grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{family:'Sora',size:10},stepSize:1}}
+      }
+    }
+  });
 }
 
 function chDaily(sem){
@@ -451,63 +493,92 @@ function chWeekly(){
   const lb=[],dA=[],dR=[];
   for(let o=-5;o<=0;o++){const{start}=getWR(wk+o);lb.push(start.toLocaleDateString('es-PE',{day:'numeric',month:'short'}));const sw=db.filter(r=>inWk(r,wk+o));dA.push(sw.reduce((s,r)=>s+(r.asistentes?.length||0),0));dR.push(sw.length);}
   if(ch.w)ch.w.destroy();
-  ch.w=new Chart(document.getElementById('ch-w2'),{type:'line',data:{labels:lb,datasets:[{label:'Asistentes',data:dA,borderColor:'#059669',backgroundColor:'rgba(5,150,105,.07)',tension:.4,fill:true,pointRadius:4,pointBackgroundColor:'#059669'},{label:'Reuniones',data:dR,borderColor:'#3b82f6',backgroundColor:'transparent',tension:.4,pointRadius:4,pointBackgroundColor:'#3b82f6',yAxisID:'y2'}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index'},plugins:{legend:{position:'top',labels:{font:{family:'Sora',size:10},boxWidth:10,padding:8}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{family:'Sora',size:10}}},y2:{position:'right',beginAtZero:true,grid:{display:false},ticks:{font:{family:'Sora',size:10}}},x:{grid:{display:false},ticks:{font:{family:'Sora',size:10}}}}}});
+  ch.w=new Chart(document.getElementById('ch-w2'),{type:'line',data:{labels:lb,datasets:[{label:'Asistentes',data:dA,borderColor:'#059669',backgroundColor:'rgba(5,150,105,.07)',tension:.4,fill:true,pointRadius:4,pointBackgroundColor:'#059669'},{label:'Células',data:dR,borderColor:'#3b82f6',backgroundColor:'transparent',tension:.4,pointRadius:4,pointBackgroundColor:'#3b82f6',yAxisID:'y2'}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index'},plugins:{legend:{position:'top',labels:{font:{family:'Sora',size:10},boxWidth:10,padding:8}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{family:'Sora',size:10}}},y2:{position:'right',beginAtZero:true,grid:{display:false},ticks:{font:{family:'Sora',size:10}}},x:{grid:{display:false},ticks:{font:{family:'Sora',size:10}}}}}});
 }
 function chNvos(tA,nv){
   document.getElementById('dn2').textContent=tA;
   if(ch.nv)ch.nv.destroy();
   ch.nv=new Chart(document.getElementById('ch-nv'),{type:'doughnut',data:{labels:['Recurrentes','Nuevos'],datasets:[{data:[(tA-nv)||0,nv||0],backgroundColor:['#059669','#f43f5e'],borderWidth:0,hoverOffset:5}]},options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{position:'bottom',labels:{font:{family:'Sora',size:10},boxWidth:8,padding:8}}}}});
 }
-function chCasas(sem){
-  const mp={};sem.forEach(r=>{if(!mp[r.casa])mp[r.casa]=0;mp[r.casa]+=(r.asistentes?.length||0);});
-  const keys=Object.keys(mp).sort((a,b)=>mp[b]-mp[a]).slice(0,10);
-  if(ch.c)ch.c.destroy();
-  ch.c=new Chart(document.getElementById('ch-c'),{type:'bar',data:{labels:keys.map(k=>`${EM[k]||'🏠'} ${k}`),datasets:[{data:keys.map(k=>mp[k]),backgroundColor:keys.map((_,i)=>`hsla(${155+i*18},55%,${38+i%3*6}%,.75)`),borderRadius:6,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{family:'Sora',size:10}}},y:{grid:{display:false},ticks:{font:{family:'Sora',size:10}}}}}});
-}
-function rkRanking(sem){
-  const mp={};sem.forEach(r=>{if(!mp[r.casa])mp[r.casa]={a:0,r:0};mp[r.casa].a+=(r.asistentes?.length||0);mp[r.casa].r++;});
-  const sorted=Object.entries(mp).sort((a,b)=>b[1].a-a[1].a);
-  const meds=['🥇','🥈','🥉'];
-  const maxA=sorted[0]?.[1]?.a||1;
-  document.getElementById('rk').innerHTML=sorted.map(([c,v],i)=>`
-    <div class="rk-item">
-      <div style="width:22px;text-align:center;font-size:12px;font-weight:800;color:var(--muted);flex-shrink:0">${meds[i]||i+1}</div>
-      <div style="font-size:18px;flex-shrink:0">${EM[c]||'🏠'}</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c}</div>
-        <div class="pw"><div class="pb" style="width:${Math.round(v.a/maxA*100)}%"></div></div>
-      </div>
-      <div style="text-align:right;flex-shrink:0">
-        <div style="font-size:15px;font-weight:800;color:var(--g2)">${v.a}</div>
-        <div style="font-size:10px;color:var(--muted)">${v.r} reun.</div>
-      </div>
-    </div>`).join('')||`<div class="empty" style="padding:20px"><div class="ei" style="font-size:30px">📊</div><p>Sin datos</p></div>`;
-}
-function tbRec(){
-  const rec=[...db].sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||'')).slice(0,10);
+
+function tbRec(sem){
   const mbc={presencial:'bg',virtual:'bb',hibrida:'ba'};
-  const mbl={presencial:'🏠 Presencial',virtual:'💻 Virtual',hibrida:'🔀 Híbrida'};
+  const mbl={presencial:'🏠',virtual:'💻',hibrida:'🔀'};
+  const rec=[...sem].sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||'')).slice(0,8);
   document.getElementById('tb-r').innerHTML=rec.map(r=>{
     const ri=db.indexOf(r),nv=(r.asistentes||[]).filter(a=>a.nuevo).length;
-    return`<tr><td style="font-weight:600">${EM[r.casa]||'🏠'} ${r.casa}</td><td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.tema}</td><td>${fmtF(r.fecha)}</td><td><span class="badge ${mbc[r.modalidad]||'bgr'}">${mbl[r.modalidad]||r.modalidad}</span></td><td><strong style="color:var(--g2)">${(r.asistentes||[]).length}</strong></td><td>${nv?`<span class="badge brose">🆕 ${nv}</span>`:'—'}</td><td>${r.lider}</td><td>${r.nueva==='si'?'<span class="badge brose">🆕 Nueva</span>':'—'}</td><td><button class="btn btn-ghost btn-sm" onclick="verDet(${ri})">Ver</button></td></tr>`;
-  }).join('')||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:28px"><div style="font-size:24px;margin-bottom:8px">📋</div>Sin reportes.<br><a href="#" onclick="abrirM('mi');return false" style="color:var(--g2)">Ingresar primero →</a></td></tr>`;
+    return`<tr><td style="font-weight:600">${EM[r.casa]||'🏠'} ${r.casa}</td><td style="font-weight:500">${r.celula||'—'}</td><td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.tema}</td><td>${fmtF(r.fecha)}</td><td><span class="badge ${mbc[r.modalidad]||'bgr'}">${mbl[r.modalidad]||''} ${r.modalidad}</span></td><td><strong style="color:var(--g2)">${(r.asistentes||[]).length}</strong></td><td>${nv?`<span class="badge brose">🆕 ${nv}</span>`:'—'}</td><td>${r.lider}</td><td><button class="btn btn-ghost btn-sm" onclick="verDet(${ri})">Ver</button></td></tr>`;
+  }).join('')||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:24px"><div style="font-size:20px;margin-bottom:6px">⛪</div>Sin células esta semana. <a href="#" onclick="abrirM('mi');return false" style="color:var(--g2)">Ingresar →</a></td></tr>`;
 }
 
-// CASAS PAGE
+function tbNvosDash(sem){
+  const nv=[];sem.forEach(r=>(r.asistentes||[]).filter(a=>a.nuevo).forEach(a=>nv.push({...a,casa:r.casa,celula:r.celula||'—',lider:r.lider,fecha:r.fecha})));
+  document.getElementById('tb-nvo-dash').innerHTML=nv.slice(0,10).map((a,i)=>`
+    <tr><td style="color:var(--muted)">${i+1}</td><td style="font-weight:700">${a.nombre}</td><td>${EM[a.casa]||'🏠'} ${a.casa}</td><td>${a.celula}</td><td>${a.lider}</td><td>${a.distrito||'—'}</td><td>${fmtF(a.fecha)}</td></tr>`
+  ).join('')||`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px">Sin nuevos esta semana</td></tr>`;
+}
+
+// ══ CASAS PAGE — resumen con cantidad de células por casa ══
 function renderCasas(){
+  const casaMap={};
+  db.forEach(r=>{
+    if(!casaMap[r.casa]) casaMap[r.casa]={celulas:new Set(),lideres:new Set(),asist:0,nvo:0,rep:[]};
+    casaMap[r.casa].celulas.add(r.celula||'Sin nombre');
+    casaMap[r.casa].lideres.add(r.lider);
+    casaMap[r.casa].asist+=(r.asistentes||[]).length;
+    casaMap[r.casa].nvo+=(r.asistentes||[]).filter(a=>a.nuevo).length;
+    casaMap[r.casa].rep.push(r);
+  });
+  const casas=Object.entries(casaMap).sort((a,b)=>b[1].asist-a[1].asist);
+  document.getElementById('cas-cnt').textContent=`${casas.length} casa${casas.length!==1?'s':''}`;
+  const grid=document.getElementById('casa-summary-grid');
+  if(!casas.length){grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="ei">🏠</div><p>Sin datos</p></div>`;return;}
+  grid.innerHTML=casas.map(([c,v],idx)=>`
+    <div class="csc" style="border-left-color:${COLORS[idx%COLORS.length]}">
+      <div class="csc-head">
+        <div>
+          <div style="font-size:20px;margin-bottom:4px">${EM[c]||'🏠'}</div>
+          <div class="csc-name">${c}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">${[...v.lideres].join(', ')}</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="goPage('celulas',document.getElementById('nb-cel'));filtrarPorCasa('${c}')">Ver células →</button>
+      </div>
+      <div class="csc-stats">
+        <div class="csc-stat"><div class="csc-stat-val" style="color:${COLORS[idx%COLORS.length]}">${v.celulas.size}</div><div class="csc-stat-lbl">Células</div></div>
+        <div class="csc-stat"><div class="csc-stat-val" style="color:var(--g2)">${v.asist}</div><div class="csc-stat-lbl">Asistentes</div></div>
+        <div class="csc-stat"><div class="csc-stat-val" style="color:var(--rose)">${v.nvo}</div><div class="csc-stat-lbl">Nuevos</div></div>
+      </div>
+      <div style="margin-top:10px">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">CÉLULAS: ${[...v.celulas].join(' · ')}</div>
+        <div style="font-size:10px;color:var(--muted)">Líderes: ${[...v.lideres].join(', ')}</div>
+      </div>
+    </div>`).join('');
+}
+
+function filtrarPorCasa(casa){
+  document.getElementById('fil-casa').value=casa;
+  renderCelulas();
+}
+
+// ══ CÉLULAS PAGE ══
+function renderCelulas(){
   const q=(document.getElementById('src-c')?.value||'').toLowerCase();
-  const m=document.getElementById('fil-m')?.value||'';
-  const l=db.filter(r=>(r.casa+r.tema+(r.lider||'')).toLowerCase().includes(q)&&(!m||r.modalidad===m));
-  document.getElementById('c-cnt').textContent=`${l.length} reporte${l.length!==1?'s':''}`;
+  const casa=document.getElementById('fil-casa')?.value||'';
+  const mod=document.getElementById('fil-mod')?.value||'';
+  const l=db.filter(r=>(r.casa+r.tema+(r.lider||'')+(r.celula||'')).toLowerCase().includes(q)&&(!casa||r.casa===casa)&&(!mod||r.modalidad===mod));
+  document.getElementById('cel-cnt').textContent=`${l.length} célula${l.length!==1?'s':''}`;
   const g=document.getElementById('cg');
-  if(!l.length){g.innerHTML=`<div style="grid-column:1/-1"><div class="empty"><div class="ei">🏠</div><p>No hay reportes</p><button class="btn btn-p" onclick="abrirM('mi')" style="margin-top:14px">+ Ingresar reporte</button></div></div>`;return;}
+  if(!l.length){g.innerHTML=`<div style="grid-column:1/-1"><div class="empty"><div class="ei">⛪</div><p>No hay células</p><button class="btn btn-p" onclick="abrirM('mi')" style="margin-top:14px">+ Ingresar reporte</button></div></div>`;return;}
   const mbc={presencial:'bg',virtual:'bb',hibrida:'ba'};
   const mbl={presencial:'🏠 Presencial',virtual:'💻 Virtual',hibrida:'🔀 Híbrida'};
   g.innerHTML=[...l].sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||'')).map(r=>{
     const ri=db.indexOf(r),nv=(r.asistentes||[]).filter(a=>a.nuevo).length;
     return`<div class="cc" onclick="verDet(${ri})">
       <div class="cc-top">
-        <div><div class="cc-nm">${EM[r.casa]||'🏠'} ${r.casa}</div><div class="cc-lid">👑 ${r.lider}</div></div>
+        <div>
+          <div class="cc-nm">${EM[r.casa]||'🏠'} ${r.casa}</div>
+          <div class="cc-sub">⛪ ${r.celula||'Sin nombre'} · 👑 ${r.lider}</div>
+        </div>
         <div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end">
           <span class="badge ${mbc[r.modalidad]||'bgr'}">${mbl[r.modalidad]||r.modalidad}</span>
           ${r.nueva==='si'?'<span class="badge brose">🆕 Nueva</span>':''}
@@ -526,44 +597,55 @@ function renderCasas(){
   }).join('');
 }
 
-// ASISTENTES
-function renderAtts(){
-  const q=(document.getElementById('src-a')?.value||'').toLowerCase();
-  const c=document.getElementById('fil-a-c')?.value||'';
-  const all=[];db.forEach(r=>(r.asistentes||[]).forEach(a=>all.push({...a,casa:r.casa,fecha:r.fecha,lider:r.lider})));
-  const fl=all.filter(a=>a.nombre.toLowerCase().includes(q)&&(!c||a.casa===c));
-  document.getElementById('a-cnt').textContent=`${fl.length} persona${fl.length!==1?'s':''}`;
-  document.getElementById('tb-a').innerHTML=fl.map((a,i)=>`<tr><td style="color:var(--muted)">${i+1}</td><td style="font-weight:600">${a.nombre}</td><td>${EM[a.casa]||'🏠'} ${a.casa}</td><td>${a.distrito||'—'}</td><td>${fmtF(a.fecha)}</td><td>${a.nuevo?'<span class="badge brose">🆕 Nuevo</span>':'<span class="badge bg">✅ Recurrente</span>'}</td></tr>`).join('')||`<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px">Sin resultados</td></tr>`;
-}
-
-// NUEVOS
+// ══ NUEVOS PAGE ══
 function renderNuevos(){
   const sem=db.filter(r=>inWk(r));
-  const nv=[];sem.forEach(r=>(r.asistentes||[]).filter(a=>a.nuevo).forEach(a=>nv.push({...a,casa:r.casa,lider:r.lider,fecha:r.fecha})));
-  document.getElementById('n-cnt').textContent=`${nv.length} nuevo${nv.length!==1?'s':''} esta semana`;
-  document.getElementById('tb-n').innerHTML=nv.map((a,i)=>`<tr><td style="color:var(--muted)">${i+1}</td><td style="font-weight:700">${a.nombre}</td><td>${EM[a.casa]||'🏠'} ${a.casa}</td><td>${a.lider}</td><td>${a.distrito||'—'}</td><td>${fmtF(a.fecha)}</td></tr>`).join('')||`<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px">Sin nuevos esta semana</td></tr>`;
+  const nv=[];sem.forEach(r=>(r.asistentes||[]).filter(a=>a.nuevo).forEach(a=>nv.push({...a,casa:r.casa,celula:r.celula||'—',lider:r.lider,fecha:r.fecha})));
+  document.getElementById('nvo-cnt').textContent=`${nv.length} nuevo${nv.length!==1?'s':''} esta semana`;
+  document.getElementById('tb-nvo').innerHTML=nv.map((a,i)=>`<tr><td style="color:var(--muted)">${i+1}</td><td style="font-weight:700">${a.nombre}</td><td>${EM[a.casa]||'🏠'} ${a.casa}</td><td>${a.celula}</td><td>${a.lider}</td><td>${a.distrito||'—'}</td><td>${fmtF(a.fecha)}</td></tr>`).join('')||`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:28px">Sin nuevos esta semana</td></tr>`;
 }
 
-// DETALLE
+// ══ DETALLE — muestra lista de asistentes solo en el modal ══
 function verDet(i){
   const r=db[i];
   const mbl={presencial:'🏠 Presencial',virtual:'💻 Virtual',hibrida:'🔀 Híbrida'};
   const nv=(r.asistentes||[]).filter(a=>a.nuevo).length;
-  document.getElementById('md-t').textContent=`${EM[r.casa]||'🏠'} Casa ${r.casa}`;
+  document.getElementById('md-t').textContent=`${EM[r.casa]||'🏠'} ${r.casa} — ${r.celula||'Célula'}`;
   document.getElementById('md-b').innerHTML=`
-    <div class="rc">${[['Casa',`${EM[r.casa]||'🏠'} ${r.casa}`],['Líder',r.lider],['Tema',r.tema],['Fecha',fmtF(r.fecha)+(r.hora?' · '+r.hora:'')],['Lugar',r.dir||'—'],['Modalidad',mbl[r.modalidad]||r.modalidad],['Casa nueva',r.nueva==='si'?'🆕 Sí':'✅ No'],['Total',(r.asistentes||[]).length+' asistentes'],['Nuevos',nv+' 🆕'],r.obs?['Obs.',r.obs]:null].filter(Boolean).map(([k,v])=>`<div class="rrow"><div class="rk">${k}</div><div class="rv">${v}</div></div>`).join('')}</div>
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">Asistentes (${(r.asistentes||[]).length})</div>
-    <div class="al">${(r.asistentes||[]).map((a,j)=>`<div class="ai"><div class="ai-n">${j+1}</div><div style="flex:1;font-weight:600">${a.nombre}</div>${a.distrito?`<span style="font-size:10px;color:var(--muted)">${a.distrito}</span>`:''}<span>${a.nuevo?'🆕':''}</span></div>`).join('')||'<p style="color:var(--muted);font-size:12px">Sin asistentes</p>'}</div>`;
+    <div class="rc">${[
+      ['Casa',`${EM[r.casa]||'🏠'} ${r.casa}`],
+      ['Célula',r.celula||'—'],
+      ['Pastor / Líder',r.lider],
+      ['Tema',r.tema],
+      ['Fecha',fmtF(r.fecha)+(r.hora?' · '+r.hora:'')],
+      ['Dirección',r.dir||'—'],
+      ['Modalidad',mbl[r.modalidad]||r.modalidad],
+      ['Célula nueva',r.nueva==='si'?'🆕 Sí':'✅ No'],
+      ['Total',(r.asistentes||[]).length+' asistentes'],
+      ['Nuevos',nv+' 🆕'],
+      r.obs?['Obs.',r.obs]:null
+    ].filter(Boolean).map(([k,v])=>`<div class="rrow"><div class="rk2">${k}</div><div class="rv">${v}</div></div>`).join('')}</div>
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">
+      Lista de Asistentes (${(r.asistentes||[]).length})
+    </div>
+    <div class="al">
+      ${(r.asistentes||[]).map((a,j)=>`
+        <div class="ai">
+          <div class="ai-n">${j+1}</div>
+          <div style="flex:1;font-weight:600">${a.nombre}</div>
+          ${a.distrito?`<span style="font-size:10px;color:var(--muted)">${a.distrito}</span>`:''}
+          <span>${a.nuevo?'<span class="badge brose">🆕 Nuevo</span>':''}</span>
+        </div>`).join('')||'<p style="color:var(--muted);font-size:12px">Sin asistentes</p>'}
+    </div>`;
   document.getElementById('md-del').onclick=()=>{if(confirm('¿Eliminar?')){eliminar(i);cerrarM('md');}};
   abrirM('md');
 }
-function eliminar(i){db.splice(i,1);sv();renderAll();renderCasas();renderAtts();renderNuevos();}
 
-// MODALS
+function eliminar(i){db.splice(i,1);sv();renderAll();renderCasas();renderCelulas();renderNuevos();}
+
+// MODALS & TABS
 function abrirM(id){document.getElementById(id).classList.add('on');}
 function cerrarM(id){document.getElementById(id).classList.remove('on');}
-
-// TABS
 function swTab(t){
   document.getElementById('t-ia').style.display=t==='ia'?'block':'none';
   document.getElementById('t-man').style.display=t==='man'?'block':'none';
@@ -577,7 +659,7 @@ async function procIA(){
   if(!txt){alert('Pega el texto del reporte primero');return;}
   const st=document.getElementById('ia-st');st.style.display='flex';
   document.getElementById('ia-msg').textContent='Analizando con IA...';
-  const prompt=`Analiza este reporte de casa/reunión y extrae los datos en JSON.\n\nTEXTO:\n${txt}\n\nDevuelve SOLO JSON sin markdown:\n{"casa":"nombre en mayúsculas (AMOR, GOZO, PAZ etc)","lider":"","tema":"","fecha":"YYYY-MM-DD o vacío","hora":"HH:MM o vacío","dir":"","modalidad":"presencial|virtual|hibrida","nueva":"si|no","obs":"","asistentes":[{"nombre":"","distrito":"","nuevo":false}]}\nSi alguien tiene 🆕 cerca de su nombre nuevo=true. Si no existe un campo devuelve "".`;
+  const prompt=`Analiza este reporte de célula y extrae los datos en JSON.\n\nTEXTO:\n${txt}\n\nDevuelve SOLO JSON sin markdown:\n{"casa":"nombre en mayúsculas (AMOR, GOZO, PAZ etc)","celula":"nombre de la célula","lider":"","tema":"","fecha":"YYYY-MM-DD o vacío","hora":"HH:MM o vacío","dir":"","modalidad":"presencial|virtual|hibrida","nueva":"si|no","obs":"","asistentes":[{"nombre":"","distrito":"","nuevo":false}]}\nSi alguien tiene 🆕 nuevo=true. Si no existe un campo devuelve "".`;
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
     const data=await res.json();
@@ -587,42 +669,61 @@ async function procIA(){
     sv();st.style.display='none';cerrarM('mi');
     document.getElementById('wa-t').value='';
     renderAll();
-    alert(`✅ Casa "${p.casa}" registrada — ${(p.asistentes||[]).length} asistentes, ${(p.asistentes||[]).filter(a=>a.nuevo).length} nuevos.`);
+    alert(`✅ Célula "${p.celula||p.casa}" registrada — ${(p.asistentes||[]).length} asistentes.`);
   }catch(e){document.getElementById('ia-msg').textContent='Error al procesar. Usa ingreso manual.';setTimeout(()=>st.style.display='none',3000);}
 }
 
-// MANUAL
 function guardarMan(){
-  const ca=document.getElementById('mc').value,li=document.getElementById('ml').value.trim(),te=document.getElementById('mt').value.trim(),fe=document.getElementById('mf').value;
-  if(!ca||!li||!te||!fe){alert('Completa los campos obligatorios (*)');return;}
+  const ca=document.getElementById('mc').value,cel=document.getElementById('mcel').value.trim(),li=document.getElementById('ml').value.trim(),te=document.getElementById('mt').value.trim(),fe=document.getElementById('mf').value;
+  if(!ca||!cel||!li||!te||!fe){alert('Completa los campos obligatorios (*)');return;}
   const atts=document.getElementById('ma').value.split('\n').filter(l=>l.trim()).map(l=>{const nvo=l.includes('🆕')||l.toLowerCase().includes('nuevo');const nom=l.replace('🆕','').replace(/nuevo/gi,'').replace(/\s*\([^)]*\)/,'').trim();const dist=(l.match(/\(([^)]+)\)/)||[])[1]||'';return{nombre:nom,distrito:dist,nuevo:nvo};}).filter(a=>a.nombre);
-  db.push({id:Date.now(),ts:new Date().toISOString(),casa:ca,lider:li,tema:te,fecha:fe,hora:document.getElementById('mh').value,dir:document.getElementById('md2').value.trim(),modalidad:document.getElementById('mmod').value,nueva:document.getElementById('mnv').value,obs:'',asistentes:atts});
+  db.push({id:Date.now(),ts:new Date().toISOString(),casa:ca,celula:cel,lider:li,tema:te,fecha:fe,hora:document.getElementById('mh').value,dir:document.getElementById('md2').value.trim(),modalidad:document.getElementById('mmod').value,nueva:document.getElementById('mnv').value,obs:'',asistentes:atts});
   sv();cerrarM('mi');renderAll();
-  ['ml','mt','md2','ma'].forEach(id=>document.getElementById(id).value='');
+  ['ml','mt','md2','ma','mcel'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('mc').value='';document.getElementById('mf').value=new Date().toISOString().split('T')[0];
 }
 
+// SYNC SHEETS
+async function syncSheets(){
+  const lbl1=document.getElementById('sync-lbl'),lbl2=document.getElementById('sync-lbl2');
+  lbl1.textContent='Sincronizando...';lbl2.textContent='Sincronizando...';
+  try{
+    const res=await fetch(SHEETS_URL+'?t='+Date.now());
+    const rows=await res.json();
+    if(!Array.isArray(rows)||!rows.length){lbl1.textContent='Sin datos';lbl2.textContent='Sin datos';setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},2500);return;}
+    const nuevos=rows.map((r,i)=>({
+      id:'sh_'+i,ts:r['Timestamp']||'',casa:r['Casa']||'',celula:r['Célula']||'',lider:r['Líder']||'',tema:r['Tema']||'',fecha:r['Fecha']||'',hora:r['Hora']||'',dir:r['Dirección']||'',modalidad:(r['Modalidad']||'presencial').toLowerCase(),nueva:r['Casa Nueva']==='Sí'?'si':'no',obs:r['Observaciones']||'',asistentes:parsAtt(r['Lista Asistentes']||''),_sh:true
+    })).filter(r=>r.casa);
+    db=db.filter(r=>!r._sh);db=[...db,...nuevos];sv();renderAll();
+    lbl1.textContent=`✅ ${nuevos.length} sync`;lbl2.textContent=`✅ ${nuevos.length} sync`;
+    setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
+  }catch(e){
+    lbl1.textContent='⚠️ Error';lbl2.textContent='⚠️ Error';
+    setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
+  }
+}
+function parsAtt(str){if(!str)return[];return str.split(',').map(s=>{const nvo=s.includes('🆕');const dist=(s.match(/\(([^)]+)\)/)||[])[1]||'';const nom=s.replace('🆕','').replace(/\s*\([^)]*\)/,'').trim();return{nombre:nom,distrito:dist,nuevo:nvo};}).filter(a=>a.nombre);}
+
 // DEMO
 function demo(){
-  if(!confirm('¿Agregar datos de demostración?'))return;
+  if(!confirm('¿Agregar datos demo?'))return;
   const h=new Date(),fh=d=>{const dt=new Date(h);dt.setDate(h.getDate()-d);return dt.toISOString().split('T')[0];};
   [
-    {id:101,ts:'',casa:'AMOR',lider:'Pedro Flores',tema:'Fe que mueve montañas',fecha:fh(0),hora:'19:00',dir:'Jr. Las Orquídeas 342, SJL',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'María López',distrito:'SJL',nuevo:false},{nombre:'Carlos Ruiz',distrito:'SJL',nuevo:false},{nombre:'Ana Torres',distrito:'Comas',nuevo:true},{nombre:'Luis Mendoza',distrito:'SJL',nuevo:false},{nombre:'Rosa Quispe',distrito:'Los Olivos',nuevo:false},{nombre:'Jorge Huanca',distrito:'SJL',nuevo:true}]},
-    {id:102,ts:'',casa:'GOZO',lider:'Carmen Silva',tema:'La gracia de Dios',fecha:fh(1),hora:'18:30',dir:'Av. Próceres 1245',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'Roberto Díaz',distrito:'SJL',nuevo:false},{nombre:'Elena Vargas',distrito:'SJL',nuevo:false},{nombre:'Miguel Castro',distrito:'Comas',nuevo:true},{nombre:'Patricia Lozano',distrito:'SJL',nuevo:false},{nombre:'Fernando Gutiérrez',distrito:'SJL',nuevo:false}]},
-    {id:103,ts:'',casa:'PAZ',lider:'Jorge Mamani',tema:'Testimonio y misión',fecha:fh(2),hora:'19:30',dir:'Jr. Los Jazmines 890',modalidad:'virtual',nueva:'si',obs:'Casa nueva en Comas',asistentes:[{nombre:'Sandra Cárdenas',distrito:'Comas',nuevo:true},{nombre:'Alejandro Ríos',distrito:'Comas',nuevo:true},{nombre:'Lucía Flores',distrito:'Comas',nuevo:false},{nombre:'Diego Morales',distrito:'Comas',nuevo:false}]},
-    {id:104,ts:'',casa:'FE',lider:'Ana Peralta',tema:'Crecimiento espiritual',fecha:fh(0),hora:'20:00',dir:'Ca. Los Pinos 456',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'Carlos Quispe',distrito:'SJL',nuevo:false},{nombre:'Milagros Santos',distrito:'SJL',nuevo:false},{nombre:'Héctor Vega',distrito:'Ate',nuevo:true},{nombre:'Natalia Cruz',distrito:'SJL',nuevo:false},{nombre:'Óscar Mendoza',distrito:'Ate',nuevo:false},{nombre:'Gloria Huamán',distrito:'SJL',nuevo:false},{nombre:'Raúl Chamorro',distrito:'Ate',nuevo:false}]},
-    {id:105,ts:'',casa:'PODER',lider:'Luis Condori',tema:'Unidad en el cuerpo',fecha:fh(3),hora:'18:00',dir:'https://zoom.us/j/123',modalidad:'hibrida',nueva:'no',obs:'',asistentes:[{nombre:'Vanessa Torres',distrito:'Miraflores',nuevo:false},{nombre:'Sebastián López',distrito:'Surco',nuevo:false},{nombre:'Daniela Ramos',distrito:'Miraflores',nuevo:true},{nombre:'Andrés Soto',distrito:'Surco',nuevo:false}]},
-    {id:106,ts:'',casa:'BONDAD',lider:'Miryam Huanca',tema:'Servicio al prójimo',fecha:fh(1),hora:'19:00',dir:'Jr. Las Rosas 234',modalidad:'presencial',nueva:'si',obs:'',asistentes:[{nombre:'César Montoya',distrito:'SJL',nuevo:false},{nombre:'Isabel Ríos',distrito:'SJL',nuevo:true},{nombre:'Marco Paredes',distrito:'SJL',nuevo:false},{nombre:'Sofía Delgado',distrito:'SJL',nuevo:false},{nombre:'Tomás Villena',distrito:'SJL',nuevo:false}]},
+    {id:101,casa:'AMOR',celula:'Abierta',lider:'Pedro Flores',tema:'Fe que mueve montañas',fecha:fh(0),hora:'19:00',dir:'Jr. Las Orquídeas 342',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'María López',distrito:'SJL',nuevo:false},{nombre:'Carlos Ruiz',distrito:'SJL',nuevo:false},{nombre:'Ana Torres',distrito:'Comas',nuevo:true},{nombre:'Luis Mendoza',distrito:'SJL',nuevo:false},{nombre:'Rosa Quispe',distrito:'Los Olivos',nuevo:true}]},
+    {id:102,casa:'AMOR',celula:'Cerrada',lider:'Carmen Díaz',tema:'Crecer en comunidad',fecha:fh(1),hora:'18:00',dir:'Av. Los Álamos 456',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'Roberto Vega',distrito:'SJL',nuevo:false},{nombre:'Elena Ríos',distrito:'SJL',nuevo:false},{nombre:'Miguel Santos',distrito:'Comas',nuevo:false},{nombre:'Patricia Cruz',distrito:'SJL',nuevo:false}]},
+    {id:103,casa:'GOZO',celula:'Abierta',lider:'Jorge Mamani',tema:'Testimonio y misión',fecha:fh(2),hora:'19:30',dir:'Jr. Los Jazmines 890',modalidad:'virtual',nueva:'si',obs:'Primera célula abierta de GOZO',asistentes:[{nombre:'Sandra Cárdenas',distrito:'Comas',nuevo:true},{nombre:'Alejandro Ríos',distrito:'Comas',nuevo:true},{nombre:'Lucía Flores',distrito:'Comas',nuevo:false}]},
+    {id:104,casa:'GOZO',celula:'Cerrada',lider:'Ana y Luis Peralta',tema:'Crecimiento espiritual',fecha:fh(0),hora:'20:00',dir:'Ca. Los Pinos 456',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'Carlos Quispe',distrito:'SJL',nuevo:false},{nombre:'Milagros Santos',distrito:'SJL',nuevo:false},{nombre:'Héctor Vega',distrito:'Ate',nuevo:false},{nombre:'Natalia Cruz',distrito:'SJL',nuevo:false},{nombre:'Óscar Mendoza',distrito:'Ate',nuevo:false}]},
+    {id:105,casa:'FE',celula:'Abierta',lider:'Luis Condori',tema:'Unidad en el cuerpo',fecha:fh(3),hora:'18:00',dir:'https://zoom.us/j/123',modalidad:'hibrida',nueva:'no',obs:'',asistentes:[{nombre:'Vanessa Torres',distrito:'Miraflores',nuevo:false},{nombre:'Sebastián López',distrito:'Surco',nuevo:false},{nombre:'Daniela Ramos',distrito:'Miraflores',nuevo:true}]},
+    {id:106,casa:'PAZ',celula:'Cerrada',lider:'Miryam Huanca',tema:'Servicio al prójimo',fecha:fh(1),hora:'19:00',dir:'Jr. Las Rosas 234',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'César Montoya',distrito:'SJL',nuevo:false},{nombre:'Isabel Ríos',distrito:'SJL',nuevo:false},{nombre:'Marco Paredes',distrito:'SJL',nuevo:false},{nombre:'Sofía Delgado',distrito:'SJL',nuevo:false}]},
   ].forEach(r=>db.push(r));
   sv();renderAll();alert('✅ Demo cargado');
 }
-function limpiar(){if(!confirm('¿Eliminar todos los datos?'))return;db=[];sv();renderAll();renderCasas();renderAtts();renderNuevos();}
+function limpiar(){if(!confirm('¿Eliminar todos los datos?'))return;db=[];sv();renderAll();renderCasas();renderCelulas();renderNuevos();}
 
 // INIT
 document.getElementById('wkl').textContent=fmtWk(0);
 document.getElementById('mf').value=new Date().toISOString().split('T')[0];
 renderAll();
-// Auto-sync al abrir
 syncSheets();
 </script>
 </body>
