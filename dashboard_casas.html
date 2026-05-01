@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Central — Casas & Células</title>
+<title>Dashboard Central — Casass & Células</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -440,9 +440,10 @@ function badges(){
   document.getElementById('cnt-cel').textContent=db.length;
   const nv=db.filter(r=>inWk(r)).reduce((s,r)=>s+(r.asistentes||[]).filter(a=>a.nuevo).length,0);
   document.getElementById('cnt-nvo').textContent=nv;
-  const lids=JSON.parse(localStorage.getItem('lideres_reg')||'[]');
-  const semLideres=new Set(db.filter(r=>inWk(r)).map(r=>r.lider));
-  const pendientes=lids.filter(l=>!semLideres.has(l.nombre)).length;
+  const clave=n=>(n||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+  const lids=getLideres();
+  const semLideres=new Set(db.filter(r=>inWk(r)).map(r=>clave(r.lider)));
+  const pendientes=lids.filter(l=>!semLideres.has(clave(l.nombre))).length;
   document.getElementById('cnt-lid').textContent=pendientes>0?pendientes:'✓';
   document.getElementById('cnt-lid').style.background=pendientes>0?'#ef4444':'#059669';
 }
@@ -746,21 +747,75 @@ async function syncSheets(){
   const lbl1=document.getElementById('sync-lbl'),lbl2=document.getElementById('sync-lbl2');
   lbl1.textContent='Sincronizando...';lbl2.textContent='Sincronizando...';
   try{
-    const res=await fetch(SHEETS_URL+'?t='+Date.now());
-    const rows=await res.json();
-    if(!Array.isArray(rows)||!rows.length){lbl1.textContent='Sin datos';lbl2.textContent='Sin datos';setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},2500);return;}
+    const res=await fetch(SHEETS_URL+'?t='+Date.now(),{method:'GET',mode:'cors'});
+    const txt=await res.text();
+    // Limpiar posibles caracteres extra que Apps Script a veces agrega
+    const clean=txt.trim().replace(/^[^[{]*/, '').replace(/[^}\]]*$/, '');
+    let rows;
+    try{ rows=JSON.parse(clean); }catch(e){ throw new Error('JSON inválido: '+txt.substring(0,100)); }
+    if(!Array.isArray(rows)||!rows.length){
+      lbl1.textContent='Sin datos en Sheets';lbl2.textContent='Sin datos en Sheets';
+      setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
+      return;
+    }
     const nuevos=rows.map((r,i)=>({
-      id:'sh_'+i,ts:r['Timestamp']||'',casa:r['Casa']||'',celula:r['Célula']||'',lider:r['Líder']||'',tema:r['Tema']||'',fecha:r['Fecha']||'',hora:r['Hora']||'',dir:r['Dirección']||'',modalidad:(r['Modalidad']||'presencial').toLowerCase(),nueva:r['Casa Nueva']==='Sí'?'si':'no',obs:r['Observaciones']||'',asistentes:parsAtt(r['Lista Asistentes']||''),_sh:true
+      id:'sh_'+i+'_'+Date.now(),
+      ts:r['Timestamp']||'',
+      casa:(r['Casa']||'').toString().toUpperCase().trim(),
+      celula:r['Célula']||r['Celula']||'',
+      lider:normNombre(r['Líder']||r['Lider']||''),
+      tema:r['Tema']||'',
+      fecha:normFecha(r['Fecha']||''),
+      hora:r['Hora']||'',
+      dir:r['Dirección']||r['Direccion']||'',
+      modalidad:(r['Modalidad']||'presencial').toLowerCase().trim(),
+      nueva:(r['Casa Nueva']||r['Casa_Nueva']||'')===('Sí'||'Si')?'si':'no',
+      obs:r['Observaciones']||'',
+      ofrenda:r['Ofrenda']||'',
+      asistentes:parsAtt(r['Lista Asistentes']||r['Lista_Asistentes']||''),
+      _sh:true
     })).filter(r=>r.casa);
-    db=db.filter(r=>!r._sh);db=[...db,...nuevos];sv();renderAll();
-    lbl1.textContent=`✅ ${nuevos.length} sync`;lbl2.textContent=`✅ ${nuevos.length} sync`;
+    db=db.filter(r=>!r._sh);
+    db=[...db,...nuevos];
+    sv(); renderAll();
+    lbl1.textContent=`✅ ${nuevos.length} registros`;
+    lbl2.textContent=`✅ ${nuevos.length} registros`;
     setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
   }catch(e){
-    lbl1.textContent='⚠️ Error';lbl2.textContent='⚠️ Error';
-    setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
+    console.error('Sync error:',e);
+    lbl1.textContent='⚠️ Error — ver consola';
+    lbl2.textContent='⚠️ Error';
+    setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},4000);
   }
 }
-function parsAtt(str){if(!str)return[];return str.split(',').map(s=>{const nvo=s.includes('🆕');const dist=(s.match(/\(([^)]+)\)/)||[])[1]||'';const nom=s.replace('🆕','').replace(/\s*\([^)]*\)/,'').trim();return{nombre:nom,distrito:dist,nuevo:nvo};}).filter(a=>a.nombre);}
+
+// Normaliza fecha de DD/MM/YYYY o YYYY-MM-DD a YYYY-MM-DD
+function normFecha(f){
+  if(!f) return '';
+  f=f.toString().trim();
+  // Ya está en formato correcto
+  if(/^\d{4}-\d{2}-\d{2}$/.test(f)) return f;
+  // DD/MM/YYYY
+  const m=f.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if(m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  return f;
+}
+
+// Normaliza nombre: capitaliza cada palabra, elimina espacios dobles
+function normNombre(n){
+  if(!n) return '';
+  return n.trim().toLowerCase().replace(/\s+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+}
+
+function parsAtt(str){
+  if(!str)return[];
+  return str.split(',').map(s=>{
+    const nvo=s.includes('🆕');
+    const dist=(s.match(/\(([^)]+)\)/)||[])[1]||'';
+    const nom=normNombre(s.replace('🆕','').replace(/\s*\([^)]*\)/,'').trim());
+    return{nombre:nom,distrito:dist,nuevo:nvo};
+  }).filter(a=>a.nombre);
+}
 
 // DEMO
 function demo(){
@@ -785,11 +840,15 @@ function saveLideres(l){localStorage.setItem('lideres_reg',JSON.stringify(l));}
 
 function agregarLider(){
   const casa=document.getElementById('lid-casa-sel').value;
-  const nombre=document.getElementById('lid-nombre-inp').value.trim();
-  if(!nombre){document.getElementById('lid-nombre-inp').style.border='2px solid #ef4444';return;}
+  const nombreRaw=document.getElementById('lid-nombre-inp').value.trim();
+  if(!nombreRaw){document.getElementById('lid-nombre-inp').style.border='2px solid #ef4444';return;}
   document.getElementById('lid-nombre-inp').style.border='';
+  // Normalizar: capitaliza cada palabra
+  const nombre=normNombre(nombreRaw);
   const lids=getLideres();
-  if(lids.find(l=>l.nombre===nombre&&l.casa===casa)){alert('Este líder ya está registrado');return;}
+  // Comparar sin distinguir mayúsculas ni tildes
+  const clave=n=>n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+  if(lids.find(l=>clave(l.nombre)===clave(nombre)&&l.casa===casa)){alert('Este líder ya está registrado');return;}
   lids.push({nombre,casa:casa||'Sin casa'});
   saveLideres(lids);
   document.getElementById('lid-nombre-inp').value='';
@@ -815,21 +874,36 @@ function filtrarLid(f){
 }
 
 function renderLideres(){
-  let lids=getLideres();
+  let lids=getLideres().map(l=>({...l,nombre:normNombre(l.nombre)}));
   const sem=db.filter(r=>inWk(r));
+
+  // Clave de comparación sin tildes ni mayúsculas
+  const clave=n=>n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+
   const repMap={};
   sem.forEach(r=>{
-    if(!repMap[r.lider])repMap[r.lider]={count:0,fechas:[],ofrenda:0,casa:r.casa};
-    repMap[r.lider].count++;
-    repMap[r.lider].fechas.push(r.fecha);
-    repMap[r.lider].ofrenda+=parseFloat(r.ofrenda||0);
+    const k=clave(normNombre(r.lider||''));
+    if(!repMap[k])repMap[k]={nombre:normNombre(r.lider),count:0,fechas:[],ofrenda:0,casa:r.casa};
+    repMap[k].count++;
+    repMap[k].fechas.push(r.fecha);
+    repMap[k].ofrenda+=parseFloat(r.ofrenda||0);
   });
-  // Auto-detectar líderes de reportes que no están registrados
-  const lidNombres=new Set(lids.map(l=>l.nombre));
-  Object.keys(repMap).forEach(n=>{if(!lidNombres.has(n))lids.push({nombre:n,casa:repMap[n].casa,_auto:true});});
+
+  // Auto-detectar líderes de reportes no registrados
+  const lidClaves=new Set(lids.map(l=>clave(l.nombre)));
+  Object.keys(repMap).forEach(k=>{
+    if(!lidClaves.has(k)){
+      lids.push({nombre:repMap[k].nombre,casa:repMap[k].casa,_auto:true});
+      lidClaves.add(k);
+    }
+  });
+
+  // Eliminar duplicados que puedan quedar por capitalización
+  const seen=new Set();
+  lids=lids.filter(l=>{const k=clave(l.nombre);if(seen.has(k))return false;seen.add(k);return true;});
 
   const total=lids.length;
-  const reportaron=lids.filter(l=>repMap[l.nombre]).length;
+  const reportaron=lids.filter(l=>repMap[clave(l.nombre)]).length;
   const pendientes=total-reportaron;
   const pct=total?Math.round(reportaron/total*100):0;
 
@@ -842,12 +916,16 @@ function renderLideres(){
   document.getElementById('cnt-lid').style.background=pendientes>0?'#ef4444':'#059669';
 
   let lista=lids;
-  if(lidFiltro==='si')lista=lids.filter(l=>repMap[l.nombre]);
-  if(lidFiltro==='no')lista=lids.filter(l=>!repMap[l.nombre]);
-  lista.sort((a,b)=>{const ar=!!repMap[a.nombre],br=!!repMap[b.nombre];if(ar!==br)return ar?1:-1;return a.nombre.localeCompare(b.nombre);});
+  if(lidFiltro==='si')lista=lids.filter(l=>repMap[clave(l.nombre)]);
+  if(lidFiltro==='no')lista=lids.filter(l=>!repMap[clave(l.nombre)]);
+  lista.sort((a,b)=>{
+    const ar=!!repMap[clave(a.nombre)],br=!!repMap[clave(b.nombre)];
+    if(ar!==br)return ar?1:-1;
+    return a.nombre.localeCompare(b.nombre);
+  });
 
   document.getElementById('tb-lid').innerHTML=lista.map((l,i)=>{
-    const rep=repMap[l.nombre];
+    const rep=repMap[clave(l.nombre)];
     const reporto=!!rep;
     const ultima=rep?[...rep.fechas].sort().pop():'';
     const ofrenda=rep&&rep.ofrenda>0?`S/ ${rep.ofrenda.toFixed(2)}`:'—';
