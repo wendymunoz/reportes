@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Central  — Casas & Células</title> 
+<title>Dashboard Central — Casas & Células</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -191,6 +191,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
     <button class="sb-btn" id="nb-casas" onclick="goPage('casas',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Casas<span class="sb-badge" id="cnt-cas">0</span></button>
     <button class="sb-btn" id="nb-cel" onclick="goPage('celulas',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M6 20v-3a6 6 0 0 1 12 0v3"/><circle cx="4" cy="9" r="2"/><path d="M2 20v-2a4 4 0 0 1 4-4"/><circle cx="20" cy="9" r="2"/><path d="M22 20v-2a4 4 0 0 0-4-4"/></svg>Células<span class="sb-badge" id="cnt-cel">0</span></button>
     <button class="sb-btn" id="nb-nvo" onclick="goPage('nuevos',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Nuevos<span class="sb-badge amb" id="cnt-nvo">0</span></button>
+    <button class="sb-btn" id="nb-lid" onclick="goPage('lideres',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><polyline points="9 11 12 14 15 11"/></svg>Líderes<span class="sb-badge" id="cnt-lid" style="background:#059669">0</span></button>
     <div class="sb-grp">Acciones</div>
     <button class="sb-btn" onclick="abrirM('mi')"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ingresar reporte</button>
     <button class="sb-btn" onclick="syncSheets()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg><span id="sync-lbl">Sincronizar</span></button>
@@ -293,6 +294,57 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
   <div class="card" style="margin:0"><div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>Célula</th><th>Líder</th><th>Distrito</th><th>Fecha</th></tr></thead><tbody id="tb-nvo"></tbody></table></div></div>
 </div>
 
+<!-- ══ LÍDERES ══ -->
+<div id="pg-lideres" class="page">
+  <div style="margin-bottom:16px">
+    <div class="hint-b"><svg width="14" height="14" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Control de reportes por líder esta semana. Verde = reportó · Rojo = pendiente.</div>
+  </div>
+
+  <!-- STATS LÍDERES -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px">
+    <div class="sc c1" style="padding:14px 16px"><div class="sc-lbl">Líderes registrados</div><div class="sc-val" id="lid-total" style="font-size:24px">0</div><div class="sc-sub">en el sistema</div></div>
+    <div class="sc c2" style="padding:14px 16px"><div class="sc-lbl">Reportaron</div><div class="sc-val" id="lid-si" style="font-size:24px;color:var(--g2)">0</div><div class="sc-sub">esta semana ✅</div></div>
+    <div class="sc c3" style="padding:14px 16px"><div class="sc-lbl">Pendientes</div><div class="sc-val" id="lid-no" style="font-size:24px">0</div><div class="sc-sub">sin reportar ⚠️</div></div>
+  </div>
+
+  <!-- BARRA DE PROGRESO -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-hd"><div class="ttl"><span class="pip"></span>Avance de reportes esta semana</div><span id="lid-pct-txt" style="font-size:12px;font-weight:700;color:var(--g2)">0%</span></div>
+    <div style="background:#f1f5f1;border-radius:8px;height:12px;overflow:hidden">
+      <div id="lid-prog-bar" style="height:100%;border-radius:8px;background:linear-gradient(90deg,var(--g2),var(--g3));transition:width .6s ease;width:0%"></div>
+    </div>
+  </div>
+
+  <!-- AGREGAR LÍDER -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-hd"><div class="ttl"><span class="pip"></span>Registrar líderes del sistema</div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <select id="lid-casa-sel" class="si" style="flex:0 0 160px">
+        <option value="">Casa...</option>
+      </select>
+      <input id="lid-nombre-inp" class="si" placeholder="Nombre del pastor / líder" style="flex:1;min-width:180px"/>
+      <button class="btn btn-p btn-sm" onclick="agregarLider()">+ Agregar</button>
+    </div>
+  </div>
+
+  <!-- TABLA LÍDERES -->
+  <div class="card" style="margin:0">
+    <div class="card-hd"><div class="ttl"><span class="pip"></span>Estado de reportes</div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost btn-sm" onclick="filtrarLid('todos')" id="flt-todos" style="border-color:var(--g2);color:var(--g2)">Todos</button>
+        <button class="btn btn-ghost btn-sm" onclick="filtrarLid('si')" id="flt-si">✅ Reportaron</button>
+        <button class="btn btn-ghost btn-sm" onclick="filtrarLid('no')" id="flt-no">⚠️ Pendientes</button>
+      </div>
+    </div>
+    <div class="tw">
+      <table class="tbl">
+        <thead><tr><th>#</th><th>Líder / Pastor</th><th>Casa</th><th>Estado semana</th><th>Células reportadas</th><th>Última fecha</th><th>Ofrenda total</th><th></th></tr></thead>
+        <tbody id="tb-lid"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 </div><!-- end main -->
 </div><!-- end layout -->
 
@@ -372,12 +424,13 @@ function goPage(n,btn){
   document.getElementById('pg-'+n).classList.add('on');
   document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('on'));
   btn?.classList.add('on');
-  const ti={dashboard:'Dashboard General',casas:'Casas',celulas:'Células',nuevos:'Nuevos Asistentes'};
+  const ti={dashboard:'Dashboard General',casas:'Casas',celulas:'Células',nuevos:'Nuevos Asistentes',lideres:'Control de Líderes'};
   document.getElementById('tbt').textContent=ti[n]||n;
   if(n==='dashboard')renderDash();
   if(n==='casas')renderCasas();
   if(n==='celulas')renderCelulas();
   if(n==='nuevos')renderNuevos();
+  if(n==='lideres')renderLideres();
 }
 
 function renderAll(){renderDash();badges();}
@@ -387,6 +440,11 @@ function badges(){
   document.getElementById('cnt-cel').textContent=db.length;
   const nv=db.filter(r=>inWk(r)).reduce((s,r)=>s+(r.asistentes||[]).filter(a=>a.nuevo).length,0);
   document.getElementById('cnt-nvo').textContent=nv;
+  const lids=JSON.parse(localStorage.getItem('lideres_reg')||'[]');
+  const semLideres=new Set(db.filter(r=>inWk(r)).map(r=>r.lider));
+  const pendientes=lids.filter(l=>!semLideres.has(l.nombre)).length;
+  document.getElementById('cnt-lid').textContent=pendientes>0?pendientes:'✓';
+  document.getElementById('cnt-lid').style.background=pendientes>0?'#ef4444':'#059669';
 }
 
 // ══ DASHBOARD ══
@@ -720,9 +778,96 @@ function demo(){
 }
 function limpiar(){if(!confirm('¿Eliminar todos los datos?'))return;db=[];sv();renderAll();renderCasas();renderCelulas();renderNuevos();}
 
+// ══ LÍDERES ══
+let lidFiltro='todos';
+function getLideres(){return JSON.parse(localStorage.getItem('lideres_reg')||'[]');}
+function saveLideres(l){localStorage.setItem('lideres_reg',JSON.stringify(l));}
+
+function agregarLider(){
+  const casa=document.getElementById('lid-casa-sel').value;
+  const nombre=document.getElementById('lid-nombre-inp').value.trim();
+  if(!nombre){document.getElementById('lid-nombre-inp').style.border='2px solid #ef4444';return;}
+  document.getElementById('lid-nombre-inp').style.border='';
+  const lids=getLideres();
+  if(lids.find(l=>l.nombre===nombre&&l.casa===casa)){alert('Este líder ya está registrado');return;}
+  lids.push({nombre,casa:casa||'Sin casa'});
+  saveLideres(lids);
+  document.getElementById('lid-nombre-inp').value='';
+  renderLideres();badges();
+}
+
+function eliminarLider(nombre,casa){
+  if(!confirm(`¿Eliminar a ${nombre}?`))return;
+  saveLideres(getLideres().filter(l=>!(l.nombre===nombre&&l.casa===casa)));
+  renderLideres();badges();
+}
+
+function filtrarLid(f){
+  lidFiltro=f;
+  ['todos','si','no'].forEach(x=>{
+    const btn=document.getElementById('flt-'+x);
+    if(!btn)return;
+    btn.style.background=f===x?'var(--g2)':'';
+    btn.style.color=f===x?'#fff':'';
+    btn.style.borderColor=f===x?'var(--g2)':'var(--border)';
+  });
+  renderLideres();
+}
+
+function renderLideres(){
+  let lids=getLideres();
+  const sem=db.filter(r=>inWk(r));
+  const repMap={};
+  sem.forEach(r=>{
+    if(!repMap[r.lider])repMap[r.lider]={count:0,fechas:[],ofrenda:0,casa:r.casa};
+    repMap[r.lider].count++;
+    repMap[r.lider].fechas.push(r.fecha);
+    repMap[r.lider].ofrenda+=parseFloat(r.ofrenda||0);
+  });
+  // Auto-detectar líderes de reportes que no están registrados
+  const lidNombres=new Set(lids.map(l=>l.nombre));
+  Object.keys(repMap).forEach(n=>{if(!lidNombres.has(n))lids.push({nombre:n,casa:repMap[n].casa,_auto:true});});
+
+  const total=lids.length;
+  const reportaron=lids.filter(l=>repMap[l.nombre]).length;
+  const pendientes=total-reportaron;
+  const pct=total?Math.round(reportaron/total*100):0;
+
+  document.getElementById('lid-total').textContent=total;
+  document.getElementById('lid-si').textContent=reportaron;
+  document.getElementById('lid-no').textContent=pendientes;
+  document.getElementById('lid-pct-txt').textContent=pct+'%';
+  document.getElementById('lid-prog-bar').style.width=pct+'%';
+  document.getElementById('cnt-lid').textContent=pendientes>0?pendientes:'✓';
+  document.getElementById('cnt-lid').style.background=pendientes>0?'#ef4444':'#059669';
+
+  let lista=lids;
+  if(lidFiltro==='si')lista=lids.filter(l=>repMap[l.nombre]);
+  if(lidFiltro==='no')lista=lids.filter(l=>!repMap[l.nombre]);
+  lista.sort((a,b)=>{const ar=!!repMap[a.nombre],br=!!repMap[b.nombre];if(ar!==br)return ar?1:-1;return a.nombre.localeCompare(b.nombre);});
+
+  document.getElementById('tb-lid').innerHTML=lista.map((l,i)=>{
+    const rep=repMap[l.nombre];
+    const reporto=!!rep;
+    const ultima=rep?[...rep.fechas].sort().pop():'';
+    const ofrenda=rep&&rep.ofrenda>0?`S/ ${rep.ofrenda.toFixed(2)}`:'—';
+    return`<tr>
+      <td style="color:var(--muted)">${i+1}</td>
+      <td><div style="font-weight:700">${l.nombre}</div>${l._auto?'<div style="font-size:10px;color:var(--muted)">Auto-detectado</div>':''}</td>
+      <td>${EM[l.casa]||'🏠'} ${l.casa||'—'}</td>
+      <td>${reporto?'<span class="badge bg" style="padding:4px 12px">✅ Reportó</span>':'<span class="badge brose" style="padding:4px 12px">⚠️ Pendiente</span>'}</td>
+      <td style="font-weight:700;color:var(--g2);text-align:center">${rep?rep.count:'—'}</td>
+      <td>${fmtF(ultima)}</td>
+      <td style="font-weight:700;color:var(--amber)">${ofrenda}</td>
+      <td>${!l._auto?`<button class="btn btn-danger btn-sm" onclick="eliminarLider('${l.nombre.replace(/'/g,"\\'")}','${l.casa}')">🗑</button>`:''}</td>
+    </tr>`;
+  }).join('')||`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Sin líderes registrados.<br><span style="font-size:11px">Agrégalos arriba o registra células y aparecerán automáticamente.</span></td></tr>`;
+}
+
 // INIT
 document.getElementById('wkl').textContent=fmtWk(0);
 document.getElementById('mf').value=new Date().toISOString().split('T')[0];
+CASAS.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=`${EM[c]||'🏠'} ${c}`;document.getElementById('lid-casa-sel')?.appendChild(o);});
 renderAll();
 syncSheets();
 </script>
