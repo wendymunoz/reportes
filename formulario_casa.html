@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Reporte de Células</title>
+<title>Reporte de Célula</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -363,15 +363,19 @@ function toggleNuevo(btn, side){
   const card=btn.closest('.att-card');
   const recBtn=card.querySelector('[data-side="rec"]');
   const nvoBtn=card.querySelector('[data-side="nvo"]');
-  const isNvo = side==='nvo';
-  // Update both buttons
-  recBtn.classList.toggle('on-rec', !isNvo);
+  const extra=card.querySelector('.extra-nuevo');
+  const isNvo=side==='nvo';
+  recBtn.classList.toggle('on-rec',!isNvo);
   recBtn.classList.remove('on-nvo');
-  nvoBtn.classList.toggle('on-nvo', isNvo);
+  nvoBtn.classList.toggle('on-nvo',isNvo);
   nvoBtn.classList.remove('on-rec');
-  // Store value on both so collect() can read either
-  recBtn.dataset.nuevo = isNvo ? 'true' : 'false';
-  nvoBtn.dataset.nuevo = isNvo ? 'true' : 'false';
+  recBtn.dataset.nuevo=isNvo?'true':'false';
+  nvoBtn.dataset.nuevo=isNvo?'true':'false';
+  // Mostrar/ocultar campos extra con animación
+  if(extra){
+    extra.style.display=isNvo?'block':'none';
+    if(isNvo) extra.querySelector('.att-edad')?.focus();
+  }
 }
 function setErr(id,e){document.getElementById(id)?.classList.toggle('err',e);}
 function fmtFecha(f){if(!f)return'—';try{const[y,m,d]=f.split('-');const ms=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return`${parseInt(d)} ${ms[parseInt(m)-1]} ${y}`;}catch{return f;}}
@@ -454,13 +458,16 @@ function collect(step){
       const nom=r.querySelector('.att-nombre').value.trim();
       const dist=r.querySelector('.att-dist').value.trim();
       const nvo=r.querySelector('[data-side="nvo"]').dataset.nuevo==='true';
-      if(nom) fd.asistentes.push({nombre:nom,distrito:dist,nuevo:nvo});
+      const edad=r.querySelector('.att-edad')?.value.trim()||'';
+      const cel=r.querySelector('.att-cel')?.value.trim()||'';
+      const dir=r.querySelector('.att-dir')?.value.trim()||'';
+      if(nom) fd.asistentes.push({nombre:nom,distrito:dist,nuevo:nvo,edad,celular:cel,direccion:dir});
     });
   }
 }
 
 let attCount=0;
-function addAtt(nom='',dist='',nvo=false){
+function addAtt(nom='',dist='',nvo=false,edad='',cel='',dir=''){
   attCount++;
   const n=attCount;
   const c=document.getElementById('atts-cont');
@@ -478,14 +485,31 @@ function addAtt(nom='',dist='',nvo=false){
       <input class="att-dist" placeholder="Ej: SJL, Comas, Miraflores..." value="${dist}" style="margin:0"/>
     </div>
     <div class="nt-row">
-      <button type="button" class="nuevo-toggle on-rec" onclick="toggleNuevo(this,'rec')" data-nuevo="${nvo?'true':'false'}" data-side="rec">
+      <button type="button" class="nuevo-toggle ${!nvo?'on-rec':''}" onclick="toggleNuevo(this,'rec')" data-nuevo="${nvo?'true':'false'}" data-side="rec">
         <span class="nt-ico">✅</span>
         <span class="nt-txt">Recurrente</span>
       </button>
-      <button type="button" class="nuevo-toggle nuevo-side ${nvo?'on-nvo':''}" onclick="toggleNuevo(this,'nvo')" data-nuevo="${nvo?'true':'false'}" data-side="nvo">
+      <button type="button" class="nuevo-toggle ${nvo?'on-nvo':''}" onclick="toggleNuevo(this,'nvo')" data-nuevo="${nvo?'true':'false'}" data-side="nvo">
         <span class="nt-ico">⭐</span>
         <span class="nt-txt">Nuevo</span>
       </button>
+    </div>
+    <div class="extra-nuevo" style="display:${nvo?'block':'none'};margin-top:10px;padding:12px;background:#f0fdf4;border-radius:10px;border:1px solid #bbf7d0">
+      <div style="font-size:10px;font-weight:700;color:var(--g2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📋 Datos del nuevo visitante <span style="font-weight:400;opacity:.7">(opcional)</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <div class="lbl" style="margin-bottom:4px;font-size:10px">Edad</div>
+          <input type="number" class="att-edad" placeholder="Ej: 28" value="${edad}" min="5" max="99" inputmode="numeric" style="margin:0;padding:10px 12px;font-size:13px"/>
+        </div>
+        <div>
+          <div class="lbl" style="margin-bottom:4px;font-size:10px">Celular</div>
+          <input type="tel" class="att-cel" placeholder="999 999 999" value="${cel}" inputmode="numeric" maxlength="9" style="margin:0;padding:10px 12px;font-size:13px"/>
+        </div>
+      </div>
+      <div>
+        <div class="lbl" style="margin-bottom:4px;font-size:10px">Dirección</div>
+        <input type="text" class="att-dir" placeholder="Dirección del visitante" value="${dir}" style="margin:0;padding:10px 12px;font-size:13px"/>
+      </div>
     </div>`;
   c.appendChild(d);
   renumAtt();
