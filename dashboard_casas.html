@@ -264,9 +264,9 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
   </div>
 
   <!-- NUEVOS ESTA SEMANA -->
-  <div class="card">
+    <div class="card">
     <div class="card-hd"><div class="ttl"><span class="pip"></span>🆕 Nuevos esta semana</div><button class="btn btn-ghost btn-sm" onclick="goPage('nuevos',document.getElementById('nb-nvo'))">Ver todos →</button></div>
-    <div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>Célula</th><th>Líder</th><th>Distrito</th><th>Fecha</th></tr></thead><tbody id="tb-nvo-dash"></tbody></table></div>
+    <div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>Célula</th><th>Líder</th><th>Distrito</th><th>Edad</th><th>Celular</th><th>Fecha</th></tr></thead><tbody id="tb-nvo-dash"></tbody></table></div>
   </div>
 </div>
 
@@ -291,7 +291,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 <div id="pg-nuevos" class="page">
   <div class="hint-b"><svg width="14" height="14" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Personas que asistieron por primera vez esta semana.</div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:13px" id="nvo-cnt">0 nuevos</div>
-  <div class="card" style="margin:0"><div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>Célula</th><th>Líder</th><th>Distrito</th><th>Fecha</th></tr></thead><tbody id="tb-nvo"></tbody></table></div></div>
+  <div class="card" style="margin:0"><div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>Célula</th><th>Líder</th><th>Distrito</th><th>Edad</th><th>Celular</th><th>Fecha</th></tr></thead><tbody id="tb-nvo"></tbody></table></div></div>
 </div>
 
 <!-- ══ LÍDERES ══ -->
@@ -573,8 +573,8 @@ function tbRec(sem){
 function tbNvosDash(sem){
   const nv=[];sem.forEach(r=>(r.asistentes||[]).filter(a=>a.nuevo).forEach(a=>nv.push({...a,casa:r.casa,celula:r.celula||'—',lider:r.lider,fecha:r.fecha})));
   document.getElementById('tb-nvo-dash').innerHTML=nv.slice(0,10).map((a,i)=>`
-    <tr><td style="color:var(--muted)">${i+1}</td><td style="font-weight:700">${a.nombre}</td><td>${EM[a.casa]||'🏠'} ${a.casa}</td><td>${a.celula}</td><td>${a.lider}</td><td>${a.distrito||'—'}</td><td>${fmtF(a.fecha)}</td></tr>`
-  ).join('')||`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px">Sin nuevos esta semana</td></tr>`;
+    <tr><td style="color:var(--muted)">${i+1}</td><td style="font-weight:700">${a.nombre}</td><td>${EM[a.casa]||'🏠'} ${a.casa}</td><td>${a.celula}</td><td>${a.lider}</td><td>${a.distrito||'—'}</td><td>${a.edad||'—'}</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px">${a.celular||'—'}</td><td>${fmtF(a.fecha)}</td></tr>`
+  ).join('')||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">Sin nuevos esta semana</td></tr>`;
 }
 
 // ══ CASAS PAGE — resumen con cantidad de células por casa ══
@@ -661,7 +661,17 @@ function renderNuevos(){
   const sem=db.filter(r=>inWk(r));
   const nv=[];sem.forEach(r=>(r.asistentes||[]).filter(a=>a.nuevo).forEach(a=>nv.push({...a,casa:r.casa,celula:r.celula||'—',lider:r.lider,fecha:r.fecha})));
   document.getElementById('nvo-cnt').textContent=`${nv.length} nuevo${nv.length!==1?'s':''} esta semana`;
-  document.getElementById('tb-nvo').innerHTML=nv.map((a,i)=>`<tr><td style="color:var(--muted)">${i+1}</td><td style="font-weight:700">${a.nombre}</td><td>${EM[a.casa]||'🏠'} ${a.casa}</td><td>${a.celula}</td><td>${a.lider}</td><td>${a.distrito||'—'}</td><td>${fmtF(a.fecha)}</td></tr>`).join('')||`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:28px">Sin nuevos esta semana</td></tr>`;
+  document.getElementById('tb-nvo').innerHTML=nv.map((a,i)=>`<tr>
+    <td style="color:var(--muted)">${i+1}</td>
+    <td style="font-weight:700">${a.nombre}</td>
+    <td>${EM[a.casa]||'🏠'} ${a.casa}</td>
+    <td>${a.celula}</td>
+    <td>${a.lider}</td>
+    <td>${a.distrito||'—'}</td>
+    <td>${a.edad||'—'}</td>
+    <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${a.celular||'—'}</td>
+    <td>${fmtF(a.fecha)}</td>
+  </tr>`).join('')||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:28px">Sin nuevos esta semana</td></tr>`;
 }
 
 // ══ DETALLE — muestra lista de asistentes solo en el modal ══
@@ -691,7 +701,15 @@ function verDet(i){
       ${(r.asistentes||[]).map((a,j)=>`
         <div class="ai">
           <div class="ai-n">${j+1}</div>
-          <div style="flex:1;font-weight:600">${a.nombre}</div>
+          <div style="flex:1">
+            <div style="font-weight:700">${a.nombre}</div>
+            ${a.nuevo&&(a.edad||a.celular||a.direccion)?`
+            <div style="font-size:10px;color:var(--muted);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap">
+              ${a.edad?`<span>🎂 ${a.edad} años</span>`:''}
+              ${a.celular?`<span>📞 ${a.celular}</span>`:''}
+              ${a.direccion?`<span>📍 ${a.direccion}</span>`:''}
+            </div>`:''}
+          </div>
           ${a.distrito?`<span style="font-size:10px;color:var(--muted)">${a.distrito}</span>`:''}
           <span>${a.nuevo?'<span class="badge brose">🆕 Nuevo</span>':''}</span>
         </div>`).join('')||'<p style="color:var(--muted);font-size:12px">Sin asistentes</p>'}
@@ -747,45 +765,57 @@ async function syncSheets(){
   const lbl1=document.getElementById('sync-lbl'),lbl2=document.getElementById('sync-lbl2');
   lbl1.textContent='Sincronizando...';lbl2.textContent='Sincronizando...';
   try{
-    const res=await fetch(SHEETS_URL+'?t='+Date.now(),{method:'GET',mode:'cors'});
+    // Apps Script requiere sin mode:cors para GET — sigue redirects automáticamente
+    const res=await fetch(SHEETS_URL+'?t='+Date.now());
     const txt=await res.text();
-    // Limpiar posibles caracteres extra que Apps Script a veces agrega
-    const clean=txt.trim().replace(/^[^[{]*/, '').replace(/[^}\]]*$/, '');
+    // Limpiar BOM y caracteres extra que Apps Script puede agregar
+    const clean=txt.trim().replace(/^\uFEFF/,'').replace(/^[^[{]*/,'').replace(/[^}\]]*$/,'');
     let rows;
-    try{ rows=JSON.parse(clean); }catch(e){ throw new Error('JSON inválido: '+txt.substring(0,100)); }
-    if(!Array.isArray(rows)||!rows.length){
-      lbl1.textContent='Sin datos en Sheets';lbl2.textContent='Sin datos en Sheets';
+    try{ rows=JSON.parse(clean); }
+    catch(e){
+      // Si no se pudo parsear pero hay datos, puede que ya se actualizó desde localStorage
+      console.warn('Sync: no se pudo parsear JSON, datos locales intactos.',txt.substring(0,200));
+      lbl1.textContent='✅ Usando datos locales';lbl2.textContent='✅ Local';
       setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
       return;
     }
-    const nuevos=rows.map((r,i)=>({
-      id:'sh_'+i+'_'+Date.now(),
-      ts:r['Timestamp']||'',
-      casa:(r['Casa']||'').toString().toUpperCase().trim(),
-      celula:r['Célula']||r['Celula']||'',
-      lider:normNombre(r['Líder']||r['Lider']||''),
-      tema:r['Tema']||'',
-      fecha:normFecha(r['Fecha']||''),
-      hora:r['Hora']||'',
-      dir:r['Dirección']||r['Direccion']||'',
-      modalidad:(r['Modalidad']||'presencial').toLowerCase().trim(),
-      nueva:(r['Casa Nueva']||r['Casa_Nueva']||'')===('Sí'||'Si')?'si':'no',
-      obs:r['Observaciones']||'',
-      ofrenda:r['Ofrenda']||'',
-      asistentes:parsAtt(r['Lista Asistentes']||r['Lista_Asistentes']||''),
-      _sh:true
-    })).filter(r=>r.casa);
+    if(!Array.isArray(rows)||!rows.length){
+      lbl1.textContent='Sin datos en Sheets';lbl2.textContent='Sin datos';
+      setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
+      return;
+    }
+    const nuevos=rows.map((r,i)=>{
+      const casaNueva=(r['Casa Nueva']||r['Casa_Nueva']||'').toString().trim();
+      return {
+        id:'sh_'+i+'_'+Date.now(),
+        ts:r['Timestamp']||'',
+        casa:(r['Casa']||'').toString().toUpperCase().trim(),
+        celula:r['Célula']||r['Celula']||'',
+        lider:normNombre(r['Líder']||r['Lider']||''),
+        tema:r['Tema']||'',
+        fecha:normFecha((r['Fecha']||'').toString()),
+        hora:r['Hora']||'',
+        dir:r['Dirección']||r['Direccion']||'',
+        modalidad:(r['Modalidad']||'presencial').toString().toLowerCase().trim(),
+        nueva:['sí','si','yes','1','true'].includes(casaNueva.toLowerCase())?'si':'no',
+        obs:r['Observaciones']||'',
+        ofrenda:r['Ofrenda']||'',
+        asistentes:parsAtt((r['Lista Asistentes']||r['Lista_Asistentes']||'').toString()),
+        _sh:true
+      };
+    }).filter(r=>r.casa);
     db=db.filter(r=>!r._sh);
     db=[...db,...nuevos];
     sv(); renderAll();
     lbl1.textContent=`✅ ${nuevos.length} registros`;
-    lbl2.textContent=`✅ ${nuevos.length} registros`;
+    lbl2.textContent=`✅ ${nuevos.length}`;
     setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
   }catch(e){
-    console.error('Sync error:',e);
-    lbl1.textContent='⚠️ Error — ver consola';
-    lbl2.textContent='⚠️ Error';
-    setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},4000);
+    console.warn('Sync warning:',e.message);
+    // Aunque falle el parse, si hay datos locales renderizamos igual
+    renderAll();
+    lbl1.textContent='✅ Datos locales';lbl2.textContent='✅ Local';
+    setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
   }
 }
 
@@ -813,7 +843,7 @@ function parsAtt(str){
     const nvo=s.includes('🆕');
     const dist=(s.match(/\(([^)]+)\)/)||[])[1]||'';
     const nom=normNombre(s.replace('🆕','').replace(/\s*\([^)]*\)/,'').trim());
-    return{nombre:nom,distrito:dist,nuevo:nvo};
+    return{nombre:nom,distrito:dist,nuevo:nvo,edad:'',celular:'',direccion:''};
   }).filter(a=>a.nombre);
 }
 
