@@ -401,7 +401,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 <script>
 const CASAS=['AMOR','GOZO','PAZ','PACIENCIA','BENIGNIDAD','TEMPLANZA','FE','BONDAD','MANSEDUMBRE','MISERICORDIA','GRACIA','PODER','PROSPERIDAD','REMANENTE'];
 const EM={AMOR:'❤️',GOZO:'😊',PAZ:'🕊️',PACIENCIA:'⏳',BENIGNIDAD:'🌿',TEMPLANZA:'⚖️',FE:'🙏',BONDAD:'💛',MANSEDUMBRE:'🌸',MISERICORDIA:'🤝',GRACIA:'✨',PODER:'⚡',PROSPERIDAD:'🌱',REMANENTE:'🔥'};
-const SHEETS_URL='https://script.google.com/macros/s/AKfycbzhAUirtJ1JJuhcQ4R6h5H3Bg0SsENi_xNEZE-fPfYGoZbyTgLi--atUGE1xOy8jrWF/exec';
+const SHEETS_URL='https://script.google.com/macros/s/AKfycby99g4iUpEOGdEpeHjV39DjQoQraeGZsnBFEtKt01-Lj2ud-dc0D9JSHaHvDDBuRu_m/exec';
 const COLORS=['#059669','#3b82f6','#f59e0b','#8b5cf6','#f43f5e','#06b6d4','#84cc16','#f97316','#ec4899','#6366f1','#14b8a6','#eab308','#ef4444','#a855f7'];
 
 let db=JSON.parse(localStorage.getItem('casas_db')||'[]');
@@ -760,63 +760,36 @@ function guardarMan(){
   document.getElementById('mc').value='';document.getElementById('mf').value=new Date().toISOString().split('T')[0];
 }
 
-// SYNC SHEETS
-async function syncSheets(){
+// SYNC SHEETS — JSONP para bypass CORS con Apps Script
+function syncSheets(){
   const lbl1=document.getElementById('sync-lbl'),lbl2=document.getElementById('sync-lbl2');
   lbl1.textContent='Sincronizando...';lbl2.textContent='Sincronizando...';
-  try{
-    // Apps Script requiere sin mode:cors para GET — sigue redirects automáticamente
-    const res=await fetch(SHEETS_URL+'?t='+Date.now());
-    const txt=await res.text();
-    // Limpiar BOM y caracteres extra que Apps Script puede agregar
-    const clean=txt.trim().replace(/^\uFEFF/,'').replace(/^[^[{]*/,'').replace(/[^}\]]*$/,'');
-    let rows;
-    try{ rows=JSON.parse(clean); }
-    catch(e){
-      // Si no se pudo parsear pero hay datos, puede que ya se actualizó desde localStorage
-      console.warn('Sync: no se pudo parsear JSON, datos locales intactos.',txt.substring(0,200));
-      lbl1.textContent='✅ Usando datos locales';lbl2.textContent='✅ Local';
-      setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
-      return;
-    }
-    if(!Array.isArray(rows)||!rows.length){
-      lbl1.textContent='Sin datos en Sheets';lbl2.textContent='Sin datos';
-      setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
-      return;
-    }
-    const nuevos=rows.map((r,i)=>{
-      const casaNueva=(r['Casa Nueva']||r['Casa_Nueva']||'').toString().trim();
-      return {
-        id:'sh_'+i+'_'+Date.now(),
-        ts:r['Timestamp']||'',
-        casa:(r['Casa']||'').toString().toUpperCase().trim(),
-        celula:r['Célula']||r['Celula']||'',
-        lider:normNombre(r['Líder']||r['Lider']||''),
-        tema:r['Tema']||'',
-        fecha:normFecha((r['Fecha']||'').toString()),
-        hora:r['Hora']||'',
-        dir:r['Dirección']||r['Direccion']||'',
-        modalidad:(r['Modalidad']||'presencial').toString().toLowerCase().trim(),
-        nueva:['sí','si','yes','1','true'].includes(casaNueva.toLowerCase())?'si':'no',
-        obs:r['Observaciones']||'',
-        ofrenda:r['Ofrenda']||'',
-        asistentes:parsAtt((r['Lista Asistentes']||r['Lista_Asistentes']||'').toString()),
-        _sh:true
-      };
-    }).filter(r=>r.casa);
-    db=db.filter(r=>!r._sh);
-    db=[...db,...nuevos];
-    sv(); renderAll();
-    lbl1.textContent=`✅ ${nuevos.length} registros`;
-    lbl2.textContent=`✅ ${nuevos.length}`;
+  if(window._syncScript){window._syncScript.remove();window._syncScript=null;}
+  const timeout=setTimeout(()=>{
+    delete window.__sheetsCB;
+    lbl1.textContent='Sin respuesta';lbl2.textContent='Sin respuesta';
     setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
-  }catch(e){
-    console.warn('Sync warning:',e.message);
-    // Aunque falle el parse, si hay datos locales renderizamos igual
-    renderAll();
-    lbl1.textContent='✅ Datos locales';lbl2.textContent='✅ Local';
-    setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
-  }
+  },12000);
+  window.__sheetsCB=function(data){
+    clearTimeout(timeout);
+    delete window.__sheetsCB;
+    try{
+      const rows=Array.isArray(data)?data:[];
+      if(!rows.length){lbl1.textContent='Sin datos';lbl2.textContent='Sin datos';setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);return;}
+      const nuevos=rows.map((r,i)=>{
+        const cn=(r['Casa Nueva']||r['Casa_Nueva']||'').toString().trim();
+        return{id:'sh_'+i+'_'+Date.now(),ts:r['Timestamp']||'',casa:(r['Casa']||'').toString().toUpperCase().trim(),celula:r['Célula']||r['Celula']||'',lider:normNombre(r['Líder']||r['Lider']||''),tema:r['Tema']||'',fecha:normFecha((r['Fecha']||'').toString()),hora:r['Hora']||'',dir:r['Dirección']||r['Direccion']||'',modalidad:(r['Modalidad']||'presencial').toString().toLowerCase().trim(),nueva:['sí','si','yes','1','true'].includes(cn.toLowerCase())?'si':'no',obs:r['Observaciones']||'',ofrenda:r['Ofrenda']||'',asistentes:parsAtt((r['Lista Asistentes']||r['Lista_Asistentes']||'').toString()),_sh:true};
+      }).filter(r=>r.casa);
+      db=db.filter(r=>!r._sh);db=[...db,...nuevos];sv();renderAll();
+      lbl1.textContent='✅ '+nuevos.length+' registros';lbl2.textContent='✅ '+nuevos.length;
+      setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
+    }catch(e){lbl1.textContent='⚠️ Error';lbl2.textContent='⚠️ Error';setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);}
+  };
+  const s=document.createElement('script');
+  s.src=SHEETS_URL+'?callback=__sheetsCB&t='+Date.now();
+  s.onerror=()=>{clearTimeout(timeout);delete window.__sheetsCB;lbl1.textContent='Sin conexión';lbl2.textContent='Sin conexión';setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);};
+  window._syncScript=s;
+  document.head.appendChild(s);
 }
 
 // Normaliza fecha de DD/MM/YYYY o YYYY-MM-DD a YYYY-MM-DD
