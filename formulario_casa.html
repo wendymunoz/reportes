@@ -456,7 +456,7 @@ function collect(step){
     fd.asistentes=[];
     document.querySelectorAll('.att-card').forEach(r=>{
       const nom=r.querySelector('.att-nombre').value.trim();
-      const dist=r.querySelector('.att-dist').value.trim();
+      const dist=r.querySelector('.att-dist').value.trim(); 
       const nvo=r.querySelector('[data-side="nvo"]').dataset.nuevo==='true';
       const edad=r.querySelector('.att-edad')?.value.trim()||'';
       const cel=r.querySelector('.att-cel')?.value.trim()||'';
