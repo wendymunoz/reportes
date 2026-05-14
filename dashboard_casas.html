@@ -928,7 +928,7 @@ function renderLideres(){
   const pct=total?Math.round(reportaron/total*100):0;
 
   document.getElementById('lid-total').textContent=total;
-  document.getElementById('lid-si').textContent=reportaron;
+  document.getElementById('lid-si').textContent=reportaron; 
   document.getElementById('lid-no').textContent=pendientes;
   document.getElementById('lid-pct-txt').textContent=pct+'%';
   document.getElementById('lid-prog-bar').style.width=pct+'%';
