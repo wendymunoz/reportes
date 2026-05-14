@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>xDashboard Central — Casas & Células</title>
+<title>Dashboard Central — Casas & Células</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -405,6 +405,8 @@ const SHEETS_URL='https://script.google.com/macros/s/AKfycby99g4iUpEOGdEpeHjV39D
 const COLORS=['#059669','#3b82f6','#f59e0b','#8b5cf6','#f43f5e','#06b6d4','#84cc16','#f97316','#ec4899','#6366f1','#14b8a6','#eab308','#ef4444','#a855f7'];
 
 let db=JSON.parse(localStorage.getItem('casas_db')||'[]');
+// Limpiar fechas ISO que puedan tener T05:00:00.000Z
+db=db.map(r=>({...r,fecha:r.fecha?r.fecha.toString().split('T')[0]:r.fecha}));
 let wk=0, ch={};
 function sv(){localStorage.setItem('casas_db',JSON.stringify(db));}
 
@@ -414,8 +416,32 @@ CASAS.forEach(c=>{['mc','fil-casa'].forEach(id=>{const o=document.createElement(
 // WEEK
 function getWR(o=0){const n=new Date(),day=n.getDay(),diff=n.getDate()-day+(day===0?-6:1);const m=new Date(n);m.setDate(diff+o*7);m.setHours(0,0,0,0);const s=new Date(m);s.setDate(m.getDate()+6);s.setHours(23,59,59,999);return{start:m,end:s};}
 function fmtWk(o){const{start,end}=getWR(o);const op={day:'numeric',month:'short'};return`${start.toLocaleDateString('es-PE',op)} — ${end.toLocaleDateString('es-PE',op)}, ${start.getFullYear()}`;}
-function inWk(r,o=wk){const{start,end}=getWR(o);if(!r.fecha)return false;const d=new Date(r.fecha+'T12:00:00');return d>=start&&d<=end;}
-function fmtF(f){if(!f)return'—';try{const[y,m,d]=f.split('-');const ms=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return`${parseInt(d)} ${ms[parseInt(m)-1]} ${y}`;}catch{return f;}}
+function cleanFecha(f){
+  if(!f) return '';
+  f = f.toString().trim();
+  // ISO completo: 2026-05-06T05:00:00.000Z → 2026-05-06
+  if(f.includes('T')) return f.split('T')[0];
+  // DD/MM/YYYY → YYYY-MM-DD
+  const m=f.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if(m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  return f;
+}
+function inWk(r,o=wk){
+  const{start,end}=getWR(o);
+  if(!r.fecha) return false;
+  const fecha=cleanFecha(r.fecha);
+  const d=new Date(fecha+'T12:00:00');
+  return d>=start&&d<=end;
+}
+function fmtF(f){
+  if(!f) return '—';
+  try{
+    const fecha=cleanFecha(f.toString());
+    const[y,m,d]=fecha.split('-');
+    const ms=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    return`${parseInt(d)} ${ms[parseInt(m)-1]} ${y}`;
+  }catch{return f;}
+}
 function cSem(d){wk+=d;document.getElementById('wkl').textContent=fmtWk(wk);renderAll();}
 
 // NAV
@@ -792,17 +818,8 @@ function syncSheets(){
   document.head.appendChild(s);
 }
 
-// Normaliza fecha de DD/MM/YYYY o YYYY-MM-DD a YYYY-MM-DD
-function normFecha(f){
-  if(!f) return '';
-  f=f.toString().trim();
-  // Ya está en formato correcto
-  if(/^\d{4}-\d{2}-\d{2}$/.test(f)) return f;
-  // DD/MM/YYYY
-  const m=f.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
-  if(m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
-  return f;
-}
+// Normaliza fecha a YYYY-MM-DD
+function normFecha(f){ return cleanFecha(f); }
 
 // Normaliza nombre: capitaliza cada palabra, elimina espacios dobles
 function normNombre(n){
