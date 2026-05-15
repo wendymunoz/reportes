@@ -265,7 +265,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 
   <!-- NUEVOS ESTA SEMANA -->
     <div class="card">
-    <div class="card-hd"><div class="ttl"><span class="pip"></span>🆕 Nuevos esta semana</div><button class="btn btn-ghost btn-sm" onclick="goPage('nuevos',document.getElementById('nb-nvo'))">Ver todos →</button></div>
+    <div class="card-hd"><div class="ttl"><span class="pip"></span>🆕 Nuevos este mes</div><button class="btn btn-ghost btn-sm" onclick="goPage('nuevos',document.getElementById('nb-nvo'))">Ver todos →</button></div>
     <div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>Célula</th><th>Líder</th><th>Distrito</th><th>Edad</th><th>Celular</th><th>Fecha</th></tr></thead><tbody id="tb-nvo-dash"></tbody></table></div>
   </div>
 </div>
@@ -289,7 +289,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 
 <!-- ══ NUEVOS ══ -->
 <div id="pg-nuevos" class="page">
-  <div class="hint-b"><svg width="14" height="14" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Personas que asistieron por primera vez esta semana.</div>
+  <div class="hint-b"><svg width="14" height="14" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Personas que asistieron por primera vez este mes. Se acumulan durante todo el mes.</div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:13px" id="nvo-cnt">0 nuevos</div>
   <div class="card" style="margin:0"><div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>Célula</th><th>Líder</th><th>Distrito</th><th>Edad</th><th>Celular</th><th>Fecha</th></tr></thead><tbody id="tb-nvo"></tbody></table></div></div>
 </div>
@@ -426,7 +426,15 @@ function cleanFecha(f){
   if(m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
   return f;
 }
-function inWk(r,o=wk){
+// Verifica si un registro está en el mes actual (para acumular nuevos)
+function inMonth(r){
+  const{start}=getWR(wk);
+  const mesRef=start.getMonth();
+  const anioRef=start.getFullYear();
+  if(!r.fecha) return false;
+  const d=new Date(cleanFecha(r.fecha)+'T12:00:00');
+  return d.getMonth()===mesRef && d.getFullYear()===anioRef;
+}
   const{start,end}=getWR(o);
   if(!r.fecha) return false;
   const fecha=cleanFecha(r.fecha);
@@ -461,11 +469,12 @@ function goPage(n,btn){
 
 function renderAll(){renderDash();badges();}
 function badges(){
-  const casasU=new Set(db.map(r=>r.casa)).size;
-  document.getElementById('cnt-cas').textContent=casasU;
-  document.getElementById('cnt-cel').textContent=db.length;
-  const nv=db.filter(r=>inWk(r)).reduce((s,r)=>s+(r.asistentes||[]).filter(a=>a.nuevo).length,0);
-  document.getElementById('cnt-nvo').textContent=nv;
+  const casasU=new Set(db.filter(r=>inWk(r)).map(r=>r.casa)).size;
+  document.getElementById('cnt-cas').textContent=casasU||new Set(db.map(r=>r.casa)).size;
+  document.getElementById('cnt-cel').textContent=db.filter(r=>inWk(r)).length||db.length;
+  // Nuevos acumulados del mes
+  const nvMes=db.filter(r=>inMonth(r)).reduce((s,r)=>s+(r.asistentes||[]).filter(a=>a.nuevo).length,0);
+  document.getElementById('cnt-nvo').textContent=nvMes;
   const clave=n=>(n||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
   const lids=getLideres();
   const semLideres=new Set(db.filter(r=>inWk(r)).map(r=>clave(r.lider)));
@@ -477,25 +486,25 @@ function badges(){
 // ══ DASHBOARD ══
 function renderDash(){
   const sem=db.filter(r=>inWk(r));
+  const mes=db.filter(r=>inMonth(r));
   const tA=sem.reduce((s,r)=>s+(r.asistentes?.length||0),0);
-  const nv=sem.reduce((s,r)=>s+(r.asistentes?.filter(a=>a.nuevo).length||0),0);
+  const nvMes=mes.reduce((s,r)=>s+(r.asistentes?.filter(a=>a.nuevo).length||0),0);
   const cU=new Set(sem.map(r=>r.casa)).size;
   const cN=sem.filter(r=>r.nueva==='si').length;
   document.getElementById('s-r').textContent=sem.length;
   document.getElementById('s-a').textContent=tA;
-  document.getElementById('s-n').textContent=nv;
+  document.getElementById('s-n').textContent=nvMes;
   document.getElementById('s-ca').textContent=cU;
   document.getElementById('s-cn').textContent=cN;
   document.getElementById('s-as').textContent=`prom ${sem.length?Math.round(tA/sem.length):0} por célula`;
   document.getElementById('s-rs').textContent=`en ${cU} casas`;
-
   chAgrupado(sem);
   chDaily(sem);
   chModal(sem);
   chWeekly();
-  chNvos(tA,nv);
+  chNvos(tA,nvMes);
   tbRec(sem);
-  tbNvosDash(sem);
+  tbNvosDash(mes);
   badges();
 }
 
@@ -596,11 +605,11 @@ function tbRec(sem){
   }).join('')||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:24px"><div style="font-size:20px;margin-bottom:6px">⛪</div>Sin células esta semana. <a href="#" onclick="abrirM('mi');return false" style="color:var(--g2)">Ingresar →</a></td></tr>`;
 }
 
-function tbNvosDash(sem){
-  const nv=[];sem.forEach(r=>(r.asistentes||[]).filter(a=>a.nuevo).forEach(a=>nv.push({...a,casa:r.casa,celula:r.celula||'—',lider:r.lider,fecha:r.fecha})));
+function tbNvosDash(mes){
+  const nv=[];mes.forEach(r=>(r.asistentes||[]).filter(a=>a.nuevo).forEach(a=>nv.push({...a,casa:r.casa,celula:r.celula||'—',lider:r.lider,fecha:r.fecha})));
   document.getElementById('tb-nvo-dash').innerHTML=nv.slice(0,10).map((a,i)=>`
     <tr><td style="color:var(--muted)">${i+1}</td><td style="font-weight:700">${a.nombre}</td><td>${EM[a.casa]||'🏠'} ${a.casa}</td><td>${a.celula}</td><td>${a.lider}</td><td>${a.distrito||'—'}</td><td>${a.edad||'—'}</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px">${a.celular||'—'}</td><td>${fmtF(a.fecha)}</td></tr>`
-  ).join('')||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">Sin nuevos esta semana</td></tr>`;
+  ).join('')||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">Sin nuevos este mes</td></tr>`;
 }
 
 // ══ CASAS PAGE — resumen con cantidad de células por casa ══
@@ -684,9 +693,9 @@ function renderCelulas(){
 
 // ══ NUEVOS PAGE ══
 function renderNuevos(){
-  const sem=db.filter(r=>inWk(r));
-  const nv=[];sem.forEach(r=>(r.asistentes||[]).filter(a=>a.nuevo).forEach(a=>nv.push({...a,casa:r.casa,celula:r.celula||'—',lider:r.lider,fecha:r.fecha})));
-  document.getElementById('nvo-cnt').textContent=`${nv.length} nuevo${nv.length!==1?'s':''} esta semana`;
+  const mes=db.filter(r=>inMonth(r));
+  const nv=[];mes.forEach(r=>(r.asistentes||[]).filter(a=>a.nuevo).forEach(a=>nv.push({...a,casa:r.casa,celula:r.celula||'—',lider:r.lider,fecha:r.fecha})));
+  document.getElementById('nvo-cnt').textContent=`${nv.length} nuevo${nv.length!==1?'s':''} este mes`;
   document.getElementById('tb-nvo').innerHTML=nv.map((a,i)=>`<tr>
     <td style="color:var(--muted)">${i+1}</td>
     <td style="font-weight:700">${a.nombre}</td>
@@ -697,7 +706,7 @@ function renderNuevos(){
     <td>${a.edad||'—'}</td>
     <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${a.celular||'—'}</td>
     <td>${fmtF(a.fecha)}</td>
-  </tr>`).join('')||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:28px">Sin nuevos esta semana</td></tr>`;
+  </tr>`).join('')||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:28px">Sin nuevos este mes</td></tr>`;
 }
 
 // ══ DETALLE — muestra lista de asistentes solo en el modal ══
@@ -744,7 +753,22 @@ function verDet(i){
   abrirM('md');
 }
 
-function eliminar(i){db.splice(i,1);sv();renderAll();renderCasas();renderCelulas();renderNuevos();}
+function eliminar(i){
+  if(!confirm('¿Eliminar este reporte? Esta acción no se puede deshacer.')) return;
+  db.splice(i,1);
+  sv();
+  // Actualiza todas las secciones
+  renderAll();
+  renderCasas();
+  renderCelulas();
+  renderNuevos();
+  renderLideres();
+  // Cierra el modal si estaba abierto
+  cerrarM('md');
+  // Actualiza tabla recientes si está visible
+  const sem=db.filter(r=>inWk(r));
+  tbRec(sem);
+}
 
 // MODALS & TABS
 function abrirM(id){document.getElementById(id).classList.add('on');}
@@ -928,7 +952,7 @@ function renderLideres(){
   const pct=total?Math.round(reportaron/total*100):0;
 
   document.getElementById('lid-total').textContent=total;
-  document.getElementById('lid-si').textContent=reportaron; 
+  document.getElementById('lid-si').textContent=reportaron;
   document.getElementById('lid-no').textContent=pendientes;
   document.getElementById('lid-pct-txt').textContent=pct+'%';
   document.getElementById('lid-prog-bar').style.width=pct+'%';
