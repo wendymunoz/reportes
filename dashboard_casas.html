@@ -435,6 +435,7 @@ function inMonth(r){
   const d=new Date(cleanFecha(r.fecha)+'T12:00:00');
   return d.getMonth()===mesRef && d.getFullYear()===anioRef;
 }
+function inWk(r,o=wk){
   const{start,end}=getWR(o);
   if(!r.fecha) return false;
   const fecha=cleanFecha(r.fecha);
