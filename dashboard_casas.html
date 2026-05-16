@@ -171,6 +171,12 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 .spin{width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px;}
+.bkp-bar{background:#fef3c7;border:1px solid #f59e0b;border-radius:10px;padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;font-size:12px;color:#92400e;flex-wrap:wrap;}
+.bkp-bar strong{flex:1;min-width:160px;}
+.bkp-bar button{padding:5px 12px;border-radius:6px;border:none;cursor:pointer;font-size:11px;font-weight:600;}
+.bkp-bar .bkp-ok{background:var(--g2);color:#fff;}
+.bkp-bar .bkp-no{background:transparent;color:#92400e;text-decoration:underline;}
+.bkp-toast{position:fixed;bottom:24px;right:24px;background:var(--g1);color:#fff;padding:12px 18px;border-radius:10px;font-size:12px;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,.2);pointer-events:none;}
 </style>
 </head>
 <body>
@@ -199,6 +205,8 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
     <button class="sb-btn" onclick="limpiar()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>Limpiar datos</button>
     <div class="sb-grp">Exportar</div>
     <button class="sb-btn" onclick="window.print()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimir</button>
+    <button class="sb-btn" onclick="hacerRespaldo(true)" style="color:#34d399"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Respaldar datos</button>
+    <div style="font-size:9px;opacity:.4;padding:2px 10px 8px" id="sb-bkp-lbl">—</div>
   </nav>
   <div class="sb-foot">v4.0 · Casas & Células</div>
 </aside>
@@ -216,6 +224,13 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
     <button class="btn btn-sync btn-sm" onclick="syncSheets()"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg><span id="sync-lbl2">Sincronizar</span></button>
     <button class="btn btn-p btn-sm" onclick="abrirM('mi')"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nuevo reporte</button>
   </div>
+</div>
+
+<!-- Barra de notificación de backup -->
+<div id="bkp-notif" class="bkp-bar" style="display:none">
+  <strong>⚠️ Hace más de 7 días sin respaldo. Los datos de células son sensibles.</strong>
+  <button class="bkp-ok" onclick="hacerRespaldo(true);document.getElementById('bkp-notif').style.display='none'">Respaldar ahora</button>
+  <button class="bkp-no" onclick="this.closest('#bkp-notif').style.display='none'">Luego</button>
 </div>
 
 <!-- ══ DASHBOARD ══ -->
@@ -996,12 +1011,48 @@ function renderLideres(){
   }).join('')||`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Sin líderes registrados.<br><span style="font-size:11px">Agrégalos arriba o registra células y aparecerán automáticamente.</span></td></tr>`;
 }
 
+// ══ BACKUP — respaldo semanal local + Google Drive ══
+const BACKUP_KEY='casas_ultimo_backup';
+const BACKUP_DIAS=7;
+
+function hacerRespaldo(manual=false){
+  if(!db.length){if(manual)alert('No hay datos para respaldar.');return;}
+  const fecha=new Date().toISOString().split('T')[0];
+  const payload={version:1,generado:new Date().toISOString(),total:db.length,datos:db};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='respaldo_celulas_'+fecha+'.json';a.click();
+  URL.revokeObjectURL(url);
+  fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'backup',generado:new Date().toISOString(),total:db.length,datos:db})}).catch(()=>{});
+  const ts=new Date().toISOString();
+  localStorage.setItem(BACKUP_KEY,ts);
+  actualizarLblBackup(ts);
+  const t=document.createElement('div');t.className='bkp-toast';t.textContent='✅ Respaldo descargado: respaldo_celulas_'+fecha+'.json';
+  document.body.appendChild(t);setTimeout(()=>t.remove(),4000);
+}
+
+function actualizarLblBackup(ts){
+  const el=document.getElementById('sb-bkp-lbl');if(!el)return;
+  if(!ts){el.textContent='Sin respaldo';return;}
+  const d=new Date(ts);
+  el.textContent='Último: '+d.toLocaleDateString('es-PE',{day:'numeric',month:'short'});
+}
+
+function verificarBackupAuto(){
+  const ts=localStorage.getItem(BACKUP_KEY);
+  actualizarLblBackup(ts);
+  if(!ts||((Date.now()-new Date(ts).getTime())/(1000*60*60*24))>=BACKUP_DIAS){
+    document.getElementById('bkp-notif').style.display='flex';
+  }
+}
+
 // INIT
 document.getElementById('wkl').textContent=fmtWk(0);
 document.getElementById('mf').value=new Date().toISOString().split('T')[0];
 CASAS.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=`${EM[c]||'🏠'} ${c}`;document.getElementById('lid-casa-sel')?.appendChild(o);});
 renderAll();
 syncSheets();
+verificarBackupAuto();
 </script>
 </body>
 </html>
