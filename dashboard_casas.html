@@ -287,8 +287,18 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 
 <!-- ══ CASAS ══ -->
 <div id="pg-casas" class="page">
-  <div style="font-size:11px;color:var(--muted);margin-bottom:14px" id="cas-cnt">0 casas</div>
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap">
+    <div style="font-size:11px;color:var(--muted)" id="cas-cnt">0 casas</div>
+    <div style="font-size:11px;color:var(--red);font-weight:700" id="cas-pend-cnt"></div>
+  </div>
   <div class="casa-summary-grid" id="casa-summary-grid"></div>
+  <div id="casas-pend-wrap" style="display:none;margin-top:24px">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--red);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Casas sin reportar esta semana
+    </div>
+    <div class="casa-summary-grid" id="casas-pend-grid"></div>
+  </div>
 </div>
 
 <!-- ══ CÉLULAS ══ -->
@@ -667,6 +677,38 @@ function renderCasas(){
         <div style="font-size:10px;color:var(--muted)">Líderes: ${[...v.lideres].join(', ')}</div>
       </div>
     </div>`).join('');
+
+  // Casas pendientes
+  const reportadas=new Set(casas.map(([c])=>c));
+  const pendientes=CASAS.filter(c=>!reportadas.has(c));
+  const pWrap=document.getElementById('casas-pend-wrap');
+  const pGrid=document.getElementById('casas-pend-grid');
+  const pCnt=document.getElementById('cas-pend-cnt');
+  if(pendientes.length){
+    pCnt.textContent=`⚠️ ${pendientes.length} pendiente${pendientes.length!==1?'s':''}`;
+    pGrid.innerHTML=pendientes.map(c=>`
+      <div class="csc" style="border-left-color:var(--red);opacity:.75">
+        <div class="csc-head">
+          <div>
+            <div style="font-size:20px;margin-bottom:4px">${EM[c]||'🏠'}</div>
+            <div class="csc-name">${c}</div>
+            <div style="font-size:11px;color:var(--red);margin-top:2px;font-weight:600">Sin reporte esta semana</div>
+          </div>
+          <span class="badge brose" style="align-self:flex-start">⚠️ Pendiente</span>
+        </div>
+        <div class="csc-stats">
+          <div class="csc-stat"><div class="csc-stat-val" style="color:var(--muted)">—</div><div class="csc-stat-lbl">Células</div></div>
+          <div class="csc-stat"><div class="csc-stat-val" style="color:var(--muted)">—</div><div class="csc-stat-lbl">Asistentes</div></div>
+          <div class="csc-stat"><div class="csc-stat-val" style="color:var(--muted)">—</div><div class="csc-stat-lbl">Nuevos</div></div>
+        </div>
+      </div>`).join('');
+    pWrap.style.display='block';
+  } else {
+    pCnt.textContent='✅ Todas las casas reportaron';
+    pCnt.style.color='var(--g2)';
+    pGrid.innerHTML='';
+    pWrap.style.display='none';
+  }
 }
 
 function filtrarPorCasa(casa){
