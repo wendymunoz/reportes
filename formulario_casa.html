@@ -536,7 +536,9 @@ function buildResumen(){
   ].filter(Boolean).map(([k,v])=>`<div class="res-row"><div class="res-k">${k}</div><div class="res-v">${v}</div></div>`).join('');
 }
 
+let _enviando=false;
 async function enviar(){
+  if(_enviando)return;_enviando=true;
   fd.obs=document.getElementById('f-obs').value.trim();
   fd.ofrenda=document.getElementById('f-ofrenda').value.trim();
   fd.id=Date.now(); fd.ts=new Date().toISOString();

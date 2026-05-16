@@ -468,7 +468,11 @@ function goPage(n,btn){
   if(n==='lideres')renderLideres();
 }
 
-function renderAll(){renderDash();badges();}
+function renderAll(){
+  renderDash();badges();
+  const ap=document.querySelector('.page.on');
+  if(ap){const n=ap.id.replace('pg-','');if(n==='casas')renderCasas();else if(n==='celulas')renderCelulas();else if(n==='nuevos')renderNuevos();else if(n==='lideres')renderLideres();}
+}
 function badges(){
   const casasU=new Set(db.filter(r=>inWk(r)).map(r=>r.casa)).size;
   document.getElementById('cnt-cas').textContent=casasU||new Set(db.map(r=>r.casa)).size;
@@ -616,7 +620,7 @@ function tbNvosDash(mes){
 // ══ CASAS PAGE — resumen con cantidad de células por casa ══
 function renderCasas(){
   const casaMap={};
-  db.forEach(r=>{
+  db.filter(r=>inWk(r)).forEach(r=>{
     if(!casaMap[r.casa]) casaMap[r.casa]={celulas:new Set(),lideres:new Set(),asist:0,nvo:0,rep:[]};
     casaMap[r.casa].celulas.add(r.celula||'Sin nombre');
     casaMap[r.casa].lideres.add(r.lider);
@@ -627,7 +631,7 @@ function renderCasas(){
   const casas=Object.entries(casaMap).sort((a,b)=>b[1].asist-a[1].asist);
   document.getElementById('cas-cnt').textContent=`${casas.length} casa${casas.length!==1?'s':''}`;
   const grid=document.getElementById('casa-summary-grid');
-  if(!casas.length){grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="ei">🏠</div><p>Sin datos</p></div>`;return;}
+  if(!casas.length){grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="ei">🏠</div><p>Sin reportes esta semana</p></div>`;return;}
   grid.innerHTML=casas.map(([c,v],idx)=>`
     <div class="csc" style="border-left-color:${COLORS[idx%COLORS.length]}">
       <div class="csc-head">
@@ -660,10 +664,10 @@ function renderCelulas(){
   const q=(document.getElementById('src-c')?.value||'').toLowerCase();
   const casa=document.getElementById('fil-casa')?.value||'';
   const mod=document.getElementById('fil-mod')?.value||'';
-  const l=db.filter(r=>(r.casa+r.tema+(r.lider||'')+(r.celula||'')).toLowerCase().includes(q)&&(!casa||r.casa===casa)&&(!mod||r.modalidad===mod));
+  const l=db.filter(r=>inWk(r)&&(r.casa+r.tema+(r.lider||'')+(r.celula||'')).toLowerCase().includes(q)&&(!casa||r.casa===casa)&&(!mod||r.modalidad===mod));
   document.getElementById('cel-cnt').textContent=`${l.length} célula${l.length!==1?'s':''}`;
   const g=document.getElementById('cg');
-  if(!l.length){g.innerHTML=`<div style="grid-column:1/-1"><div class="empty"><div class="ei">⛪</div><p>No hay células</p><button class="btn btn-p" onclick="abrirM('mi')" style="margin-top:14px">+ Ingresar reporte</button></div></div>`;return;}
+  if(!l.length){g.innerHTML=`<div style="grid-column:1/-1"><div class="empty"><div class="ei">⛪</div><p>No hay células esta semana</p><button class="btn btn-p" onclick="abrirM('mi')" style="margin-top:14px">+ Ingresar reporte</button></div></div>`;return;}
   const mbc={presencial:'bg',virtual:'bb',hibrida:'ba'};
   const mbl={presencial:'🏠 Presencial',virtual:'💻 Virtual',hibrida:'🔀 Híbrida'};
   g.innerHTML=[...l].sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||'')).map(r=>{
@@ -756,6 +760,8 @@ function verDet(i){
 
 function eliminar(i){
   if(!confirm('¿Eliminar este reporte? Esta acción no se puede deshacer.')) return;
+  const reg=db[i];
+  if(reg&&reg._sh&&reg.id){const _del=new Set(JSON.parse(localStorage.getItem('casas_deleted_ids')||'[]'));_del.add(reg.id);localStorage.setItem('casas_deleted_ids',JSON.stringify([..._del]));}
   db.splice(i,1);
   sv();
   // Actualiza todas las secciones
@@ -829,9 +835,9 @@ function syncSheets(){
       if(!rows.length){lbl1.textContent='Sin datos';lbl2.textContent='Sin datos';setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);return;}
       const nuevos=rows.map((r,i)=>{
         const cn=(r['Casa Nueva']||r['Casa_Nueva']||'').toString().trim();
-        return{id:'sh_'+i+'_'+Date.now(),ts:r['Timestamp']||'',casa:(r['Casa']||'').toString().toUpperCase().trim(),celula:r['Célula']||r['Celula']||'',lider:normNombre(r['Líder']||r['Lider']||''),tema:r['Tema']||'',fecha:normFecha((r['Fecha']||'').toString()),hora:r['Hora']||'',dir:r['Dirección']||r['Direccion']||'',modalidad:(r['Modalidad']||'presencial').toString().toLowerCase().trim(),nueva:['sí','si','yes','1','true'].includes(cn.toLowerCase())?'si':'no',obs:r['Observaciones']||'',ofrenda:r['Ofrenda']||'',asistentes:parsAtt((r['Lista Asistentes']||r['Lista_Asistentes']||'').toString()),_sh:true};
+        return{id:stableId([(r['Casa']||'').toString().toUpperCase().trim(),normNombre(r['Líder']||r['Lider']||''),normFecha((r['Fecha']||'').toString()),r['Célula']||r['Celula']||''].join('|')),ts:r['Timestamp']||'',casa:(r['Casa']||'').toString().toUpperCase().trim(),celula:r['Célula']||r['Celula']||'',lider:normNombre(r['Líder']||r['Lider']||''),tema:r['Tema']||'',fecha:normFecha((r['Fecha']||'').toString()),hora:r['Hora']||'',dir:r['Dirección']||r['Direccion']||'',modalidad:(r['Modalidad']||'presencial').toString().toLowerCase().trim(),nueva:['sí','si','yes','1','true'].includes(cn.toLowerCase())?'si':'no',obs:r['Observaciones']||'',ofrenda:r['Ofrenda']||'',asistentes:parsAtt((r['Lista Asistentes']||r['Lista_Asistentes']||'').toString()),_sh:true};
       }).filter(r=>r.casa);
-      db=db.filter(r=>!r._sh);db=[...db,...nuevos];sv();renderAll();
+      const delIds=new Set(JSON.parse(localStorage.getItem('casas_deleted_ids')||'[]'));const nuevosFilt=nuevos.filter(n=>!delIds.has(n.id));db=db.filter(r=>!r._sh);nuevosFilt.forEach(n=>{db=db.filter(r=>!(r.casa===n.casa&&r.lider===n.lider&&r.fecha===n.fecha&&r.celula===n.celula));});db=[...db,...nuevosFilt];sv();renderAll();
       lbl1.textContent='✅ '+nuevos.length+' registros';lbl2.textContent='✅ '+nuevos.length;
       setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
     }catch(e){lbl1.textContent='⚠️ Error';lbl2.textContent='⚠️ Error';setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);}
@@ -842,6 +848,9 @@ function syncSheets(){
   window._syncScript=s;
   document.head.appendChild(s);
 }
+
+// ID estable basado en contenido
+function stableId(s){let h=0;for(let i=0;i<s.length;i++){h=Math.imul(31,h)+s.charCodeAt(i)|0;}return'sh_'+(h>>>0).toString(36);}
 
 // Normaliza fecha a YYYY-MM-DD
 function normFecha(f){ return cleanFecha(f); }
