@@ -455,7 +455,11 @@ const EM_DEFAULT={AMOR:'❤️',GOZO:'😊',PAZ:'🕊️',PACIENCIA:'⏳',BENIGN
 let cfg=JSON.parse(localStorage.getItem('casas_cfg')||'null')||{casas:[...CASAS_DEFAULT],em:{...EM_DEFAULT}};
 const CASAS=cfg.casas;
 const EM=cfg.em;
-function svCfg(){localStorage.setItem('casas_cfg',JSON.stringify(cfg));}
+function svCfg(){
+  localStorage.setItem('casas_cfg',JSON.stringify(cfg));
+  fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'saveCfg',data:JSON.stringify(cfg)})}).catch(()=>{});
+}
 const SHEETS_URL='https://script.google.com/macros/s/AKfycby99g4iUpEOGdEpeHjV39DjQoQraeGZsnBFEtKt01-Lj2ud-dc0D9JSHaHvDDBuRu_m/exec';
 const COLORS=['#059669','#3b82f6','#f59e0b','#8b5cf6','#f43f5e','#06b6d4','#84cc16','#f97316','#ec4899','#6366f1','#14b8a6','#eab308','#ef4444','#a855f7'];
 
@@ -1288,6 +1292,29 @@ function actualizarLblBackup(ts){
   el.textContent='Último: '+d.toLocaleDateString('es-PE',{day:'numeric',month:'short'});
 }
 
+function cargarConfigSheets(){
+  const cbk='_cfgCb_'+Date.now();
+  window[cbk]=function(resp){
+    const sc=document.getElementById('_cfg-sc');if(sc)sc.remove();
+    delete window[cbk];
+    if(!resp||!resp.config)return;
+    try{
+      const remote=JSON.parse(resp.config);
+      if(!remote||!Array.isArray(remote.casas)||!remote.casas.length)return;
+      // Apply remote config in-place so CASAS/EM refs stay valid
+      CASAS.length=0;remote.casas.forEach(c=>CASAS.push(c));
+      Object.keys(EM).forEach(k=>delete EM[k]);Object.assign(EM,remote.em||{});
+      cfg.casas=CASAS;cfg.em=EM;
+      localStorage.setItem('casas_cfg',JSON.stringify(cfg));
+      refreshSelects();renderAll();
+    }catch(e){}
+  };
+  const sc=document.createElement('script');sc.id='_cfg-sc';
+  sc.src=SHEETS_URL+'?action=config&callback='+cbk+'&t='+Date.now();
+  sc.onerror=()=>{sc.remove();delete window[cbk];};
+  document.body.appendChild(sc);
+}
+
 function verificarBackupAuto(){
   const ts=localStorage.getItem(BACKUP_KEY);
   actualizarLblBackup(ts);
@@ -1302,7 +1329,7 @@ document.getElementById('mf').value=new Date().toISOString().split('T')[0];
 // lid-casa-sel via refreshSelects()
 renderAll();
 syncSheets();
-verificarBackupAuto();
+verificarBackupAuto();cargarConfigSheets();
 </script>
 
 <!-- ══ MODAL VALIDACIÓN LÍDERES ══ -->
