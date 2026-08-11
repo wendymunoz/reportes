@@ -1277,7 +1277,7 @@ function hacerRespaldo(manual=false){
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='respaldo_celulas_'+fecha+'.json';a.click();
   URL.revokeObjectURL(url);
-  fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'backup',generado:new Date().toISOString(),total:db.length,datos:db})}).catch(()=>{});
+  fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'backup',generado:new Date().toISOString(),total:db.length,datos:db})}).catch(()=>{});
   const ts=new Date().toISOString();
   localStorage.setItem(BACKUP_KEY,ts);
   actualizarLblBackup(ts);

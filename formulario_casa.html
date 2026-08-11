@@ -330,8 +330,9 @@ const SHEETS_URL='https://script.google.com/macros/s/AKfycby99g4iUpEOGdEpeHjV39D
 let casaSel='', fd={}, rdSaved={};
 
 // Build casa dropdown
-(()=>{
+function buildCasaList(){
   const list=document.getElementById('glist');
+  list.innerHTML='';
   CASAS.forEach(c=>{
     const d=document.createElement('div');
     d.className='gopt'; d.dataset.v=c;
@@ -339,7 +340,30 @@ let casaSel='', fd={}, rdSaved={};
     d.onclick=()=>selCasa(c);
     list.appendChild(d);
   });
-})();
+}
+buildCasaList();
+
+function cargarConfigSheets(){
+  const cbk='_cfgCb_'+Date.now();
+  window[cbk]=function(resp){
+    const sc=document.getElementById('_cfg-sc');if(sc)sc.remove();
+    delete window[cbk];
+    if(!resp||!resp.config)return;
+    try{
+      const remote=JSON.parse(resp.config);
+      if(!remote||!Array.isArray(remote.casas)||!remote.casas.length)return;
+      CASAS.length=0;remote.casas.forEach(c=>CASAS.push(c));
+      Object.keys(EMOJIS).forEach(k=>delete EMOJIS[k]);Object.assign(EMOJIS,remote.em||{});
+      localStorage.setItem('casas_cfg',JSON.stringify({casas:[...CASAS],em:{...EMOJIS}}));
+      buildCasaList();
+    }catch(e){}
+  };
+  const sc=document.createElement('script');sc.id='_cfg-sc';
+  sc.src=SHEETS_URL+'?action=config&callback='+cbk+'&t='+Date.now();
+  sc.onerror=()=>{sc.remove();delete window[cbk];};
+  document.body.appendChild(sc);
+}
+cargarConfigSheets();
 
 function toggleDD(){
   const t=document.getElementById('gtrig'),l=document.getElementById('glist'),o=l.classList.contains('open');
@@ -566,7 +590,7 @@ async function enviar(){
 
   // Enviar a Google Sheets
   try{
-    await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({...fd})});
+    await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({...fd})});
     st.className='send-status ok';
     st.innerHTML='<span>✅ Reporte guardado en el dashboard</span>';
   }catch(err){
