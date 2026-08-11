@@ -1129,7 +1129,7 @@ function abrirValidacionLideres(){
     t.textContent='✅ Todos los líderes detectados ya están registrados.';
     document.body.appendChild(t);setTimeout(()=>t.remove(),3500);return;
   }
-  const lids=getLideres();
+  const lids=getLideres().slice().sort((a,b)=>clave(a.nombre).localeCompare(clave(b.nombre)));
   const optsEx=lids.map(l=>`<option value="${l.nombre}">${l.nombre} (${EM[l.casa]||'🏠'} ${l.casa})</option>`).join('');
   document.getElementById('valida-cnt').textContent=`${nuevos.length} nombre${nuevos.length!==1?'s':''} por validar`;
   document.getElementById('valida-lista').innerHTML=nuevos.map((d,i)=>`
