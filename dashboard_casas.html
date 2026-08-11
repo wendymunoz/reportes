@@ -198,6 +198,8 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
     <button class="sb-btn" id="nb-cel" onclick="goPage('celulas',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M6 20v-3a6 6 0 0 1 12 0v3"/><circle cx="4" cy="9" r="2"/><path d="M2 20v-2a4 4 0 0 1 4-4"/><circle cx="20" cy="9" r="2"/><path d="M22 20v-2a4 4 0 0 0-4-4"/></svg>Células<span class="sb-badge" id="cnt-cel">0</span></button>
     <button class="sb-btn" id="nb-nvo" onclick="goPage('nuevos',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Nuevos<span class="sb-badge amb" id="cnt-nvo">0</span></button>
     <button class="sb-btn" id="nb-lid" onclick="goPage('lideres',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><polyline points="9 11 12 14 15 11"/></svg>Líderes<span class="sb-badge" id="cnt-lid" style="background:#059669">0</span></button>
+    <div class="sb-grp">Sistema</div>
+    <button class="sb-btn" id="nb-config" onclick="goPage('config',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Configuración</button>
     <div class="sb-grp">Acciones</div>
     <button class="sb-btn" onclick="abrirM('mi')"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ingresar reporte</button>
     <button class="sb-btn" onclick="syncSheets()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg><span id="sync-lbl">Sincronizar</span></button>
@@ -370,6 +372,30 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
   </div>
 </div>
 
+<!-- ══ CONFIGURACIÓN ══ -->
+<div id="pg-config" class="page">
+  <div class="hint-b" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Administra las casas del sistema. Los cambios aplican de inmediato.</div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-hd"><div class="ttl"><span class="pip"></span>Agregar nueva casa</div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+      <div><div class="fl">Emoji</div><input id="cfg-em" class="si" style="width:64px;text-align:center;font-size:20px" placeholder="🏠" maxlength="4"/></div>
+      <div style="flex:1;min-width:180px"><div class="fl">Nombre *</div><input id="cfg-nombre" class="si" placeholder="Ej: ESPERANZA" style="width:100%" oninput="this.value=this.value.toUpperCase()"/></div>
+      <button class="btn btn-p btn-sm" style="height:38px" onclick="agregarCasa()">+ Agregar</button>
+    </div>
+    <div id="cfg-err" style="display:none;color:var(--red);font-size:11px;margin-top:6px"></div>
+  </div>
+  <div class="card">
+    <div class="card-hd">
+      <div class="ttl"><span class="pip"></span>Casas registradas</div>
+      <span id="cfg-total" style="font-size:11px;color:var(--muted)">0 casas</span>
+    </div>
+    <div id="cfg-lista"></div>
+    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+      <button class="btn btn-ghost btn-sm" onclick="resetCasas()" style="color:var(--muted)">↩ Restaurar casas por defecto</button>
+    </div>
+  </div>
+</div>
+
 </div><!-- end main -->
 </div><!-- end layout -->
 
@@ -378,7 +404,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
   <div class="modal">
     <div class="mhd"><div class="mhd-t" id="md-t">Detalle</div><button class="xbtn" onclick="cerrarM('md')">×</button></div>
     <div class="mbody" id="md-b"></div>
-    <div class="mfoot"><button class="btn btn-danger btn-sm" id="md-del">🗑 Eliminar</button><button class="btn btn-ghost btn-sm" onclick="cerrarM('md')">Cerrar</button></div>
+    <div class="mfoot"><button class="btn btn-danger btn-sm" id="md-del">🗑 Eliminar</button><button class="btn btn-ghost btn-sm" id="md-edit" style="color:var(--blue)">✏️ Editar</button><button class="btn btn-ghost btn-sm" onclick="cerrarM('md')">Cerrar</button></div>
   </div>
 </div>
 
@@ -424,8 +450,12 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 </div>
 
 <script>
-const CASAS=['AMOR','GOZO','PAZ','PACIENCIA','BENIGNIDAD','TEMPLANZA','FE','BONDAD','MANSEDUMBRE','MISERICORDIA','GRACIA','PODER','PROSPERIDAD','REMANENTE'];
-const EM={AMOR:'❤️',GOZO:'😊',PAZ:'🕊️',PACIENCIA:'⏳',BENIGNIDAD:'🌿',TEMPLANZA:'⚖️',FE:'🙏',BONDAD:'💛',MANSEDUMBRE:'🌸',MISERICORDIA:'🤝',GRACIA:'✨',PODER:'⚡',PROSPERIDAD:'🌱',REMANENTE:'🔥'};
+const CASAS_DEFAULT=['AMOR','GOZO','PAZ','PACIENCIA','BENIGNIDAD','TEMPLANZA','FE','BONDAD','MANSEDUMBRE','MISERICORDIA','GRACIA','PODER','PROSPERIDAD','REMANENTE'];
+const EM_DEFAULT={AMOR:'❤️',GOZO:'😊',PAZ:'🕊️',PACIENCIA:'⏳',BENIGNIDAD:'🌿',TEMPLANZA:'⚖️',FE:'🙏',BONDAD:'💛',MANSEDUMBRE:'🌸',MISERICORDIA:'🤝',GRACIA:'✨',PODER:'⚡',PROSPERIDAD:'🌱',REMANENTE:'🔥'};
+let cfg=JSON.parse(localStorage.getItem('casas_cfg')||'null')||{casas:[...CASAS_DEFAULT],em:{...EM_DEFAULT}};
+const CASAS=cfg.casas;
+const EM=cfg.em;
+function svCfg(){localStorage.setItem('casas_cfg',JSON.stringify(cfg));}
 const SHEETS_URL='https://script.google.com/macros/s/AKfycby99g4iUpEOGdEpeHjV39DjQoQraeGZsnBFEtKt01-Lj2ud-dc0D9JSHaHvDDBuRu_m/exec';
 const COLORS=['#059669','#3b82f6','#f59e0b','#8b5cf6','#f43f5e','#06b6d4','#84cc16','#f97316','#ec4899','#6366f1','#14b8a6','#eab308','#ef4444','#a855f7'];
 
@@ -435,8 +465,17 @@ db=db.map(r=>({...r,fecha:r.fecha?r.fecha.toString().split('T')[0]:r.fecha}));
 let wk=0, ch={};
 function sv(){localStorage.setItem('casas_db',JSON.stringify(db));}
 
-// Populate selects
-CASAS.forEach(c=>{['mc','fil-casa'].forEach(id=>{const o=document.createElement('option');o.value=c;o.textContent=`${EM[c]||'🏠'} ${c}`;document.getElementById(id)?.appendChild(o);});});
+// Populate selects (dinámico)
+function refreshSelects(){
+  ['mc','fil-casa','lid-casa-sel'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const val=el.value;
+    while(el.options.length>1)el.remove(1);
+    CASAS.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=`${EM[c]||'🏠'} ${c}`;el.appendChild(o);});
+    if(val)el.value=val;
+  });
+}
+refreshSelects();
 
 // WEEK
 function getWR(o=0){const n=new Date(),day=n.getDay(),diff=n.getDate()-day+(day===0?-6:1);const m=new Date(n);m.setDate(diff+o*7);m.setHours(0,0,0,0);const s=new Date(m);s.setDate(m.getDate()+6);s.setHours(23,59,59,999);return{start:m,end:s};}
@@ -491,6 +530,7 @@ function goPage(n,btn){
   if(n==='celulas')renderCelulas();
   if(n==='nuevos')renderNuevos();
   if(n==='lideres')renderLideres();
+  if(n==='config')renderConfig();
 }
 
 function renderAll(){
@@ -812,6 +852,7 @@ function verDet(i){
         </div>`).join('')||'<p style="color:var(--muted);font-size:12px">Sin asistentes</p>'}
     </div>`;
   document.getElementById('md-del').onclick=()=>{if(confirm('¿Eliminar?')){eliminar(i);cerrarM('md');}};
+  document.getElementById('md-edit').onclick=()=>editarCelula(i);
   abrirM('md');
 }
 
@@ -868,7 +909,8 @@ function guardarMan(){
   const ca=document.getElementById('mc').value,cel=document.getElementById('mcel').value.trim(),li=document.getElementById('ml').value.trim(),te=document.getElementById('mt').value.trim(),fe=document.getElementById('mf').value;
   if(!ca||!cel||!li||!te||!fe){alert('Completa los campos obligatorios (*)');return;}
   const atts=document.getElementById('ma').value.split('\n').filter(l=>l.trim()).map(l=>{const nvo=l.includes('🆕')||l.toLowerCase().includes('nuevo');const nom=l.replace('🆕','').replace(/nuevo/gi,'').replace(/\s*\([^)]*\)/,'').trim();const dist=(l.match(/\(([^)]+)\)/)||[])[1]||'';return{nombre:nom,distrito:dist,nuevo:nvo};}).filter(a=>a.nombre);
-  db.push({id:Date.now(),ts:new Date().toISOString(),casa:ca,celula:cel,lider:li,tema:te,fecha:fe,hora:document.getElementById('mh').value,dir:document.getElementById('md2').value.trim(),modalidad:document.getElementById('mmod').value,nueva:document.getElementById('mnv').value,obs:'',asistentes:atts});
+  const newRec={id:Date.now(),ts:new Date().toISOString(),casa:ca,celula:cel,lider:li,tema:te,fecha:fe,hora:document.getElementById('mh').value,dir:document.getElementById('md2').value.trim(),modalidad:document.getElementById('mmod').value,nueva:document.getElementById('mnv').value,obs:'',asistentes:atts};
+  if(window._editIdx!=null){db[window._editIdx]={...db[window._editIdx],...newRec};window._editIdx=null;}else{db.push(newRec);}
   sv();cerrarM('mi');renderAll();
   ['ml','mt','md2','ma','mcel'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('mc').value='';document.getElementById('mf').value=new Date().toISOString().split('T')[0];
@@ -1053,6 +1095,82 @@ function renderLideres(){
   }).join('')||`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Sin líderes registrados.<br><span style="font-size:11px">Agrégalos arriba o registra células y aparecerán automáticamente.</span></td></tr>`;
 }
 
+// ══ CONFIGURACIÓN DE CASAS ══
+function renderConfig(){
+  const lista=document.getElementById('cfg-lista');
+  const total=document.getElementById('cfg-total');
+  total.textContent=`${CASAS.length} casa${CASAS.length!==1?'s':''}`;
+  if(!CASAS.length){lista.innerHTML='<p style="color:var(--muted);font-size:12px;padding:8px 0">No hay casas.</p>';return;}
+  lista.innerHTML=CASAS.map((c,i)=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:22px;width:32px;text-align:center">${EM[c]||'🏠'}</span>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:13px">${c}</div>
+        <div style="font-size:10px;color:var(--muted)">${db.filter(r=>r.casa===c).length} reportes en total</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="editarEmojiCasa('${c}')" title="Cambiar emoji">✏️</button>
+      <button class="btn btn-danger btn-sm" onclick="eliminarCasa('${c}')">🗑</button>
+    </div>`).join('');
+}
+
+function agregarCasa(){
+  const nombre=document.getElementById('cfg-nombre').value.trim().toUpperCase();
+  const em=document.getElementById('cfg-em').value.trim()||'🏠';
+  const err=document.getElementById('cfg-err');
+  if(!nombre){err.textContent='El nombre es obligatorio.';err.style.display='block';return;}
+  if(CASAS.includes(nombre)){err.textContent='Ya existe una casa con ese nombre.';err.style.display='block';return;}
+  err.style.display='none';
+  CASAS.push(nombre);EM[nombre]=em;
+  cfg.casas=[...CASAS];cfg.em={...EM};svCfg();
+  refreshSelects();renderConfig();
+  document.getElementById('cfg-nombre').value='';document.getElementById('cfg-em').value='';
+}
+
+function eliminarCasa(nombre){
+  const total=db.filter(r=>r.casa===nombre).length;
+  const msg=total>0?`¿Eliminar la casa "${nombre}"? Tiene ${total} reporte${total!==1?'s':''} (los datos no se borran).`:`¿Eliminar la casa "${nombre}"?`;
+  if(!confirm(msg))return;
+  const idx=CASAS.indexOf(nombre);if(idx>=0)CASAS.splice(idx,1);
+  delete EM[nombre];cfg.casas=[...CASAS];cfg.em={...EM};svCfg();
+  refreshSelects();renderConfig();renderCasas();
+}
+
+function editarEmojiCasa(nombre){
+  const actual=EM[nombre]||'🏠';
+  const nuevo=prompt(`Emoji para "${nombre}" (actual: ${actual}):`,actual);
+  if(nuevo==null||nuevo.trim()===actual)return;
+  EM[nombre]=nuevo.trim()||'🏠';cfg.em={...EM};svCfg();
+  renderConfig();renderCasas();
+}
+
+function resetCasas(){
+  if(!confirm('¿Restaurar las 14 casas por defecto?'))return;
+  CASAS.length=0;CASAS_DEFAULT.forEach(c=>CASAS.push(c));
+  Object.keys(EM).forEach(k=>delete EM[k]);Object.assign(EM,EM_DEFAULT);
+  cfg={casas:[...CASAS],em:{...EM}};svCfg();
+  refreshSelects();renderConfig();renderCasas();
+}
+
+// ══ EDITAR CÉLULA ══
+function editarCelula(i){
+  const r=db[i];
+  cerrarM('md');
+  swTab('man');
+  document.getElementById('mc').value=r.casa;
+  document.getElementById('mcel').value=r.celula||'Abierta';
+  document.getElementById('ml').value=r.lider;
+  document.getElementById('mt').value=r.tema;
+  document.getElementById('mf').value=r.fecha||new Date().toISOString().split('T')[0];
+  document.getElementById('mh').value=r.hora||'';
+  document.getElementById('md2').value=r.dir||'';
+  document.getElementById('mmod').value=r.modalidad||'presencial';
+  document.getElementById('mnv').value=r.nueva||'no';
+  const atts=(r.asistentes||[]).map(a=>`${a.nuevo?'🆕 ':''}${a.nombre}${a.distrito?' ('+a.distrito+')':''}`).join('\n');
+  document.getElementById('ma').value=atts;
+  window._editIdx=i;
+  abrirM('mi');
+}
+
 // ══ BACKUP — respaldo semanal local + Google Drive ══
 const BACKUP_KEY='casas_ultimo_backup';
 const BACKUP_DIAS=7;
@@ -1091,7 +1209,7 @@ function verificarBackupAuto(){
 // INIT
 document.getElementById('wkl').textContent=fmtWk(0);
 document.getElementById('mf').value=new Date().toISOString().split('T')[0];
-CASAS.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=`${EM[c]||'🏠'} ${c}`;document.getElementById('lid-casa-sel')?.appendChild(o);});
+// lid-casa-sel via refreshSelects()
 renderAll();
 syncSheets();
 verificarBackupAuto();
