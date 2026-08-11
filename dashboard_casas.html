@@ -457,7 +457,7 @@ const CASAS=cfg.casas;
 const EM=cfg.em;
 function svCfg(){
   localStorage.setItem('casas_cfg',JSON.stringify(cfg));
-  fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
+  fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
     body:JSON.stringify({action:'saveCfg',data:JSON.stringify(cfg)})}).catch(()=>{});
 }
 const SHEETS_URL='https://script.google.com/macros/s/AKfycby99g4iUpEOGdEpeHjV39DjQoQraeGZsnBFEtKt01-Lj2ud-dc0D9JSHaHvDDBuRu_m/exec';
