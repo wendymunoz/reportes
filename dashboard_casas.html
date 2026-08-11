@@ -471,7 +471,8 @@ function sv(){localStorage.setItem('casas_db',JSON.stringify(db));}
 const clave=n=>(n||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
 function getAlias(){return JSON.parse(localStorage.getItem('lideres_alias')||'{}');}
 function saveAlias(a){localStorage.setItem('lideres_alias',JSON.stringify(a));}
-function resolverNombre(raw){const a=getAlias();const k=clave(raw||'');return a[k]||raw;}
+function resolverNombre(raw){const a=getAlias();const k=clave(raw||'');const v=a[k];return v!==undefined?v:raw;}
+function resolverNombres(raw){const r=resolverNombre(raw);return Array.isArray(r)?r:[r];}
 
 // Populate selects (dinámico)
 function refreshSelects(){
@@ -554,7 +555,7 @@ function badges(){
   const nvMes=db.filter(r=>inMonth(r)).reduce((s,r)=>s+(r.asistentes||[]).filter(a=>a.nuevo).length,0);
   document.getElementById('cnt-nvo').textContent=nvMes;
   const lids=getLideres();
-  const semLideres=new Set(db.filter(r=>inWk(r)).map(r=>clave(resolverNombre(r.lider||''))));
+  const semLideres=new Set(db.filter(r=>inWk(r)).flatMap(r=>resolverNombres(r.lider||'').map(n=>clave(n))));
   const pendientes=lids.filter(l=>!semLideres.has(clave(l.nombre))).length;
   document.getElementById('cnt-lid').textContent=pendientes>0?pendientes:'✓';
   document.getElementById('cnt-lid').style.background=pendientes>0?'#ef4444':'#059669';
@@ -1038,12 +1039,13 @@ function renderLideres(){
 
   const repMap={};
   sem.forEach(r=>{
-    const resolved=resolverNombre(r.lider||'');
-    const k=clave(resolved);
-    if(!repMap[k])repMap[k]={nombre:normNombre(resolved),count:0,fechas:[],ofrenda:0,casa:r.casa};
-    repMap[k].count++;
-    repMap[k].fechas.push(r.fecha);
-    repMap[k].ofrenda+=parseFloat(r.ofrenda||0);
+    resolverNombres(r.lider||'').forEach(nombre=>{
+      const k=clave(nombre);
+      if(!repMap[k])repMap[k]={nombre:normNombre(nombre),count:0,fechas:[],ofrenda:0,casa:r.casa};
+      repMap[k].count++;
+      repMap[k].fechas.push(r.fecha);
+      repMap[k].ofrenda+=parseFloat(r.ofrenda||0);
+    });
   });
 
   // Badge del botón Detectar
@@ -1145,13 +1147,18 @@ function abrirValidacionLideres(){
             ${CASAS.map(c=>`<option value="${c}"${c===d.casa?' selected':''}>${EM[c]||'🏠'} ${c}</option>`).join('')}
           </select>
         </label>
-        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;flex-wrap:wrap">
-          <input type="radio" name="vd-${i}" data-valida-accion value="existe">
-          <span style="white-space:nowrap">🔁 Ya existe como:</span>
-          <select class="si" data-valida-sel style="flex:1;min-width:180px;font-size:12px"${!lids.length?' disabled':''}>
-            <option value="">— seleccionar líder registrado —</option>
-            ${optsEx}
-          </select>
+        <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:13px;flex-wrap:wrap">
+          <input type="radio" name="vd-${i}" data-valida-accion value="existe" style="margin-top:6px">
+          <div style="flex:1">
+            <span style="white-space:nowrap">🔁 Ya existe como:</span>
+            <div data-valida-sels style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+              <select class="si" data-valida-sel style="width:100%;font-size:12px"${!lids.length?' disabled':''}>
+                <option value="">— seleccionar líder registrado —</option>
+                ${optsEx}
+              </select>
+            </div>
+            <button type="button" class="btn btn-ghost btn-sm" style="margin-top:6px;font-size:11px" onclick="agregarSelLider(this,'${i}')" ${!lids.length?'disabled':''}>+ Agregar otro líder</button>
+          </div>
         </label>
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px">
           <input type="radio" name="vd-${i}" data-valida-accion value="ignorar">
@@ -1160,6 +1167,16 @@ function abrirValidacionLideres(){
       </div>
     </div>`).join('');
   abrirM('md-valida');
+}
+
+function agregarSelLider(btn,i){
+  const lids=getLideres();
+  const optsEx=lids.map(l=>`<option value="${l.nombre}">${l.nombre} (${EM[l.casa]||'🏠'} ${l.casa})</option>`).join('');
+  const container=btn.closest('div').querySelector('[data-valida-sels]');
+  const sel=document.createElement('select');
+  sel.className='si';sel.setAttribute('data-valida-sel','');sel.style.cssText='width:100%;font-size:12px';
+  sel.innerHTML='<option value="">— seleccionar líder registrado —</option>'+optsEx;
+  container.appendChild(sel);
 }
 
 function guardarValidacion(){
@@ -1176,8 +1193,9 @@ function guardarValidacion(){
       const casa=row.querySelector('[data-valida-casa-sel]')?.value||row.dataset.validaCasa||'Sin casa';
       if(!lidClaves.has(k)){lids.push({nombre,casa});lidClaves.add(k);alias[k]=nombre;agregados++;}
     } else if(accion==='existe'){
-      const sel=row.querySelector('[data-valida-sel]');
-      if(sel&&sel.value){alias[k]=sel.value;mapeados++;}
+      const sels=[...row.querySelectorAll('[data-valida-sel]')].map(s=>s.value).filter(v=>v);
+      if(sels.length===1){alias[k]=sels[0];mapeados++;}
+      else if(sels.length>1){alias[k]=sels;mapeados++;}
     }
   });
   saveLideres(lids);saveAlias(alias);
