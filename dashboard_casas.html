@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Central â Casas & CÃ©lulas</title>
+<title>Dashboard Central — Casas & Células</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -187,7 +187,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
   <div class="sb-top">
     <div class="sb-row">
       <div class="sb-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="#064e3b"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
-      <div><div class="sb-name">Dashboard<br>Casas & CÃ©lulas</div></div>
+      <div><div class="sb-name">Dashboard<br>Casas & Células</div></div>
     </div>
     <div class="sb-org">Sistema de Seguimiento</div>
   </div>
@@ -195,11 +195,9 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
     <div class="sb-grp">Principal</div>
     <button class="sb-btn on" id="nb-d" onclick="goPage('dashboard',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</button>
     <button class="sb-btn" id="nb-casas" onclick="goPage('casas',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Casas<span class="sb-badge" id="cnt-cas">0</span></button>
-    <button class="sb-btn" id="nb-cel" onclick="goPage('celulas',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M6 20v-3a6 6 0 0 1 12 0v3"/><circle cx="4" cy="9" r="2"/><path d="M2 20v-2a4 4 0 0 1 4-4"/><circle cx="20" cy="9" r="2"/><path d="M22 20v-2a4 4 0 0 0-4-4"/></svg>CÃ©lulas<span class="sb-badge" id="cnt-cel">0</span></button>
+    <button class="sb-btn" id="nb-cel" onclick="goPage('celulas',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><path d="M6 20v-3a6 6 0 0 1 12 0v3"/><circle cx="4" cy="9" r="2"/><path d="M2 20v-2a4 4 0 0 1 4-4"/><circle cx="20" cy="9" r="2"/><path d="M22 20v-2a4 4 0 0 0-4-4"/></svg>Células<span class="sb-badge" id="cnt-cel">0</span></button>
     <button class="sb-btn" id="nb-nvo" onclick="goPage('nuevos',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>Nuevos<span class="sb-badge amb" id="cnt-nvo">0</span></button>
-    <button class="sb-btn" id="nb-lid" onclick="goPage('lideres',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><polyline points="9 11 12 14 15 11"/></svg>LÃ­deres<span class="sb-badge" id="cnt-lid" style="background:#059669">0</span></button>
-    <div class="sb-grp">Sistema</div>
-    <button class="sb-btn" id="nb-config" onclick="goPage('config',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Configuración</button>
+    <button class="sb-btn" id="nb-lid" onclick="goPage('lideres',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><polyline points="9 11 12 14 15 11"/></svg>Líderes<span class="sb-badge" id="cnt-lid" style="background:#059669">0</span></button>
     <div class="sb-grp">Acciones</div>
     <button class="sb-btn" onclick="abrirM('mi')"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ingresar reporte</button>
     <button class="sb-btn" onclick="syncSheets()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg><span id="sync-lbl">Sincronizar</span></button>
@@ -208,64 +206,64 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
     <div class="sb-grp">Exportar</div>
     <button class="sb-btn" onclick="window.print()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>Imprimir</button>
     <button class="sb-btn" onclick="hacerRespaldo(true)" style="color:#34d399"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Respaldar datos</button>
-    <div style="font-size:9px;opacity:.4;padding:2px 10px 8px" id="sb-bkp-lbl">â</div>
+    <div style="font-size:9px;opacity:.4;padding:2px 10px 8px" id="sb-bkp-lbl">—</div>
   </nav>
-  <div class="sb-foot">v4.0 Â· Casas & CÃ©lulas</div>
+  <div class="sb-foot">v4.0 · Casas & Células</div>
 </aside>
 
 <!-- MAIN -->
 <div class="main">
 <div class="topbar">
-  <div><div class="tb-title" id="tbt">Dashboard General</div><div class="tb-sub" id="tbs">Vista consolidada de casas y cÃ©lulas</div></div>
+  <div><div class="tb-title" id="tbt">Dashboard General</div><div class="tb-sub" id="tbs">Vista consolidada de casas y células</div></div>
   <div class="tb-r">
     <div class="wk-nav">
-      <button class="wk-btn" onclick="cSem(-1)">â¹</button>
-      <span class="wk-lbl" id="wkl">â</span>
-      <button class="wk-btn" onclick="cSem(1)">âº</button>
+      <button class="wk-btn" onclick="cSem(-1)">‹</button>
+      <span class="wk-lbl" id="wkl">—</span>
+      <button class="wk-btn" onclick="cSem(1)">›</button>
     </div>
     <button class="btn btn-sync btn-sm" onclick="syncSheets()"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg><span id="sync-lbl2">Sincronizar</span></button>
     <button class="btn btn-p btn-sm" onclick="abrirM('mi')"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nuevo reporte</button>
   </div>
 </div>
 
-<!-- Barra de notificaciÃ³n de backup -->
+<!-- Barra de notificación de backup -->
 <div id="bkp-notif" class="bkp-bar" style="display:none">
-  <strong>â ï¸ Hace mÃ¡s de 7 dÃ­as sin respaldo. Los datos de cÃ©lulas son sensibles.</strong>
+  <strong>⚠️ Hace más de 7 días sin respaldo. Los datos de células son sensibles.</strong>
   <button class="bkp-ok" onclick="hacerRespaldo(true);document.getElementById('bkp-notif').style.display='none'">Respaldar ahora</button>
   <button class="bkp-no" onclick="this.closest('#bkp-notif').style.display='none'">Luego</button>
 </div>
 
-<!-- ââ DASHBOARD ââ -->
+<!-- ══ DASHBOARD ══ -->
 <div id="pg-dashboard" class="page on">
   <div class="s5">
-    <div class="sc c1"><div class="sc-lbl">CÃ©lulas semana</div><div class="sc-val" id="s-r">0</div><div class="sc-sub" id="s-rs">esta semana</div><div class="sc-ico">âª</div></div>
-    <div class="sc c2"><div class="sc-lbl">Total asistentes</div><div class="sc-val" id="s-a">0</div><div class="sc-sub" id="s-as">personas</div><div class="sc-ico">ð¥</div></div>
-    <div class="sc c3"><div class="sc-lbl">Nuevos</div><div class="sc-val" id="s-n">0</div><div class="sc-sub">primera vez ð</div><div class="sc-ico">â¨</div></div>
-    <div class="sc c4"><div class="sc-lbl">Casas activas</div><div class="sc-val" id="s-ca">0</div><div class="sc-sub">esta semana</div><div class="sc-ico">ð </div></div>
-    <div class="sc c5"><div class="sc-lbl">CÃ©lulas nuevas</div><div class="sc-val" id="s-cn">0</div><div class="sc-sub">creadas ð</div><div class="sc-ico">ð</div></div>
+    <div class="sc c1"><div class="sc-lbl">Células semana</div><div class="sc-val" id="s-r">0</div><div class="sc-sub" id="s-rs">esta semana</div><div class="sc-ico">⛪</div></div>
+    <div class="sc c2"><div class="sc-lbl">Total asistentes</div><div class="sc-val" id="s-a">0</div><div class="sc-sub" id="s-as">personas</div><div class="sc-ico">👥</div></div>
+    <div class="sc c3"><div class="sc-lbl">Nuevos</div><div class="sc-val" id="s-n">0</div><div class="sc-sub">primera vez 🆕</div><div class="sc-ico">✨</div></div>
+    <div class="sc c4"><div class="sc-lbl">Casas activas</div><div class="sc-val" id="s-ca">0</div><div class="sc-sub">esta semana</div><div class="sc-ico">🏠</div></div>
+    <div class="sc c5"><div class="sc-lbl">Células nuevas</div><div class="sc-val" id="s-cn">0</div><div class="sc-sub">creadas 🆕</div><div class="sc-ico">🆕</div></div>
   </div>
 
-  <!-- GRÃFICO AGRUPADO POR CASA -->
+  <!-- GRÁFICO AGRUPADO POR CASA -->
   <div class="card">
-    <div class="card-hd"><div class="ttl"><span class="pip"></span>CÃ©lulas y nuevos por casa</div></div>
+    <div class="card-hd"><div class="ttl"><span class="pip"></span>Células y nuevos por casa</div></div>
     <div class="ch-w"><canvas id="ch-agrup" height="220"></canvas></div>
   </div>
 
   <div class="g21">
     <div class="card" style="margin:0">
-      <div class="card-hd"><div class="ttl"><span class="pip"></span>Asistencia diaria â semana actual</div></div>
+      <div class="card-hd"><div class="ttl"><span class="pip"></span>Asistencia diaria — semana actual</div></div>
       <div class="ch-w"><canvas id="ch-d" height="195"></canvas></div>
     </div>
     <div class="card" style="margin:0">
       <div class="card-hd"><div class="ttl"><span class="pip"></span>Modalidad</div></div>
-      <div class="ch-w" style="position:relative"><canvas id="ch-m" height="165"></canvas><div class="dn-c"><div class="dn-big" id="dn1">0</div><div class="dn-sm">cÃ©lulas</div></div></div>
+      <div class="ch-w" style="position:relative"><canvas id="ch-m" height="165"></canvas><div class="dn-c"><div class="dn-big" id="dn1">0</div><div class="dn-sm">células</div></div></div>
       <div id="leg-m" style="display:flex;gap:8px;justify-content:center;margin-top:8px;font-size:10px;font-weight:600;color:var(--muted);flex-wrap:wrap"></div>
     </div>
   </div>
 
   <div class="g3" style="margin-bottom:15px">
     <div class="card" style="margin:0;grid-column:span 2">
-      <div class="card-hd"><div class="ttl"><span class="pip"></span>Comparativo semanal â Ãºltimas 6 semanas</div></div>
+      <div class="card-hd"><div class="ttl"><span class="pip"></span>Comparativo semanal — últimas 6 semanas</div></div>
       <div class="ch-w"><canvas id="ch-w2" height="180"></canvas></div>
     </div>
     <div class="card" style="margin:0">
@@ -276,18 +274,18 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 
   <!-- TABLA RECIENTES -->
   <div class="card">
-    <div class="card-hd"><div class="ttl"><span class="pip"></span>Ãltimas cÃ©lulas registradas</div><button class="btn btn-ghost btn-sm" onclick="goPage('celulas',document.getElementById('nb-cel'))">Ver todas â</button></div>
-    <div class="tw"><table class="tbl"><thead><tr><th>Casa</th><th>CÃ©lula</th><th>Tema</th><th>Fecha</th><th>Modalidad</th><th>Asistentes</th><th>Nuevos</th><th>LÃ­der</th><th></th></tr></thead><tbody id="tb-r"></tbody></table></div>
+    <div class="card-hd"><div class="ttl"><span class="pip"></span>Últimas células registradas</div><button class="btn btn-ghost btn-sm" onclick="goPage('celulas',document.getElementById('nb-cel'))">Ver todas →</button></div>
+    <div class="tw"><table class="tbl"><thead><tr><th>Casa</th><th>Célula</th><th>Tema</th><th>Fecha</th><th>Modalidad</th><th>Asistentes</th><th>Nuevos</th><th>Líder</th><th></th></tr></thead><tbody id="tb-r"></tbody></table></div>
   </div>
 
   <!-- NUEVOS ESTA SEMANA -->
     <div class="card">
-    <div class="card-hd"><div class="ttl"><span class="pip"></span>ð Nuevos este mes</div><button class="btn btn-ghost btn-sm" onclick="goPage('nuevos',document.getElementById('nb-nvo'))">Ver todos â</button></div>
-    <div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>CÃ©lula</th><th>LÃ­der</th><th>Distrito</th><th>Edad</th><th>Celular</th><th>Fecha</th></tr></thead><tbody id="tb-nvo-dash"></tbody></table></div>
+    <div class="card-hd"><div class="ttl"><span class="pip"></span>🆕 Nuevos este mes</div><button class="btn btn-ghost btn-sm" onclick="goPage('nuevos',document.getElementById('nb-nvo'))">Ver todos →</button></div>
+    <div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>Célula</th><th>Líder</th><th>Distrito</th><th>Edad</th><th>Celular</th><th>Fecha</th></tr></thead><tbody id="tb-nvo-dash"></tbody></table></div>
   </div>
 </div>
 
-<!-- ââ CASAS ââ -->
+<!-- ══ CASAS ══ -->
 <div id="pg-casas" class="page">
   <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap">
     <div style="font-size:11px;color:var(--muted)" id="cas-cnt">0 casas</div>
@@ -303,35 +301,35 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
   </div>
 </div>
 
-<!-- ââ CÃLULAS ââ -->
+<!-- ══ CÉLULAS ══ -->
 <div id="pg-celulas" class="page">
   <div class="sr">
-    <input class="si" id="src-c" placeholder="ð Buscar cÃ©lula, casa, tema o lÃ­der..." oninput="renderCelulas()"/>
+    <input class="si" id="src-c" placeholder="🔍 Buscar célula, casa, tema o líder..." oninput="renderCelulas()"/>
     <select class="si" style="flex:0 0 150px" id="fil-casa" onchange="renderCelulas()"><option value="">Todas las casas</option></select>
-    <select class="si" style="flex:0 0 150px" id="fil-mod" onchange="renderCelulas()"><option value="">Todas</option><option value="presencial">ð  Presencial</option><option value="virtual">ð» Virtual</option><option value="hibrida">ð HÃ­brida</option></select>
+    <select class="si" style="flex:0 0 150px" id="fil-mod" onchange="renderCelulas()"><option value="">Todas</option><option value="presencial">🏠 Presencial</option><option value="virtual">💻 Virtual</option><option value="hibrida">🔀 Híbrida</option></select>
   </div>
-  <div style="font-size:11px;color:var(--muted);margin-bottom:13px" id="cel-cnt">0 cÃ©lulas</div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:13px" id="cel-cnt">0 células</div>
   <div class="cg" id="cg"></div>
 </div>
 
-<!-- ââ NUEVOS ââ -->
+<!-- ══ NUEVOS ══ -->
 <div id="pg-nuevos" class="page">
   <div class="hint-b"><svg width="14" height="14" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Personas que asistieron por primera vez este mes. Se acumulan durante todo el mes.</div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:13px" id="nvo-cnt">0 nuevos</div>
-  <div class="card" style="margin:0"><div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>CÃ©lula</th><th>LÃ­der</th><th>Distrito</th><th>Edad</th><th>Celular</th><th>Fecha</th></tr></thead><tbody id="tb-nvo"></tbody></table></div></div>
+  <div class="card" style="margin:0"><div class="tw"><table class="tbl"><thead><tr><th>#</th><th>Nombre</th><th>Casa</th><th>Célula</th><th>Líder</th><th>Distrito</th><th>Edad</th><th>Celular</th><th>Fecha</th></tr></thead><tbody id="tb-nvo"></tbody></table></div></div>
 </div>
 
-<!-- ââ LÃDERES ââ -->
+<!-- ══ LÍDERES ══ -->
 <div id="pg-lideres" class="page">
   <div style="margin-bottom:16px">
-    <div class="hint-b"><svg width="14" height="14" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Control de reportes por lÃ­der esta semana. Verde = reportÃ³ Â· Rojo = pendiente.</div>
+    <div class="hint-b"><svg width="14" height="14" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Control de reportes por líder esta semana. Verde = reportó · Rojo = pendiente.</div>
   </div>
 
-  <!-- STATS LÃDERES -->
+  <!-- STATS LÍDERES -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px">
-    <div class="sc c1" style="padding:14px 16px"><div class="sc-lbl">LÃ­deres registrados</div><div class="sc-val" id="lid-total" style="font-size:24px">0</div><div class="sc-sub">en el sistema</div></div>
-    <div class="sc c2" style="padding:14px 16px"><div class="sc-lbl">Reportaron</div><div class="sc-val" id="lid-si" style="font-size:24px;color:var(--g2)">0</div><div class="sc-sub">esta semana â</div></div>
-    <div class="sc c3" style="padding:14px 16px"><div class="sc-lbl">Pendientes</div><div class="sc-val" id="lid-no" style="font-size:24px">0</div><div class="sc-sub">sin reportar â ï¸</div></div>
+    <div class="sc c1" style="padding:14px 16px"><div class="sc-lbl">Líderes registrados</div><div class="sc-val" id="lid-total" style="font-size:24px">0</div><div class="sc-sub">en el sistema</div></div>
+    <div class="sc c2" style="padding:14px 16px"><div class="sc-lbl">Reportaron</div><div class="sc-val" id="lid-si" style="font-size:24px;color:var(--g2)">0</div><div class="sc-sub">esta semana ✅</div></div>
+    <div class="sc c3" style="padding:14px 16px"><div class="sc-lbl">Pendientes</div><div class="sc-val" id="lid-no" style="font-size:24px">0</div><div class="sc-sub">sin reportar ⚠️</div></div>
   </div>
 
   <!-- BARRA DE PROGRESO -->
@@ -342,56 +340,32 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
     </div>
   </div>
 
-  <!-- AGREGAR LÃDER -->
+  <!-- AGREGAR LÍDER -->
   <div class="card" style="margin-bottom:16px">
-    <div class="card-hd"><div class="ttl"><span class="pip"></span>Registrar lÃ­deres del sistema</div></div>
+    <div class="card-hd"><div class="ttl"><span class="pip"></span>Registrar líderes del sistema</div></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <select id="lid-casa-sel" class="si" style="flex:0 0 160px">
         <option value="">Casa...</option>
       </select>
-      <input id="lid-nombre-inp" class="si" placeholder="Nombre del pastor / lÃ­der" style="flex:1;min-width:180px"/>
+      <input id="lid-nombre-inp" class="si" placeholder="Nombre del pastor / líder" style="flex:1;min-width:180px"/>
       <button class="btn btn-p btn-sm" onclick="agregarLider()">+ Agregar</button>
     </div>
   </div>
 
-  <!-- TABLA LÃDERES -->
+  <!-- TABLA LÍDERES -->
   <div class="card" style="margin:0">
     <div class="card-hd"><div class="ttl"><span class="pip"></span>Estado de reportes</div>
       <div style="display:flex;gap:6px">
         <button class="btn btn-ghost btn-sm" onclick="filtrarLid('todos')" id="flt-todos" style="border-color:var(--g2);color:var(--g2)">Todos</button>
-        <button class="btn btn-ghost btn-sm" onclick="filtrarLid('si')" id="flt-si">â Reportaron</button>
-        <button class="btn btn-ghost btn-sm" onclick="filtrarLid('no')" id="flt-no">â ï¸ Pendientes</button>
+        <button class="btn btn-ghost btn-sm" onclick="filtrarLid('si')" id="flt-si">✅ Reportaron</button>
+        <button class="btn btn-ghost btn-sm" onclick="filtrarLid('no')" id="flt-no">⚠️ Pendientes</button>
       </div>
     </div>
     <div class="tw">
       <table class="tbl">
-        <thead><tr><th>#</th><th>LÃ­der / Pastor</th><th>Casa</th><th>Estado semana</th><th>CÃ©lulas reportadas</th><th>Ãltima fecha</th><th>Ofrenda total</th><th></th></tr></thead>
+        <thead><tr><th>#</th><th>Líder / Pastor</th><th>Casa</th><th>Estado semana</th><th>Células reportadas</th><th>Última fecha</th><th>Ofrenda total</th><th></th></tr></thead>
         <tbody id="tb-lid"></tbody>
       </table>
-    </div>
-  </div>
-</div>
-
-<!-- ââ CONFIGURACIÃN ââ -->
-<div id="pg-config" class="page">
-  <div class="hint-b" style="margin-bottom:16px"><svg width="14" height="14" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Administra las casas. Los cambios aplican de inmediato.</div>
-  <div class="card" style="margin-bottom:16px">
-    <div class="card-hd"><div class="ttl"><span class="pip"></span>Agregar nueva casa</div></div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
-      <div><div class="fl">Emoji</div><input id="cfg-em" class="si" style="width:64px;text-align:center;font-size:20px" placeholder="ð " maxlength="4"/></div>
-      <div style="flex:1;min-width:180px"><div class="fl">Nombre *</div><input id="cfg-nombre" class="si" placeholder="Ej: ESPERANZA" style="width:100%" oninput="this.value=this.value.toUpperCase()"/></div>
-      <button class="btn btn-p btn-sm" style="height:38px" onclick="agregarCasa()">+ Agregar</button>
-    </div>
-    <div id="cfg-err" style="display:none;color:var(--red);font-size:11px;margin-top:6px"></div>
-  </div>
-  <div class="card">
-    <div class="card-hd">
-      <div class="ttl"><span class="pip"></span>Casas registradas</div>
-      <span id="cfg-total" style="font-size:11px;color:var(--muted)">0 casas</span>
-    </div>
-    <div id="cfg-lista"></div>
-    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
-      <button class="btn btn-ghost btn-sm" onclick="resetCasas()" style="color:var(--muted)">â© Restaurar casas por defecto</button>
     </div>
   </div>
 </div>
@@ -402,47 +376,47 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 <!-- MODAL DETALLE -->
 <div class="overlay" id="md" onclick="if(event.target===this)cerrarM('md')">
   <div class="modal">
-    <div class="mhd"><div class="mhd-t" id="md-t">Detalle</div><button class="xbtn" onclick="cerrarM('md')">Ã</button></div>
+    <div class="mhd"><div class="mhd-t" id="md-t">Detalle</div><button class="xbtn" onclick="cerrarM('md')">×</button></div>
     <div class="mbody" id="md-b"></div>
-    <div class="mfoot"><button class="btn btn-danger btn-sm" id="md-del">ð Eliminar</button><button class="btn btn-ghost btn-sm" id="md-edit" style="color:var(--blue)">âï¸ Editar</button><button class="btn btn-ghost btn-sm" onclick="cerrarM('md')">Cerrar</button></div>
+    <div class="mfoot"><button class="btn btn-danger btn-sm" id="md-del">🗑 Eliminar</button><button class="btn btn-ghost btn-sm" onclick="cerrarM('md')">Cerrar</button></div>
   </div>
 </div>
 
 <!-- MODAL INGRESO -->
 <div class="overlay" id="mi" onclick="if(event.target===this)cerrarM('mi')">
   <div class="modal">
-    <div class="mhd"><div class="mhd-t">â Ingresar reporte de cÃ©lula</div><button class="xbtn" onclick="cerrarM('mi')">Ã</button></div>
+    <div class="mhd"><div class="mhd-t">➕ Ingresar reporte de célula</div><button class="xbtn" onclick="cerrarM('mi')">×</button></div>
     <div class="mbody">
       <div style="display:flex;gap:6px;margin-bottom:15px">
-        <button class="btn btn-p btn-sm" id="tia-b" onclick="swTab('ia')">ð¤ Pegar reporte (IA)</button>
-        <button class="btn btn-ghost btn-sm" id="tman-b" onclick="swTab('man')">âï¸ Manual</button>
+        <button class="btn btn-p btn-sm" id="tia-b" onclick="swTab('ia')">🤖 Pegar reporte (IA)</button>
+        <button class="btn btn-ghost btn-sm" id="tman-b" onclick="swTab('man')">✏️ Manual</button>
       </div>
       <div id="t-ia">
-        <div class="hint-b"><svg width="13" height="13" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Pega el reporte del lÃ­der y la IA extrae los datos automÃ¡ticamente.</div>
-        <textarea id="wa-t" class="fi" style="height:150px;font-family:'JetBrains Mono',monospace;font-size:11px;resize:vertical" placeholder="Pega aquÃ­ el reporte de la cÃ©lula..."></textarea>
+        <div class="hint-b"><svg width="13" height="13" viewBox="0 0 24 24" fill="#059669"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Pega el reporte del líder y la IA extrae los datos automáticamente.</div>
+        <textarea id="wa-t" class="fi" style="height:150px;font-family:'JetBrains Mono',monospace;font-size:11px;resize:vertical" placeholder="Pega aquí el reporte de la célula..."></textarea>
         <button class="btn btn-p btn-sm" style="margin-top:10px;width:100%" onclick="procIA()"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Analizar con IA</button>
         <div id="ia-st" style="display:none;margin-top:10px;padding:10px 13px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;font-size:11px;color:#92400e;align-items:center;gap:8px"><div class="spin"></div><span id="ia-msg">Analizando...</span></div>
       </div>
       <div id="t-man" style="display:none">
         <div class="fg2">
           <div><div class="fl">Casa *</div><select id="mc" class="fi"><option value="">Seleccionar...</option></select></div>
-          <div><div class="fl">CÃ©lula *</div><input id="mcel" class="fi" placeholder="Nombre de la cÃ©lula"/></div>
+          <div><div class="fl">Célula *</div><input id="mcel" class="fi" placeholder="Nombre de la célula"/></div>
         </div>
         <div class="fg2">
-          <div><div class="fl">Pastor / LÃ­der *</div><input id="ml" class="fi" placeholder="Nombre del pastor o lÃ­der"/></div>
-          <div><div class="fl">Tema *</div><input id="mt" class="fi" placeholder="Tema de la cÃ©lula"/></div>
+          <div><div class="fl">Pastor / Líder *</div><input id="ml" class="fi" placeholder="Nombre del pastor o líder"/></div>
+          <div><div class="fl">Tema *</div><input id="mt" class="fi" placeholder="Tema de la célula"/></div>
         </div>
         <div class="fg2">
           <div><div class="fl">Fecha *</div><input type="date" id="mf" class="fi"/></div>
           <div><div class="fl">Hora</div><input type="time" id="mh" class="fi"/></div>
         </div>
-        <div class="fg"><div class="fl">DirecciÃ³n de la cÃ©lula</div><input id="md2" class="fi" placeholder="DirecciÃ³n fÃ­sica o enlace virtual"/></div>
+        <div class="fg"><div class="fl">Dirección de la célula</div><input id="md2" class="fi" placeholder="Dirección física o enlace virtual"/></div>
         <div class="fg2">
-          <div><div class="fl">Modalidad</div><select id="mmod" class="fi"><option value="presencial">ð  Presencial</option><option value="virtual">ð» Virtual</option><option value="hibrida">ð HÃ­brida</option></select></div>
-          <div><div class="fl">Â¿CÃ©lula nueva?</div><select id="mnv" class="fi"><option value="no">No</option><option value="si">SÃ­ ð</option></select></div>
+          <div><div class="fl">Modalidad</div><select id="mmod" class="fi"><option value="presencial">🏠 Presencial</option><option value="virtual">💻 Virtual</option><option value="hibrida">🔀 Híbrida</option></select></div>
+          <div><div class="fl">¿Célula nueva?</div><select id="mnv" class="fi"><option value="no">No</option><option value="si">Sí 🆕</option></select></div>
         </div>
-        <div class="fg"><div class="fl">Asistentes â uno por lÃ­nea, agrega ð para nuevos</div><textarea id="ma" class="fi" style="height:90px;font-family:'JetBrains Mono',monospace;font-size:11px" placeholder="MarÃ­a LÃ³pez (SJL)&#10;Carlos Ruiz ð&#10;Ana Torres (Comas) ð"></textarea></div>
-        <button class="btn btn-p btn-sm" style="width:100%" onclick="guardarMan()">ð¾ Guardar reporte</button>
+        <div class="fg"><div class="fl">Asistentes — uno por línea, agrega 🆕 para nuevos</div><textarea id="ma" class="fi" style="height:90px;font-family:'JetBrains Mono',monospace;font-size:11px" placeholder="María López (SJL)&#10;Carlos Ruiz 🆕&#10;Ana Torres (Comas) 🆕"></textarea></div>
+        <button class="btn btn-p btn-sm" style="width:100%" onclick="guardarMan()">💾 Guardar reporte</button>
       </div>
     </div>
     <div class="mfoot"><button class="btn btn-ghost btn-sm" onclick="cerrarM('mi')">Cancelar</button></div>
@@ -450,12 +424,8 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 </div>
 
 <script>
-const CASAS=['AMOR','GOZO','PAZ','PACIENCIA','BENIGNIDAD','TEMPLANZA','FE','BONDAD','MANSEDUMBRE','MISERICORDIA','GRACIA','PODER','PROSPERIDAD','REMANENTE'];_DEFAULT
-const EM={AMOR:'â¤ï¸',GOZO:'ð',PAZ:'ðï¸',PACIENCIA:'â³',BENIGNIDAD:'ð¿',TEMPLANZA:'âï¸',FE:'ð',BONDAD:'ð',MANSEDUMBRE:'ð¸',MISERICORDIA:'ð¤',GRACIA:'â¨',PODER:'â¡',PROSPERIDAD:'ð±',REMANENTE:'ð¥'};_DEFAULT
-let cfg=JSON.parse(localStorage.getItem("casas_cfg")||"null")||{casas:[...CASAS_DEFAULT],em:{...EM_DEFAULT}};
-const CASAS=cfg.casas;
-const EM=cfg.em;
-function svCfg(){localStorage.setItem("casas_cfg",JSON.stringify(cfg));}
+const CASAS=['AMOR','GOZO','PAZ','PACIENCIA','BENIGNIDAD','TEMPLANZA','FE','BONDAD','MANSEDUMBRE','MISERICORDIA','GRACIA','PODER','PROSPERIDAD','REMANENTE'];
+const EM={AMOR:'❤️',GOZO:'😊',PAZ:'🕊️',PACIENCIA:'⏳',BENIGNIDAD:'🌿',TEMPLANZA:'⚖️',FE:'🙏',BONDAD:'💛',MANSEDUMBRE:'🌸',MISERICORDIA:'🤝',GRACIA:'✨',PODER:'⚡',PROSPERIDAD:'🌱',REMANENTE:'🔥'};
 const SHEETS_URL='https://script.google.com/macros/s/AKfycby99g4iUpEOGdEpeHjV39DjQoQraeGZsnBFEtKt01-Lj2ud-dc0D9JSHaHvDDBuRu_m/exec';
 const COLORS=['#059669','#3b82f6','#f59e0b','#8b5cf6','#f43f5e','#06b6d4','#84cc16','#f97316','#ec4899','#6366f1','#14b8a6','#eab308','#ef4444','#a855f7'];
 
@@ -465,32 +435,23 @@ db=db.map(r=>({...r,fecha:r.fecha?r.fecha.toString().split('T')[0]:r.fecha}));
 let wk=0, ch={};
 function sv(){localStorage.setItem('casas_db',JSON.stringify(db));}
 
-// Populate selects (dinamico)
-function refreshSelects(){
-  ["mc","fil-casa","lid-casa-sel"].forEach(id=>{
-    const el=document.getElementById(id);if(!el)return;
-    const val=el.value;
-    while(el.options.length>1)el.remove(1);
-    CASAS.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=`${EM[c]||"ð "} ${c}`;el.appendChild(o);});
-    if(val)el.value=val;
-  });
-}
-refreshSelects();
+// Populate selects
+CASAS.forEach(c=>{['mc','fil-casa'].forEach(id=>{const o=document.createElement('option');o.value=c;o.textContent=`${EM[c]||'🏠'} ${c}`;document.getElementById(id)?.appendChild(o);});});
 
 // WEEK
 function getWR(o=0){const n=new Date(),day=n.getDay(),diff=n.getDate()-day+(day===0?-6:1);const m=new Date(n);m.setDate(diff+o*7);m.setHours(0,0,0,0);const s=new Date(m);s.setDate(m.getDate()+6);s.setHours(23,59,59,999);return{start:m,end:s};}
-function fmtWk(o){const{start,end}=getWR(o);const op={day:'numeric',month:'short'};return`${start.toLocaleDateString('es-PE',op)} â ${end.toLocaleDateString('es-PE',op)}, ${start.getFullYear()}`;}
+function fmtWk(o){const{start,end}=getWR(o);const op={day:'numeric',month:'short'};return`${start.toLocaleDateString('es-PE',op)} — ${end.toLocaleDateString('es-PE',op)}, ${start.getFullYear()}`;}
 function cleanFecha(f){
   if(!f) return '';
   f = f.toString().trim();
-  // ISO completo: 2026-05-06T05:00:00.000Z â 2026-05-06
+  // ISO completo: 2026-05-06T05:00:00.000Z → 2026-05-06
   if(f.includes('T')) return f.split('T')[0];
-  // DD/MM/YYYY â YYYY-MM-DD
+  // DD/MM/YYYY → YYYY-MM-DD
   const m=f.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
   if(m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
   return f;
 }
-// Verifica si un registro estÃ¡ en el mes actual (para acumular nuevos)
+// Verifica si un registro está en el mes actual (para acumular nuevos)
 function inMonth(r){
   const{start}=getWR(wk);
   const mesRef=start.getMonth();
@@ -507,7 +468,7 @@ function inWk(r,o=wk){
   return d>=start&&d<=end;
 }
 function fmtF(f){
-  if(!f) return 'â';
+  if(!f) return '—';
   try{
     const fecha=cleanFecha(f.toString());
     const[y,m,d]=fecha.split('-');
@@ -523,14 +484,13 @@ function goPage(n,btn){
   document.getElementById('pg-'+n).classList.add('on');
   document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('on'));
   btn?.classList.add('on');
-  const ti={dashboard:'Dashboard General',casas:'Casas',celulas:'CÃ©lulas',nuevos:'Nuevos Asistentes',lideres:'Control de LÃ­deres'};
+  const ti={dashboard:'Dashboard General',casas:'Casas',celulas:'Células',nuevos:'Nuevos Asistentes',lideres:'Control de Líderes'};
   document.getElementById('tbt').textContent=ti[n]||n;
   if(n==='dashboard')renderDash();
   if(n==='casas')renderCasas();
   if(n==='celulas')renderCelulas();
   if(n==='nuevos')renderNuevos();
   if(n==='lideres')renderLideres();
-  if(n==='config')renderConfig();
 }
 
 function renderAll(){
@@ -549,11 +509,11 @@ function badges(){
   const lids=getLideres();
   const semLideres=new Set(db.filter(r=>inWk(r)).map(r=>clave(r.lider)));
   const pendientes=lids.filter(l=>!semLideres.has(clave(l.nombre))).length;
-  document.getElementById('cnt-lid').textContent=pendientes>0?pendientes:'â';
+  document.getElementById('cnt-lid').textContent=pendientes>0?pendientes:'✓';
   document.getElementById('cnt-lid').style.background=pendientes>0?'#ef4444':'#059669';
 }
 
-// ââ DASHBOARD ââ
+// ══ DASHBOARD ══
 function renderDash(){
   const sem=db.filter(r=>inWk(r));
   const mes=db.filter(r=>inMonth(r));
@@ -566,7 +526,7 @@ function renderDash(){
   document.getElementById('s-n').textContent=nvMes;
   document.getElementById('s-ca').textContent=cU;
   document.getElementById('s-cn').textContent=cN;
-  document.getElementById('s-as').textContent=`prom ${sem.length?Math.round(tA/sem.length):0} por cÃ©lula`;
+  document.getElementById('s-as').textContent=`prom ${sem.length?Math.round(tA/sem.length):0} por célula`;
   document.getElementById('s-rs').textContent=`en ${cU} casas`;
   chAgrupado(sem);
   chDaily(sem);
@@ -578,9 +538,9 @@ function renderDash(){
   badges();
 }
 
-// GRÃFICO AGRUPADO: barras por casa, cada barra = una cÃ©lula
+// GRÁFICO AGRUPADO: barras por casa, cada barra = una célula
 function chAgrupado(sem){
-  // Por casa: cantidad de cÃ©lulas y cantidad de nuevos
+  // Por casa: cantidad de células y cantidad de nuevos
   const casaMap={};
   sem.forEach(r=>{
     if(!casaMap[r.casa]) casaMap[r.casa]={celulas:0,nuevos:0,asist:0};
@@ -592,7 +552,7 @@ function chAgrupado(sem){
   if(!casas.length){if(ch.ag)ch.ag.destroy();return;}
   const datasets=[
     {
-      label:'CÃ©lulas realizadas',
+      label:'Células realizadas',
       data:casas.map(c=>casaMap[c].celulas),
       backgroundColor:'rgba(5,150,105,.8)',
       borderColor:'#059669',
@@ -615,7 +575,7 @@ function chAgrupado(sem){
   if(ch.ag)ch.ag.destroy();
   ch.ag=new Chart(document.getElementById('ch-agrup'),{
     type:'bar',
-    data:{labels:casas.map(c=>`${EM[c]||'ð '} ${c}`),datasets},
+    data:{labels:casas.map(c=>`${EM[c]||'🏠'} ${c}`),datasets},
     options:{
       responsive:true,maintainAspectRatio:false,
       interaction:{mode:'index'},
@@ -625,7 +585,7 @@ function chAgrupado(sem){
           title:ctx=>`${ctx[0].label}`,
           label:ctx=>{
             const casa=casas[ctx.dataIndex];
-            if(ctx.datasetIndex===0) return ` CÃ©lulas: ${ctx.parsed.y}  (${casaMap[casa].asist} asistentes total)`;
+            if(ctx.datasetIndex===0) return ` Células: ${ctx.parsed.y}  (${casaMap[casa].asist} asistentes total)`;
             return ` Nuevos: ${ctx.parsed.y} personas`;
           }
         }}
@@ -639,7 +599,7 @@ function chAgrupado(sem){
 }
 
 function chDaily(sem){
-  const dias=['Lun','Mar','MiÃ©','Jue','Vie','SÃ¡b','Dom'];
+  const dias=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
   const{start}=getWR(wk);
   const dA=dias.map((_,i)=>{const d=new Date(start);d.setDate(start.getDate()+i);return sem.filter(r=>r.fecha===d.toISOString().split('T')[0]).reduce((s,r)=>s+(r.asistentes?.length||0),0);});
   const dN=dias.map((_,i)=>{const d=new Date(start);d.setDate(start.getDate()+i);return sem.filter(r=>r.fecha===d.toISOString().split('T')[0]).reduce((s,r)=>s+(r.asistentes?.filter(a=>a.nuevo).length||0),0);});
@@ -649,15 +609,15 @@ function chDaily(sem){
 function chModal(sem){
   const p=sem.filter(r=>r.modalidad==='presencial').length,v=sem.filter(r=>r.modalidad==='virtual').length,h=sem.filter(r=>r.modalidad==='hibrida').length;
   document.getElementById('dn1').textContent=sem.length;
-  document.getElementById('leg-m').innerHTML=`<span>ð  ${p}</span><span>ð» ${v}</span>${h?`<span>ð ${h}</span>`:''}`;
+  document.getElementById('leg-m').innerHTML=`<span>🏠 ${p}</span><span>💻 ${v}</span>${h?`<span>🔀 ${h}</span>`:''}`;
   if(ch.m)ch.m.destroy();
-  ch.m=new Chart(document.getElementById('ch-m'),{type:'doughnut',data:{labels:['Presencial','Virtual','HÃ­brida'],datasets:[{data:[p||0,v||0,h||0],backgroundColor:['#059669','#3b82f6','#f59e0b'],borderWidth:0,hoverOffset:5}]},options:{responsive:true,maintainAspectRatio:false,cutout:'74%',plugins:{legend:{display:false}}}});
+  ch.m=new Chart(document.getElementById('ch-m'),{type:'doughnut',data:{labels:['Presencial','Virtual','Híbrida'],datasets:[{data:[p||0,v||0,h||0],backgroundColor:['#059669','#3b82f6','#f59e0b'],borderWidth:0,hoverOffset:5}]},options:{responsive:true,maintainAspectRatio:false,cutout:'74%',plugins:{legend:{display:false}}}});
 }
 function chWeekly(){
   const lb=[],dA=[],dR=[];
   for(let o=-5;o<=0;o++){const{start}=getWR(wk+o);lb.push(start.toLocaleDateString('es-PE',{day:'numeric',month:'short'}));const sw=db.filter(r=>inWk(r,wk+o));dA.push(sw.reduce((s,r)=>s+(r.asistentes?.length||0),0));dR.push(sw.length);}
   if(ch.w)ch.w.destroy();
-  ch.w=new Chart(document.getElementById('ch-w2'),{type:'line',data:{labels:lb,datasets:[{label:'Asistentes',data:dA,borderColor:'#059669',backgroundColor:'rgba(5,150,105,.07)',tension:.4,fill:true,pointRadius:4,pointBackgroundColor:'#059669'},{label:'CÃ©lulas',data:dR,borderColor:'#3b82f6',backgroundColor:'transparent',tension:.4,pointRadius:4,pointBackgroundColor:'#3b82f6',yAxisID:'y2'}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index'},plugins:{legend:{position:'top',labels:{font:{family:'Sora',size:10},boxWidth:10,padding:8}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{family:'Sora',size:10}}},y2:{position:'right',beginAtZero:true,grid:{display:false},ticks:{font:{family:'Sora',size:10}}},x:{grid:{display:false},ticks:{font:{family:'Sora',size:10}}}}}});
+  ch.w=new Chart(document.getElementById('ch-w2'),{type:'line',data:{labels:lb,datasets:[{label:'Asistentes',data:dA,borderColor:'#059669',backgroundColor:'rgba(5,150,105,.07)',tension:.4,fill:true,pointRadius:4,pointBackgroundColor:'#059669'},{label:'Células',data:dR,borderColor:'#3b82f6',backgroundColor:'transparent',tension:.4,pointRadius:4,pointBackgroundColor:'#3b82f6',yAxisID:'y2'}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index'},plugins:{legend:{position:'top',labels:{font:{family:'Sora',size:10},boxWidth:10,padding:8}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{family:'Sora',size:10}}},y2:{position:'right',beginAtZero:true,grid:{display:false},ticks:{font:{family:'Sora',size:10}}},x:{grid:{display:false},ticks:{font:{family:'Sora',size:10}}}}}});
 }
 function chNvos(tA,nv){
   document.getElementById('dn2').textContent=tA;
@@ -667,22 +627,22 @@ function chNvos(tA,nv){
 
 function tbRec(sem){
   const mbc={presencial:'bg',virtual:'bb',hibrida:'ba'};
-  const mbl={presencial:'ð ',virtual:'ð»',hibrida:'ð'};
+  const mbl={presencial:'🏠',virtual:'💻',hibrida:'🔀'};
   const rec=[...sem].sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||'')).slice(0,8);
   document.getElementById('tb-r').innerHTML=rec.map(r=>{
     const ri=db.indexOf(r),nv=(r.asistentes||[]).filter(a=>a.nuevo).length;
-    return`<tr><td style="font-weight:600">${EM[r.casa]||'ð '} ${r.casa}</td><td style="font-weight:500">${r.celula||'â'}</td><td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.tema}</td><td>${fmtF(r.fecha)}</td><td><span class="badge ${mbc[r.modalidad]||'bgr'}">${mbl[r.modalidad]||''} ${r.modalidad}</span></td><td><strong style="color:var(--g2)">${(r.asistentes||[]).length}</strong></td><td>${nv?`<span class="badge brose">ð ${nv}</span>`:'â'}</td><td>${r.lider}</td><td><button class="btn btn-ghost btn-sm" onclick="verDet(${ri})">Ver</button></td></tr>`;
-  }).join('')||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:24px"><div style="font-size:20px;margin-bottom:6px">âª</div>Sin cÃ©lulas esta semana. <a href="#" onclick="abrirM('mi');return false" style="color:var(--g2)">Ingresar â</a></td></tr>`;
+    return`<tr><td style="font-weight:600">${EM[r.casa]||'🏠'} ${r.casa}</td><td style="font-weight:500">${r.celula||'—'}</td><td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.tema}</td><td>${fmtF(r.fecha)}</td><td><span class="badge ${mbc[r.modalidad]||'bgr'}">${mbl[r.modalidad]||''} ${r.modalidad}</span></td><td><strong style="color:var(--g2)">${(r.asistentes||[]).length}</strong></td><td>${nv?`<span class="badge brose">🆕 ${nv}</span>`:'—'}</td><td>${r.lider}</td><td><button class="btn btn-ghost btn-sm" onclick="verDet(${ri})">Ver</button></td></tr>`;
+  }).join('')||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:24px"><div style="font-size:20px;margin-bottom:6px">⛪</div>Sin células esta semana. <a href="#" onclick="abrirM('mi');return false" style="color:var(--g2)">Ingresar →</a></td></tr>`;
 }
 
 function tbNvosDash(mes){
-  const nv=[];mes.forEach(r=>(r.asistentes||[]).filter(a=>a.nuevo).forEach(a=>nv.push({...a,casa:r.casa,celula:r.celula||'â',lider:r.lider,fecha:r.fecha})));
+  const nv=[];mes.forEach(r=>(r.asistentes||[]).filter(a=>a.nuevo).forEach(a=>nv.push({...a,casa:r.casa,celula:r.celula||'—',lider:r.lider,fecha:r.fecha})));
   document.getElementById('tb-nvo-dash').innerHTML=nv.slice(0,10).map((a,i)=>`
-    <tr><td style="color:var(--muted)">${i+1}</td><td style="font-weight:700">${a.nombre}</td><td>${EM[a.casa]||'ð '} ${a.casa}</td><td>${a.celula}</td><td>${a.lider}</td><td>${a.distrito||'â'}</td><td>${a.edad||'â'}</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px">${a.celular||'â'}</td><td>${fmtF(a.fecha)}</td></tr>`
+    <tr><td style="color:var(--muted)">${i+1}</td><td style="font-weight:700">${a.nombre}</td><td>${EM[a.casa]||'🏠'} ${a.casa}</td><td>${a.celula}</td><td>${a.lider}</td><td>${a.distrito||'—'}</td><td>${a.edad||'—'}</td><td style="font-family:'JetBrains Mono',monospace;font-size:11px">${a.celular||'—'}</td><td>${fmtF(a.fecha)}</td></tr>`
   ).join('')||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px">Sin nuevos este mes</td></tr>`;
 }
 
-// ââ CASAS PAGE â resumen con cantidad de cÃ©lulas por casa ââ
+// ══ CASAS PAGE — resumen con cantidad de células por casa ══
 function renderCasas(){
   const casaMap={};
   db.filter(r=>inWk(r)).forEach(r=>{
@@ -696,25 +656,25 @@ function renderCasas(){
   const casas=Object.entries(casaMap).sort((a,b)=>b[1].asist-a[1].asist);
   document.getElementById('cas-cnt').textContent=`${casas.length} casa${casas.length!==1?'s':''}`;
   const grid=document.getElementById('casa-summary-grid');
-  if(!casas.length){grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="ei">ð </div><p>Sin reportes esta semana</p></div>`;return;}
+  if(!casas.length){grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="ei">🏠</div><p>Sin reportes esta semana</p></div>`;return;}
   grid.innerHTML=casas.map(([c,v],idx)=>`
     <div class="csc" style="border-left-color:${COLORS[idx%COLORS.length]}">
       <div class="csc-head">
         <div>
-          <div style="font-size:20px;margin-bottom:4px">${EM[c]||'ð '}</div>
+          <div style="font-size:20px;margin-bottom:4px">${EM[c]||'🏠'}</div>
           <div class="csc-name">${c}</div>
           <div style="font-size:11px;color:var(--muted);margin-top:2px">${[...v.lideres].join(', ')}</div>
         </div>
-        <button class="btn btn-ghost btn-sm" onclick="goPage('celulas',document.getElementById('nb-cel'));filtrarPorCasa('${c}')">Ver cÃ©lulas â</button>
+        <button class="btn btn-ghost btn-sm" onclick="goPage('celulas',document.getElementById('nb-cel'));filtrarPorCasa('${c}')">Ver células →</button>
       </div>
       <div class="csc-stats">
-        <div class="csc-stat"><div class="csc-stat-val" style="color:${COLORS[idx%COLORS.length]}">${v.celulas.size}</div><div class="csc-stat-lbl">CÃ©lulas</div></div>
+        <div class="csc-stat"><div class="csc-stat-val" style="color:${COLORS[idx%COLORS.length]}">${v.celulas.size}</div><div class="csc-stat-lbl">Células</div></div>
         <div class="csc-stat"><div class="csc-stat-val" style="color:var(--g2)">${v.asist}</div><div class="csc-stat-lbl">Asistentes</div></div>
         <div class="csc-stat"><div class="csc-stat-val" style="color:var(--rose)">${v.nvo}</div><div class="csc-stat-lbl">Nuevos</div></div>
       </div>
       <div style="margin-top:10px">
-        <div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">CÃLULAS: ${[...v.celulas].join(' Â· ')}</div>
-        <div style="font-size:10px;color:var(--muted)">LÃ­deres: ${[...v.lideres].join(', ')}</div>
+        <div style="font-size:10px;color:var(--muted);margin-bottom:5px;font-weight:600">CÉLULAS: ${[...v.celulas].join(' · ')}</div>
+        <div style="font-size:10px;color:var(--muted)">Líderes: ${[...v.lideres].join(', ')}</div>
       </div>
     </div>`).join('');
 
@@ -725,26 +685,26 @@ function renderCasas(){
   const pGrid=document.getElementById('casas-pend-grid');
   const pCnt=document.getElementById('cas-pend-cnt');
   if(pendientes.length){
-    pCnt.textContent=`â ï¸ ${pendientes.length} pendiente${pendientes.length!==1?'s':''}`;
+    pCnt.textContent=`⚠️ ${pendientes.length} pendiente${pendientes.length!==1?'s':''}`;
     pGrid.innerHTML=pendientes.map(c=>`
       <div class="csc" style="border-left-color:var(--red);opacity:.75">
         <div class="csc-head">
           <div>
-            <div style="font-size:20px;margin-bottom:4px">${EM[c]||'ð '}</div>
+            <div style="font-size:20px;margin-bottom:4px">${EM[c]||'🏠'}</div>
             <div class="csc-name">${c}</div>
             <div style="font-size:11px;color:var(--red);margin-top:2px;font-weight:600">Sin reporte esta semana</div>
           </div>
-          <span class="badge brose" style="align-self:flex-start">â ï¸ Pendiente</span>
+          <span class="badge brose" style="align-self:flex-start">⚠️ Pendiente</span>
         </div>
         <div class="csc-stats">
-          <div class="csc-stat"><div class="csc-stat-val" style="color:var(--muted)">â</div><div class="csc-stat-lbl">CÃ©lulas</div></div>
-          <div class="csc-stat"><div class="csc-stat-val" style="color:var(--muted)">â</div><div class="csc-stat-lbl">Asistentes</div></div>
-          <div class="csc-stat"><div class="csc-stat-val" style="color:var(--muted)">â</div><div class="csc-stat-lbl">Nuevos</div></div>
+          <div class="csc-stat"><div class="csc-stat-val" style="color:var(--muted)">—</div><div class="csc-stat-lbl">Células</div></div>
+          <div class="csc-stat"><div class="csc-stat-val" style="color:var(--muted)">—</div><div class="csc-stat-lbl">Asistentes</div></div>
+          <div class="csc-stat"><div class="csc-stat-val" style="color:var(--muted)">—</div><div class="csc-stat-lbl">Nuevos</div></div>
         </div>
       </div>`).join('');
     pWrap.style.display='block';
   } else {
-    pCnt.textContent='â Todas las casas reportaron';
+    pCnt.textContent='✅ Todas las casas reportaron';
     pCnt.style.color='var(--g2)';
     pGrid.innerHTML='';
     pWrap.style.display='none';
@@ -756,79 +716,79 @@ function filtrarPorCasa(casa){
   renderCelulas();
 }
 
-// ââ CÃLULAS PAGE ââ
+// ══ CÉLULAS PAGE ══
 function renderCelulas(){
   const q=(document.getElementById('src-c')?.value||'').toLowerCase();
   const casa=document.getElementById('fil-casa')?.value||'';
   const mod=document.getElementById('fil-mod')?.value||'';
   const l=db.filter(r=>inWk(r)&&(r.casa+r.tema+(r.lider||'')+(r.celula||'')).toLowerCase().includes(q)&&(!casa||r.casa===casa)&&(!mod||r.modalidad===mod));
-  document.getElementById('cel-cnt').textContent=`${l.length} cÃ©lula${l.length!==1?'s':''}`;
+  document.getElementById('cel-cnt').textContent=`${l.length} célula${l.length!==1?'s':''}`;
   const g=document.getElementById('cg');
-  if(!l.length){g.innerHTML=`<div style="grid-column:1/-1"><div class="empty"><div class="ei">âª</div><p>No hay cÃ©lulas esta semana</p><button class="btn btn-p" onclick="abrirM('mi')" style="margin-top:14px">+ Ingresar reporte</button></div></div>`;return;}
+  if(!l.length){g.innerHTML=`<div style="grid-column:1/-1"><div class="empty"><div class="ei">⛪</div><p>No hay células esta semana</p><button class="btn btn-p" onclick="abrirM('mi')" style="margin-top:14px">+ Ingresar reporte</button></div></div>`;return;}
   const mbc={presencial:'bg',virtual:'bb',hibrida:'ba'};
-  const mbl={presencial:'ð  Presencial',virtual:'ð» Virtual',hibrida:'ð HÃ­brida'};
+  const mbl={presencial:'🏠 Presencial',virtual:'💻 Virtual',hibrida:'🔀 Híbrida'};
   g.innerHTML=[...l].sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||'')).map(r=>{
     const ri=db.indexOf(r),nv=(r.asistentes||[]).filter(a=>a.nuevo).length;
     return`<div class="cc" onclick="verDet(${ri})">
       <div class="cc-top">
         <div>
-          <div class="cc-nm">${EM[r.casa]||'ð '} ${r.casa}</div>
-          <div class="cc-sub">âª ${r.celula||'Sin nombre'} Â· ð ${r.lider}</div>
+          <div class="cc-nm">${EM[r.casa]||'🏠'} ${r.casa}</div>
+          <div class="cc-sub">⛪ ${r.celula||'Sin nombre'} · 👑 ${r.lider}</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:3px;align-items:flex-end">
           <span class="badge ${mbc[r.modalidad]||'bgr'}">${mbl[r.modalidad]||r.modalidad}</span>
-          ${r.nueva==='si'?'<span class="badge brose">ð Nueva</span>':''}
+          ${r.nueva==='si'?'<span class="badge brose">🆕 Nueva</span>':''}
         </div>
       </div>
       <div class="cc-body">
-        <div class="cc-r"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${fmtF(r.fecha)}${r.hora?' Â· '+r.hora:''}</div>
+        <div class="cc-r"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${fmtF(r.fecha)}${r.hora?' · '+r.hora:''}</div>
         <div class="cc-r"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>${r.tema}</div>
         ${r.dir?`<div class="cc-r"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${r.dir.substring(0,45)}${r.dir.length>45?'...':''}</div>`:''}
       </div>
       <div class="cc-foot">
-        <div style="display:flex;align-items:center;gap:7px"><span style="font-size:17px;font-weight:800;color:var(--g2)">${(r.asistentes||[]).length}</span><span style="font-size:10px;color:var(--muted)">asistentes</span>${nv?`<span class="badge brose">ð ${nv}</span>`:''}</div>
-        <button onclick="event.stopPropagation();eliminar(${ri})" class="btn btn-danger btn-sm">ð</button>
+        <div style="display:flex;align-items:center;gap:7px"><span style="font-size:17px;font-weight:800;color:var(--g2)">${(r.asistentes||[]).length}</span><span style="font-size:10px;color:var(--muted)">asistentes</span>${nv?`<span class="badge brose">🆕 ${nv}</span>`:''}</div>
+        <button onclick="event.stopPropagation();eliminar(${ri})" class="btn btn-danger btn-sm">🗑</button>
       </div>
     </div>`;
   }).join('');
 }
 
-// ââ NUEVOS PAGE ââ
+// ══ NUEVOS PAGE ══
 function renderNuevos(){
   const mes=db.filter(r=>inMonth(r));
-  const nv=[];mes.forEach(r=>(r.asistentes||[]).filter(a=>a.nuevo).forEach(a=>nv.push({...a,casa:r.casa,celula:r.celula||'â',lider:r.lider,fecha:r.fecha})));
+  const nv=[];mes.forEach(r=>(r.asistentes||[]).filter(a=>a.nuevo).forEach(a=>nv.push({...a,casa:r.casa,celula:r.celula||'—',lider:r.lider,fecha:r.fecha})));
   document.getElementById('nvo-cnt').textContent=`${nv.length} nuevo${nv.length!==1?'s':''} este mes`;
   document.getElementById('tb-nvo').innerHTML=nv.map((a,i)=>`<tr>
     <td style="color:var(--muted)">${i+1}</td>
     <td style="font-weight:700">${a.nombre}</td>
-    <td>${EM[a.casa]||'ð '} ${a.casa}</td>
+    <td>${EM[a.casa]||'🏠'} ${a.casa}</td>
     <td>${a.celula}</td>
     <td>${a.lider}</td>
-    <td>${a.distrito||'â'}</td>
-    <td>${a.edad||'â'}</td>
-    <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${a.celular||'â'}</td>
+    <td>${a.distrito||'—'}</td>
+    <td>${a.edad||'—'}</td>
+    <td style="font-family:'JetBrains Mono',monospace;font-size:11px">${a.celular||'—'}</td>
     <td>${fmtF(a.fecha)}</td>
   </tr>`).join('')||`<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:28px">Sin nuevos este mes</td></tr>`;
 }
 
-// ââ DETALLE â muestra lista de asistentes solo en el modal ââ
+// ══ DETALLE — muestra lista de asistentes solo en el modal ══
 function verDet(i){
   const r=db[i];
-  const mbl={presencial:'ð  Presencial',virtual:'ð» Virtual',hibrida:'ð HÃ­brida'};
+  const mbl={presencial:'🏠 Presencial',virtual:'💻 Virtual',hibrida:'🔀 Híbrida'};
   const nv=(r.asistentes||[]).filter(a=>a.nuevo).length;
-  document.getElementById('md-t').textContent=`${EM[r.casa]||'ð '} ${r.casa} â ${r.celula||'CÃ©lula'}`;
+  document.getElementById('md-t').textContent=`${EM[r.casa]||'🏠'} ${r.casa} — ${r.celula||'Célula'}`;
   document.getElementById('md-b').innerHTML=`
     <div class="rc">${[
-      ['Casa',`${EM[r.casa]||'ð '} ${r.casa}`],
-      ['CÃ©lula',r.celula||'â'],
-      ['Pastor / LÃ­der',r.lider],
+      ['Casa',`${EM[r.casa]||'🏠'} ${r.casa}`],
+      ['Célula',r.celula||'—'],
+      ['Pastor / Líder',r.lider],
       ['Tema',r.tema],
-      ['Fecha',fmtF(r.fecha)+(r.hora?' Â· '+r.hora:'')],
-      ['DirecciÃ³n',r.dir||'â'],
+      ['Fecha',fmtF(r.fecha)+(r.hora?' · '+r.hora:'')],
+      ['Dirección',r.dir||'—'],
       ['Modalidad',mbl[r.modalidad]||r.modalidad],
-      ['CÃ©lula nueva',r.nueva==='si'?'ð SÃ­':'â No'],
+      ['Célula nueva',r.nueva==='si'?'🆕 Sí':'✅ No'],
       ['Total',(r.asistentes||[]).length+' asistentes'],
-      ['Nuevos',nv+' ð'],
+      ['Nuevos',nv+' 🆕'],
       r.obs?['Obs.',r.obs]:null
     ].filter(Boolean).map(([k,v])=>`<div class="rrow"><div class="rk2">${k}</div><div class="rv">${v}</div></div>`).join('')}</div>
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px">
@@ -842,22 +802,21 @@ function verDet(i){
             <div style="font-weight:700">${a.nombre}</div>
             ${a.nuevo&&(a.edad||a.celular||a.direccion)?`
             <div style="font-size:10px;color:var(--muted);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap">
-              ${a.edad?`<span>ð ${a.edad} aÃ±os</span>`:''}
-              ${a.celular?`<span>ð ${a.celular}</span>`:''}
-              ${a.direccion?`<span>ð ${a.direccion}</span>`:''}
+              ${a.edad?`<span>🎂 ${a.edad} años</span>`:''}
+              ${a.celular?`<span>📞 ${a.celular}</span>`:''}
+              ${a.direccion?`<span>📍 ${a.direccion}</span>`:''}
             </div>`:''}
           </div>
           ${a.distrito?`<span style="font-size:10px;color:var(--muted)">${a.distrito}</span>`:''}
-          <span>${a.nuevo?'<span class="badge brose">ð Nuevo</span>':''}</span>
+          <span>${a.nuevo?'<span class="badge brose">🆕 Nuevo</span>':''}</span>
         </div>`).join('')||'<p style="color:var(--muted);font-size:12px">Sin asistentes</p>'}
     </div>`;
-  document.getElementById('md-del').onclick=()=>{if(confirm('Â¿Eliminar?')){eliminar(i);cerrarM('md');}};
-  document.getElementById('md-edit').onclick=()=>editarCelula(i);
+  document.getElementById('md-del').onclick=()=>{if(confirm('¿Eliminar?')){eliminar(i);cerrarM('md');}};
   abrirM('md');
 }
 
 function eliminar(i){
-  if(!confirm('Â¿Eliminar este reporte? Esta acciÃ³n no se puede deshacer.')) return;
+  if(!confirm('¿Eliminar este reporte? Esta acción no se puede deshacer.')) return;
   const reg=db[i];
   if(reg&&reg._sh&&reg.id){const _del=new Set(JSON.parse(localStorage.getItem('casas_deleted_ids')||'[]'));_del.add(reg.id);localStorage.setItem('casas_deleted_ids',JSON.stringify([..._del]));}
   db.splice(i,1);
@@ -870,7 +829,7 @@ function eliminar(i){
   renderLideres();
   // Cierra el modal si estaba abierto
   cerrarM('md');
-  // Actualiza tabla recientes si estÃ¡ visible
+  // Actualiza tabla recientes si está visible
   const sem=db.filter(r=>inWk(r));
   tbRec(sem);
 }
@@ -891,7 +850,7 @@ async function procIA(){
   if(!txt){alert('Pega el texto del reporte primero');return;}
   const st=document.getElementById('ia-st');st.style.display='flex';
   document.getElementById('ia-msg').textContent='Analizando con IA...';
-  const prompt=`Analiza este reporte de cÃ©lula y extrae los datos en JSON.\n\nTEXTO:\n${txt}\n\nDevuelve SOLO JSON sin markdown:\n{"casa":"nombre en mayÃºsculas (AMOR, GOZO, PAZ etc)","celula":"nombre de la cÃ©lula","lider":"","tema":"","fecha":"YYYY-MM-DD o vacÃ­o","hora":"HH:MM o vacÃ­o","dir":"","modalidad":"presencial|virtual|hibrida","nueva":"si|no","obs":"","asistentes":[{"nombre":"","distrito":"","nuevo":false}]}\nSi alguien tiene ð nuevo=true. Si no existe un campo devuelve "".`;
+  const prompt=`Analiza este reporte de célula y extrae los datos en JSON.\n\nTEXTO:\n${txt}\n\nDevuelve SOLO JSON sin markdown:\n{"casa":"nombre en mayúsculas (AMOR, GOZO, PAZ etc)","celula":"nombre de la célula","lider":"","tema":"","fecha":"YYYY-MM-DD o vacío","hora":"HH:MM o vacío","dir":"","modalidad":"presencial|virtual|hibrida","nueva":"si|no","obs":"","asistentes":[{"nombre":"","distrito":"","nuevo":false}]}\nSi alguien tiene 🆕 nuevo=true. Si no existe un campo devuelve "".`;
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
     const data=await res.json();
@@ -901,22 +860,21 @@ async function procIA(){
     sv();st.style.display='none';cerrarM('mi');
     document.getElementById('wa-t').value='';
     renderAll();
-    alert(`â CÃ©lula "${p.celula||p.casa}" registrada â ${(p.asistentes||[]).length} asistentes.`);
+    alert(`✅ Célula "${p.celula||p.casa}" registrada — ${(p.asistentes||[]).length} asistentes.`);
   }catch(e){document.getElementById('ia-msg').textContent='Error al procesar. Usa ingreso manual.';setTimeout(()=>st.style.display='none',3000);}
 }
 
 function guardarMan(){
   const ca=document.getElementById('mc').value,cel=document.getElementById('mcel').value.trim(),li=document.getElementById('ml').value.trim(),te=document.getElementById('mt').value.trim(),fe=document.getElementById('mf').value;
   if(!ca||!cel||!li||!te||!fe){alert('Completa los campos obligatorios (*)');return;}
-  const atts=document.getElementById('ma').value.split('\n').filter(l=>l.trim()).map(l=>{const nvo=l.includes('ð')||l.toLowerCase().includes('nuevo');const nom=l.replace('ð','').replace(/nuevo/gi,'').replace(/\s*\([^)]*\)/,'').trim();const dist=(l.match(/\(([^)]+)\)/)||[])[1]||'';return{nombre:nom,distrito:dist,nuevo:nvo};}).filter(a=>a.nombre);
-  const newRec={id:Date.now(),ts:new Date().toISOString(),casa:ca,celula:cel,lider:li,tema:te,fecha:fe,hora:document.getElementById('mh').value,dir:document.getElementById('md2').value.trim(),modalidad:document.getElementById('mmod').value,nueva:document.getElementById('mnv').value,obs:'',asistentes:atts};
-  if(window._editIdx!=null){db[window._editIdx]={...db[window._editIdx],...newRec};window._editIdx=null;}else{db.push(newRec);}
+  const atts=document.getElementById('ma').value.split('\n').filter(l=>l.trim()).map(l=>{const nvo=l.includes('🆕')||l.toLowerCase().includes('nuevo');const nom=l.replace('🆕','').replace(/nuevo/gi,'').replace(/\s*\([^)]*\)/,'').trim();const dist=(l.match(/\(([^)]+)\)/)||[])[1]||'';return{nombre:nom,distrito:dist,nuevo:nvo};}).filter(a=>a.nombre);
+  db.push({id:Date.now(),ts:new Date().toISOString(),casa:ca,celula:cel,lider:li,tema:te,fecha:fe,hora:document.getElementById('mh').value,dir:document.getElementById('md2').value.trim(),modalidad:document.getElementById('mmod').value,nueva:document.getElementById('mnv').value,obs:'',asistentes:atts});
   sv();cerrarM('mi');renderAll();
   ['ml','mt','md2','ma','mcel'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('mc').value='';document.getElementById('mf').value=new Date().toISOString().split('T')[0];
 }
 
-// SYNC SHEETS â JSONP para bypass CORS con Apps Script
+// SYNC SHEETS — JSONP para bypass CORS con Apps Script
 function syncSheets(){
   const lbl1=document.getElementById('sync-lbl'),lbl2=document.getElementById('sync-lbl2');
   lbl1.textContent='Sincronizando...';lbl2.textContent='Sincronizando...';
@@ -934,16 +892,16 @@ function syncSheets(){
       if(!rows.length){lbl1.textContent='Sin datos';lbl2.textContent='Sin datos';setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);return;}
       const nuevos=rows.map((r,i)=>{
         const cn=(r['Casa Nueva']||r['Casa_Nueva']||'').toString().trim();
-        return{id:stableId([(r['Casa']||'').toString().toUpperCase().trim(),normNombre(r['LÃ­der']||r['Lider']||''),normFecha((r['Fecha']||'').toString()),r['CÃ©lula']||r['Celula']||''].join('|')),ts:r['Timestamp']||'',casa:(r['Casa']||'').toString().toUpperCase().trim(),celula:r['CÃ©lula']||r['Celula']||'',lider:normNombre(r['LÃ­der']||r['Lider']||''),tema:r['Tema']||'',fecha:normFecha((r['Fecha']||'').toString()),hora:r['Hora']||'',dir:r['DirecciÃ³n']||r['Direccion']||'',modalidad:(r['Modalidad']||'presencial').toString().toLowerCase().trim(),nueva:['sÃ­','si','yes','1','true'].includes(cn.toLowerCase())?'si':'no',obs:r['Observaciones']||'',ofrenda:r['Ofrenda']||'',asistentes:parsAtt((r['Lista Asistentes']||r['Lista_Asistentes']||'').toString()),_sh:true};
+        return{id:stableId([(r['Casa']||'').toString().toUpperCase().trim(),normNombre(r['Líder']||r['Lider']||''),normFecha((r['Fecha']||'').toString()),r['Célula']||r['Celula']||''].join('|')),ts:r['Timestamp']||'',casa:(r['Casa']||'').toString().toUpperCase().trim(),celula:r['Célula']||r['Celula']||'',lider:normNombre(r['Líder']||r['Lider']||''),tema:r['Tema']||'',fecha:normFecha((r['Fecha']||'').toString()),hora:r['Hora']||'',dir:r['Dirección']||r['Direccion']||'',modalidad:(r['Modalidad']||'presencial').toString().toLowerCase().trim(),nueva:['sí','si','yes','1','true'].includes(cn.toLowerCase())?'si':'no',obs:r['Observaciones']||'',ofrenda:r['Ofrenda']||'',asistentes:parsAtt((r['Lista Asistentes']||r['Lista_Asistentes']||'').toString()),_sh:true};
       }).filter(r=>r.casa);
       const delIds=new Set(JSON.parse(localStorage.getItem('casas_deleted_ids')||'[]'));const nuevosFilt=nuevos.filter(n=>!delIds.has(n.id));db=db.filter(r=>!r._sh);nuevosFilt.forEach(n=>{db=db.filter(r=>!(r.casa===n.casa&&r.lider===n.lider&&r.fecha===n.fecha&&r.celula===n.celula));});db=[...db,...nuevosFilt];sv();renderAll();
-      lbl1.textContent='â '+nuevos.length+' registros';lbl2.textContent='â '+nuevos.length;
+      lbl1.textContent='✅ '+nuevos.length+' registros';lbl2.textContent='✅ '+nuevos.length;
       setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
-    }catch(e){lbl1.textContent='â ï¸ Error';lbl2.textContent='â ï¸ Error';setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);}
+    }catch(e){lbl1.textContent='⚠️ Error';lbl2.textContent='⚠️ Error';setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);}
   };
   const s=document.createElement('script');
   s.src=SHEETS_URL+'?callback=__sheetsCB&t='+Date.now();
-  s.onerror=()=>{clearTimeout(timeout);delete window.__sheetsCB;lbl1.textContent='Sin conexiÃ³n';lbl2.textContent='Sin conexiÃ³n';setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);};
+  s.onerror=()=>{clearTimeout(timeout);delete window.__sheetsCB;lbl1.textContent='Sin conexión';lbl2.textContent='Sin conexión';setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);};
   window._syncScript=s;
   document.head.appendChild(s);
 }
@@ -963,30 +921,30 @@ function normNombre(n){
 function parsAtt(str){
   if(!str)return[];
   return str.split(',').map(s=>{
-    const nvo=s.includes('ð');
+    const nvo=s.includes('🆕');
     const dist=(s.match(/\(([^)]+)\)/)||[])[1]||'';
-    const nom=normNombre(s.replace('ð','').replace(/\s*\([^)]*\)/,'').trim());
+    const nom=normNombre(s.replace('🆕','').replace(/\s*\([^)]*\)/,'').trim());
     return{nombre:nom,distrito:dist,nuevo:nvo,edad:'',celular:'',direccion:''};
   }).filter(a=>a.nombre);
 }
 
 // DEMO
 function demo(){
-  if(!confirm('Â¿Agregar datos demo?'))return;
+  if(!confirm('¿Agregar datos demo?'))return;
   const h=new Date(),fh=d=>{const dt=new Date(h);dt.setDate(h.getDate()-d);return dt.toISOString().split('T')[0];};
   [
-    {id:101,casa:'AMOR',celula:'Abierta',lider:'Pedro Flores',tema:'Fe que mueve montaÃ±as',fecha:fh(0),hora:'19:00',dir:'Jr. Las OrquÃ­deas 342',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'MarÃ­a LÃ³pez',distrito:'SJL',nuevo:false},{nombre:'Carlos Ruiz',distrito:'SJL',nuevo:false},{nombre:'Ana Torres',distrito:'Comas',nuevo:true},{nombre:'Luis Mendoza',distrito:'SJL',nuevo:false},{nombre:'Rosa Quispe',distrito:'Los Olivos',nuevo:true}]},
-    {id:102,casa:'AMOR',celula:'Cerrada',lider:'Carmen DÃ­az',tema:'Crecer en comunidad',fecha:fh(1),hora:'18:00',dir:'Av. Los Ãlamos 456',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'Roberto Vega',distrito:'SJL',nuevo:false},{nombre:'Elena RÃ­os',distrito:'SJL',nuevo:false},{nombre:'Miguel Santos',distrito:'Comas',nuevo:false},{nombre:'Patricia Cruz',distrito:'SJL',nuevo:false}]},
-    {id:103,casa:'GOZO',celula:'Abierta',lider:'Jorge Mamani',tema:'Testimonio y misiÃ³n',fecha:fh(2),hora:'19:30',dir:'Jr. Los Jazmines 890',modalidad:'virtual',nueva:'si',obs:'Primera cÃ©lula abierta de GOZO',asistentes:[{nombre:'Sandra CÃ¡rdenas',distrito:'Comas',nuevo:true},{nombre:'Alejandro RÃ­os',distrito:'Comas',nuevo:true},{nombre:'LucÃ­a Flores',distrito:'Comas',nuevo:false}]},
-    {id:104,casa:'GOZO',celula:'Cerrada',lider:'Ana y Luis Peralta',tema:'Crecimiento espiritual',fecha:fh(0),hora:'20:00',dir:'Ca. Los Pinos 456',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'Carlos Quispe',distrito:'SJL',nuevo:false},{nombre:'Milagros Santos',distrito:'SJL',nuevo:false},{nombre:'HÃ©ctor Vega',distrito:'Ate',nuevo:false},{nombre:'Natalia Cruz',distrito:'SJL',nuevo:false},{nombre:'Ãscar Mendoza',distrito:'Ate',nuevo:false}]},
-    {id:105,casa:'FE',celula:'Abierta',lider:'Luis Condori',tema:'Unidad en el cuerpo',fecha:fh(3),hora:'18:00',dir:'https://zoom.us/j/123',modalidad:'hibrida',nueva:'no',obs:'',asistentes:[{nombre:'Vanessa Torres',distrito:'Miraflores',nuevo:false},{nombre:'SebastiÃ¡n LÃ³pez',distrito:'Surco',nuevo:false},{nombre:'Daniela Ramos',distrito:'Miraflores',nuevo:true}]},
-    {id:106,casa:'PAZ',celula:'Cerrada',lider:'Miryam Huanca',tema:'Servicio al prÃ³jimo',fecha:fh(1),hora:'19:00',dir:'Jr. Las Rosas 234',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'CÃ©sar Montoya',distrito:'SJL',nuevo:false},{nombre:'Isabel RÃ­os',distrito:'SJL',nuevo:false},{nombre:'Marco Paredes',distrito:'SJL',nuevo:false},{nombre:'SofÃ­a Delgado',distrito:'SJL',nuevo:false}]},
+    {id:101,casa:'AMOR',celula:'Abierta',lider:'Pedro Flores',tema:'Fe que mueve montañas',fecha:fh(0),hora:'19:00',dir:'Jr. Las Orquídeas 342',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'María López',distrito:'SJL',nuevo:false},{nombre:'Carlos Ruiz',distrito:'SJL',nuevo:false},{nombre:'Ana Torres',distrito:'Comas',nuevo:true},{nombre:'Luis Mendoza',distrito:'SJL',nuevo:false},{nombre:'Rosa Quispe',distrito:'Los Olivos',nuevo:true}]},
+    {id:102,casa:'AMOR',celula:'Cerrada',lider:'Carmen Díaz',tema:'Crecer en comunidad',fecha:fh(1),hora:'18:00',dir:'Av. Los Álamos 456',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'Roberto Vega',distrito:'SJL',nuevo:false},{nombre:'Elena Ríos',distrito:'SJL',nuevo:false},{nombre:'Miguel Santos',distrito:'Comas',nuevo:false},{nombre:'Patricia Cruz',distrito:'SJL',nuevo:false}]},
+    {id:103,casa:'GOZO',celula:'Abierta',lider:'Jorge Mamani',tema:'Testimonio y misión',fecha:fh(2),hora:'19:30',dir:'Jr. Los Jazmines 890',modalidad:'virtual',nueva:'si',obs:'Primera célula abierta de GOZO',asistentes:[{nombre:'Sandra Cárdenas',distrito:'Comas',nuevo:true},{nombre:'Alejandro Ríos',distrito:'Comas',nuevo:true},{nombre:'Lucía Flores',distrito:'Comas',nuevo:false}]},
+    {id:104,casa:'GOZO',celula:'Cerrada',lider:'Ana y Luis Peralta',tema:'Crecimiento espiritual',fecha:fh(0),hora:'20:00',dir:'Ca. Los Pinos 456',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'Carlos Quispe',distrito:'SJL',nuevo:false},{nombre:'Milagros Santos',distrito:'SJL',nuevo:false},{nombre:'Héctor Vega',distrito:'Ate',nuevo:false},{nombre:'Natalia Cruz',distrito:'SJL',nuevo:false},{nombre:'Óscar Mendoza',distrito:'Ate',nuevo:false}]},
+    {id:105,casa:'FE',celula:'Abierta',lider:'Luis Condori',tema:'Unidad en el cuerpo',fecha:fh(3),hora:'18:00',dir:'https://zoom.us/j/123',modalidad:'hibrida',nueva:'no',obs:'',asistentes:[{nombre:'Vanessa Torres',distrito:'Miraflores',nuevo:false},{nombre:'Sebastián López',distrito:'Surco',nuevo:false},{nombre:'Daniela Ramos',distrito:'Miraflores',nuevo:true}]},
+    {id:106,casa:'PAZ',celula:'Cerrada',lider:'Miryam Huanca',tema:'Servicio al prójimo',fecha:fh(1),hora:'19:00',dir:'Jr. Las Rosas 234',modalidad:'presencial',nueva:'no',obs:'',asistentes:[{nombre:'César Montoya',distrito:'SJL',nuevo:false},{nombre:'Isabel Ríos',distrito:'SJL',nuevo:false},{nombre:'Marco Paredes',distrito:'SJL',nuevo:false},{nombre:'Sofía Delgado',distrito:'SJL',nuevo:false}]},
   ].forEach(r=>db.push(r));
-  sv();renderAll();alert('â Demo cargado');
+  sv();renderAll();alert('✅ Demo cargado');
 }
-function limpiar(){if(!confirm('Â¿Eliminar todos los datos?'))return;db=[];sv();renderAll();renderCasas();renderCelulas();renderNuevos();}
+function limpiar(){if(!confirm('¿Eliminar todos los datos?'))return;db=[];sv();renderAll();renderCasas();renderCelulas();renderNuevos();}
 
-// ââ LÃDERES ââ
+// ══ LÍDERES ══
 let lidFiltro='todos';
 function getLideres(){return JSON.parse(localStorage.getItem('lideres_reg')||'[]');}
 function saveLideres(l){localStorage.setItem('lideres_reg',JSON.stringify(l));}
@@ -999,9 +957,9 @@ function agregarLider(){
   // Normalizar: capitaliza cada palabra
   const nombre=normNombre(nombreRaw);
   const lids=getLideres();
-  // Comparar sin distinguir mayÃºsculas ni tildes
+  // Comparar sin distinguir mayúsculas ni tildes
   const clave=n=>n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
-  if(lids.find(l=>clave(l.nombre)===clave(nombre)&&l.casa===casa)){alert('Este lÃ­der ya estÃ¡ registrado');return;}
+  if(lids.find(l=>clave(l.nombre)===clave(nombre)&&l.casa===casa)){alert('Este líder ya está registrado');return;}
   lids.push({nombre,casa:casa||'Sin casa'});
   saveLideres(lids);
   document.getElementById('lid-nombre-inp').value='';
@@ -1009,7 +967,7 @@ function agregarLider(){
 }
 
 function eliminarLider(nombre,casa){
-  if(!confirm(`Â¿Eliminar a ${nombre}?`))return;
+  if(!confirm(`¿Eliminar a ${nombre}?`))return;
   saveLideres(getLideres().filter(l=>!(l.nombre===nombre&&l.casa===casa)));
   renderLideres();badges();
 }
@@ -1030,7 +988,7 @@ function renderLideres(){
   let lids=getLideres().map(l=>({...l,nombre:normNombre(l.nombre)}));
   const sem=db.filter(r=>inWk(r));
 
-  // Clave de comparaciÃ³n sin tildes ni mayÃºsculas
+  // Clave de comparación sin tildes ni mayúsculas
   const clave=n=>n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
 
   const repMap={};
@@ -1042,7 +1000,7 @@ function renderLideres(){
     repMap[k].ofrenda+=parseFloat(r.ofrenda||0);
   });
 
-  // Auto-detectar lÃ­deres de reportes no registrados
+  // Auto-detectar líderes de reportes no registrados
   const lidClaves=new Set(lids.map(l=>clave(l.nombre)));
   Object.keys(repMap).forEach(k=>{
     if(!lidClaves.has(k)){
@@ -1051,7 +1009,7 @@ function renderLideres(){
     }
   });
 
-  // Eliminar duplicados que puedan quedar por capitalizaciÃ³n
+  // Eliminar duplicados que puedan quedar por capitalización
   const seen=new Set();
   lids=lids.filter(l=>{const k=clave(l.nombre);if(seen.has(k))return false;seen.add(k);return true;});
 
@@ -1065,7 +1023,7 @@ function renderLideres(){
   document.getElementById('lid-no').textContent=pendientes;
   document.getElementById('lid-pct-txt').textContent=pct+'%';
   document.getElementById('lid-prog-bar').style.width=pct+'%';
-  document.getElementById('cnt-lid').textContent=pendientes>0?pendientes:'â';
+  document.getElementById('cnt-lid').textContent=pendientes>0?pendientes:'✓';
   document.getElementById('cnt-lid').style.background=pendientes>0?'#ef4444':'#059669';
 
   let lista=lids;
@@ -1081,97 +1039,21 @@ function renderLideres(){
     const rep=repMap[clave(l.nombre)];
     const reporto=!!rep;
     const ultima=rep?[...rep.fechas].sort().pop():'';
-    const ofrenda=rep&&rep.ofrenda>0?`S/ ${rep.ofrenda.toFixed(2)}`:'â';
+    const ofrenda=rep&&rep.ofrenda>0?`S/ ${rep.ofrenda.toFixed(2)}`:'—';
     return`<tr>
       <td style="color:var(--muted)">${i+1}</td>
       <td><div style="font-weight:700">${l.nombre}</div>${l._auto?'<div style="font-size:10px;color:var(--muted)">Auto-detectado</div>':''}</td>
-      <td>${EM[l.casa]||'ð '} ${l.casa||'â'}</td>
-      <td>${reporto?'<span class="badge bg" style="padding:4px 12px">â ReportÃ³</span>':'<span class="badge brose" style="padding:4px 12px">â ï¸ Pendiente</span>'}</td>
-      <td style="font-weight:700;color:var(--g2);text-align:center">${rep?rep.count:'â'}</td>
+      <td>${EM[l.casa]||'🏠'} ${l.casa||'—'}</td>
+      <td>${reporto?'<span class="badge bg" style="padding:4px 12px">✅ Reportó</span>':'<span class="badge brose" style="padding:4px 12px">⚠️ Pendiente</span>'}</td>
+      <td style="font-weight:700;color:var(--g2);text-align:center">${rep?rep.count:'—'}</td>
       <td>${fmtF(ultima)}</td>
       <td style="font-weight:700;color:var(--amber)">${ofrenda}</td>
-      <td>${!l._auto?`<button class="btn btn-danger btn-sm" onclick="eliminarLider('${l.nombre.replace(/'/g,"\\'")}','${l.casa}')">ð</button>`:''}</td>
+      <td>${!l._auto?`<button class="btn btn-danger btn-sm" onclick="eliminarLider('${l.nombre.replace(/'/g,"\\'")}','${l.casa}')">🗑</button>`:''}</td>
     </tr>`;
-  }).join('')||`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Sin lÃ­deres registrados.<br><span style="font-size:11px">AgrÃ©galos arriba o registra cÃ©lulas y aparecerÃ¡n automÃ¡ticamente.</span></td></tr>`;
+  }).join('')||`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:28px">Sin líderes registrados.<br><span style="font-size:11px">Agrégalos arriba o registra células y aparecerán automáticamente.</span></td></tr>`;
 }
 
-// ══ CONFIGURACIÓN DE CASAS ══
-function renderConfig(){
-  const lista=document.getElementById('cfg-lista');
-  const total=document.getElementById('cfg-total');
-  total.textContent=`${CASAS.length} casa${CASAS.length!==1?'s':''}`;
-  if(!CASAS.length){lista.innerHTML='<p style="color:var(--muted);font-size:12px;padding:8px 0">No hay casas.</p>';return;}
-  lista.innerHTML=CASAS.map((c,i)=>`
-    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)">
-      <span style="font-size:22px;width:32px;text-align:center">${EM[c]||'🏠'}</span>
-      <div style="flex:1">
-        <div style="font-weight:700;font-size:13px">${c}</div>
-        <div style="font-size:10px;color:var(--muted)">${db.filter(r=>r.casa===c).length} reportes en total</div>
-      </div>
-      <button class="btn btn-ghost btn-sm" onclick="editarEmojiCasa('${c}')" title="Cambiar emoji">✏️</button>
-      <button class="btn btn-danger btn-sm" onclick="eliminarCasa('${c}')">🗑</button>
-    </div>`).join('');
-}
-
-function agregarCasa(){
-  const nombre=document.getElementById('cfg-nombre').value.trim().toUpperCase();
-  const em=document.getElementById('cfg-em').value.trim()||'🏠';
-  const err=document.getElementById('cfg-err');
-  if(!nombre){err.textContent='El nombre es obligatorio.';err.style.display='block';return;}
-  if(CASAS.includes(nombre)){err.textContent='Ya existe una casa con ese nombre.';err.style.display='block';return;}
-  err.style.display='none';
-  CASAS.push(nombre);EM[nombre]=em;
-  cfg.casas=[...CASAS];cfg.em={...EM};svCfg();
-  refreshSelects();renderConfig();
-  document.getElementById('cfg-nombre').value='';document.getElementById('cfg-em').value='';
-}
-
-function eliminarCasa(nombre){
-  const total=db.filter(r=>r.casa===nombre).length;
-  const msg=total>0?`¿Eliminar la casa "${nombre}"? Tiene ${total} reporte${total!==1?'s':''} (los datos no se borran).`:`¿Eliminar la casa "${nombre}"?`;
-  if(!confirm(msg))return;
-  const idx=CASAS.indexOf(nombre);if(idx>=0)CASAS.splice(idx,1);
-  delete EM[nombre];cfg.casas=[...CASAS];cfg.em={...EM};svCfg();
-  refreshSelects();renderConfig();renderCasas();
-}
-
-function editarEmojiCasa(nombre){
-  const actual=EM[nombre]||'🏠';
-  const nuevo=prompt(`Emoji para "${nombre}" (actual: ${actual}):`,actual);
-  if(nuevo==null||nuevo.trim()===actual)return;
-  EM[nombre]=nuevo.trim()||'🏠';cfg.em={...EM};svCfg();
-  renderConfig();renderCasas();
-}
-
-function resetCasas(){
-  if(!confirm('¿Restaurar las 14 casas por defecto?'))return;
-  CASAS.length=0;CASAS_DEFAULT.forEach(c=>CASAS.push(c));
-  Object.keys(EM).forEach(k=>delete EM[k]);Object.assign(EM,EM_DEFAULT);
-  cfg={casas:[...CASAS],em:{...EM}};svCfg();
-  refreshSelects();renderConfig();renderCasas();
-}
-
-// ══ EDITAR CÉLULA ══
-function editarCelula(i){
-  const r=db[i];
-  cerrarM('md');
-  swTab('man');
-  document.getElementById('mc').value=r.casa;
-  document.getElementById('mcel').value=r.celula||'Abierta';
-  document.getElementById('ml').value=r.lider;
-  document.getElementById('mt').value=r.tema;
-  document.getElementById('mf').value=r.fecha||new Date().toISOString().split('T')[0];
-  document.getElementById('mh').value=r.hora||'';
-  document.getElementById('md2').value=r.dir||'';
-  document.getElementById('mmod').value=r.modalidad||'presencial';
-  document.getElementById('mnv').value=r.nueva||'no';
-  const atts=(r.asistentes||[]).map(a=>`${a.nuevo?'🆕 ':''}${a.nombre}${a.distrito?' ('+a.distrito+')':''}`).join('\n');
-  document.getElementById('ma').value=atts;
-  window._editIdx=i;
-  abrirM('mi');
-}
-
-// ââ BACKUP â respaldo semanal local + Google Drive ââ
+// ══ BACKUP — respaldo semanal local + Google Drive ══
 const BACKUP_KEY='casas_ultimo_backup';
 const BACKUP_DIAS=7;
 
@@ -1187,7 +1069,7 @@ function hacerRespaldo(manual=false){
   const ts=new Date().toISOString();
   localStorage.setItem(BACKUP_KEY,ts);
   actualizarLblBackup(ts);
-  const t=document.createElement('div');t.className='bkp-toast';t.textContent='â Respaldo descargado: respaldo_celulas_'+fecha+'.json';
+  const t=document.createElement('div');t.className='bkp-toast';t.textContent='✅ Respaldo descargado: respaldo_celulas_'+fecha+'.json';
   document.body.appendChild(t);setTimeout(()=>t.remove(),4000);
 }
 
@@ -1195,7 +1077,7 @@ function actualizarLblBackup(ts){
   const el=document.getElementById('sb-bkp-lbl');if(!el)return;
   if(!ts){el.textContent='Sin respaldo';return;}
   const d=new Date(ts);
-  el.textContent='Ãltimo: '+d.toLocaleDateString('es-PE',{day:'numeric',month:'short'});
+  el.textContent='Último: '+d.toLocaleDateString('es-PE',{day:'numeric',month:'short'});
 }
 
 function verificarBackupAuto(){
@@ -1209,7 +1091,7 @@ function verificarBackupAuto(){
 // INIT
 document.getElementById('wkl').textContent=fmtWk(0);
 document.getElementById('mf').value=new Date().toISOString().split('T')[0];
-CASAS.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=`${EM[c]||'ð '} ${c}`;document.getElementById('lid-casa-sel')?.appendChild(o);});
+CASAS.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=`${EM[c]||'🏠'} ${c}`;document.getElementById('lid-casa-sel')?.appendChild(o);});
 renderAll();
 syncSheets();
 verificarBackupAuto();
