@@ -1119,7 +1119,7 @@ function detectarLideresNuevos(){
   return Object.values(mapa).map(d=>{
     const casaPpal=Object.entries(d.casas).sort((a,b)=>b[1]-a[1])[0]?.[0]||'Sin casa';
     return{...d,casa:casaPpal};
-  }).sort((a,b)=>a.nombre.localeCompare(b.nombre,'es'));
+  }).sort((a,b)=>clave(a.nombre).localeCompare(clave(b.nombre)));
 }
 
 function abrirValidacionLideres(){
