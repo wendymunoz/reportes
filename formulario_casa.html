@@ -320,8 +320,11 @@ textarea{resize:none;font-size:13px;line-height:1.6;}
 </div>
 
 <script>
-const CASAS=['AMOR','GOZO','PAZ','PACIENCIA','BENIGNIDAD','TEMPLANZA','FE','BONDAD','MANSEDUMBRE','MISERICORDIA','GRACIA','PODER','PROSPERIDAD','REMANENTE'];
-const EMOJIS={AMOR:'❤️',GOZO:'😊',PAZ:'🕊️',PACIENCIA:'⏳',BENIGNIDAD:'🌿',TEMPLANZA:'⚖️',FE:'🙏',BONDAD:'💛',MANSEDUMBRE:'🌸',MISERICORDIA:'🤝',GRACIA:'✨',PODER:'⚡',PROSPERIDAD:'🌱',REMANENTE:'🔥'};
+const CASAS_DEFAULT=['AMOR','GOZO','PAZ','PACIENCIA','BENIGNIDAD','TEMPLANZA','FE','BONDAD','MANSEDUMBRE','MISERICORDIA','GRACIA','PODER','PROSPERIDAD','REMANENTE'];
+const EMOJIS_DEFAULT={AMOR:'❤️',GOZO:'😊',PAZ:'🕊️',PACIENCIA:'⏳',BENIGNIDAD:'🌿',TEMPLANZA:'⚖️',FE:'🙏',BONDAD:'💛',MANSEDUMBRE:'🌸',MISERICORDIA:'🤝',GRACIA:'✨',PODER:'⚡',PROSPERIDAD:'🌱',REMANENTE:'🔥'};
+const _cfg=JSON.parse(localStorage.getItem('casas_cfg')||'null')||{casas:[...CASAS_DEFAULT],em:{...EMOJIS_DEFAULT}};
+const CASAS=_cfg.casas;
+const EMOJIS=_cfg.em;
 const SHEETS_URL='https://script.google.com/macros/s/AKfycby99g4iUpEOGdEpeHjV39DjQoQraeGZsnBFEtKt01-Lj2ud-dc0D9JSHaHvDDBuRu_m/exec';
 
 let casaSel='', fd={}, rdSaved={};
