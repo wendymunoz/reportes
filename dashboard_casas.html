@@ -1456,6 +1456,10 @@ async function cargarDesdeSupabase(){
 }
 
 verificarBackupAuto();cargarConfigSheets();cargarDesdeSupabase();
+// Auto-sync cada 2 minutos
+setInterval(()=>syncSupabase(),120000);
+// Sync al volver a la pestaña
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')syncSupabase();});
 </script>
 
 <!-- ══ MODAL VALIDACIÓN LÍDERES ══ -->
