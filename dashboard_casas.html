@@ -919,7 +919,11 @@ async function procIA(){
     const raw=data.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
     const p=JSON.parse(raw);
     const recIA={...p,id:Date.now(),ts:new Date().toISOString()};
-    db.push(recIA);sbUpsert('reportes',[{...recIA,ofrenda:parseFloat(recIA.ofrenda||0)}]);
+    const recIASB={...recIA,ofrenda:parseFloat(recIA.ofrenda||0)};
+    db.push(recIA);
+    sbUpsert('reportes',[recIASB]);
+    fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify(recIASB)}).catch(()=>{});
     sv();st.style.display='none';cerrarM('mi');
     document.getElementById('wa-t').value='';
     renderAll();
@@ -932,8 +936,15 @@ function guardarMan(){
   if(!ca||!cel||!li||!te||!fe){alert('Completa los campos obligatorios (*)');return;}
   const atts=document.getElementById('ma').value.split('\n').filter(l=>l.trim()).map(l=>{const nvo=l.includes('🆕')||l.toLowerCase().includes('nuevo');const nom=l.replace('🆕','').replace(/nuevo/gi,'').replace(/\s*\([^)]*\)/,'').trim();const dist=(l.match(/\(([^)]+)\)/)||[])[1]||'';return{nombre:nom,distrito:dist,nuevo:nvo};}).filter(a=>a.nombre);
   const newRec={id:Date.now(),ts:new Date().toISOString(),casa:ca,celula:cel,lider:li,tema:te,fecha:fe,hora:document.getElementById('mh').value,dir:document.getElementById('md2').value.trim(),modalidad:document.getElementById('mmod').value,nueva:document.getElementById('mnv').value,obs:'',asistentes:atts};
-  if(window._editIdx!=null){db[window._editIdx]={...db[window._editIdx],...newRec};window._editIdx=null;}
-  else{db.push(newRec);sbUpsert('reportes',[{...newRec,ofrenda:parseFloat(newRec.ofrenda||0)}]);}
+  if(window._editIdx!=null){
+    db[window._editIdx]={...db[window._editIdx],...newRec};window._editIdx=null;
+  } else {
+    db.push(newRec);
+    const recSB={...newRec,ofrenda:parseFloat(newRec.ofrenda||0)};
+    sbUpsert('reportes',[recSB]);
+    fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify(recSB)}).catch(()=>{});
+  }
   sv();cerrarM('mi');renderAll();
   ['ml','mt','md2','ma','mcel'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('mc').value='';document.getElementById('mf').value=new Date().toISOString().split('T')[0];
