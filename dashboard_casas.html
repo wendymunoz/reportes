@@ -872,7 +872,7 @@ function verDet(i){
           <span>${a.nuevo?'<span class="badge brose">🆕 Nuevo</span>':''}</span>
         </div>`).join('')||'<p style="color:var(--muted);font-size:12px">Sin asistentes</p>'}
     </div>`;
-  document.getElementById('md-del').onclick=()=>{if(confirm('¿Eliminar?')){eliminar(i);cerrarM('md');}};
+  document.getElementById('md-del').onclick=()=>{eliminar(i);cerrarM('md');};
   document.getElementById('md-edit').onclick=()=>editarCelula(i);
   abrirM('md');
 }
@@ -966,7 +966,7 @@ async function syncSupabase(){
     if(!rows.length){
       lbl1.textContent='Sin datos';lbl2.textContent='Sin datos';
       setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
-      syncSupabase();return;
+      syncSheets();return;
     }
     const nuevos=rows.filter(r=>r.casa).map(r=>({
       ...r,
@@ -985,6 +985,12 @@ async function syncSupabase(){
     });
     db=[...db,...nuevos];
     sv();renderAll();
+    // Auto-poblar tabla lideres si está vacía
+    if(!_lids.length&&db.length){
+      const seen=new Set();const autoLids=[];
+      db.forEach(r=>{const k=(r.lider||'').trim();if(k&&!seen.has(k+'|'+r.casa)){seen.add(k+'|'+r.casa);autoLids.push({nombre:k,casa:r.casa||'Sin casa'});}});
+      if(autoLids.length){_lids=autoLids;sbUpsert('lideres',autoLids);renderLideres();badges();}
+    }
     lbl1.textContent='✅ '+nuevos.length+' registros';
     lbl2.textContent='✅ '+nuevos.length;
     setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
