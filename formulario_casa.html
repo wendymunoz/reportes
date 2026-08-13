@@ -326,6 +326,11 @@ const _cfg=JSON.parse(localStorage.getItem('casas_cfg')||'null')||{casas:[...CAS
 const CASAS=_cfg.casas;
 const EMOJIS=_cfg.em;
 const SHEETS_URL='https://script.google.com/macros/s/AKfycby99g4iUpEOGdEpeHjV39DjQoQraeGZsnBFEtKt01-Lj2ud-dc0D9JSHaHvDDBuRu_m/exec';
+const SB_URL='https://mhshzqpofuggsfsuyxhd.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1oc2h6cXBvZnVnZ3Nmc3V5eGhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0ODI4OTcsImV4cCI6MjEwMjA1ODg5N30.XdjChmP9YfzNuNcltAz1oPpv09rmtrVL3lqcrPEkLlM';
+function sbFetch(path,opts={}){
+  return fetch(SB_URL+path,{...opts,headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json',...(opts.headers||{})}});
+}
 
 let casaSel='', fd={}, rdSaved={};
 
@@ -364,6 +369,20 @@ function cargarConfigSheets(){
   document.body.appendChild(sc);
 }
 cargarConfigSheets();
+(async()=>{
+  try{
+    const r=await sbFetch('/rest/v1/config?key=eq.casas_cfg&select=value');
+    if(!r.ok)return;
+    const data=await r.json();
+    if(!data.length||!data[0].value)return;
+    const remote=data[0].value;
+    if(!remote.casas||!remote.casas.length)return;
+    CASAS.length=0;remote.casas.forEach(c=>CASAS.push(c));
+    Object.keys(EMOJIS).forEach(k=>delete EMOJIS[k]);Object.assign(EMOJIS,remote.em||{});
+    localStorage.setItem('casas_cfg',JSON.stringify({casas:[...CASAS],em:{...EMOJIS}}));
+    buildCasaList();
+  }catch(e){}
+})();
 
 function toggleDD(){
   const t=document.getElementById('gtrig'),l=document.getElementById('glist'),o=l.classList.contains('open');
@@ -588,9 +607,11 @@ async function enviar(){
   const db=JSON.parse(localStorage.getItem('casas_db')||'[]');
   db.push({...fd}); localStorage.setItem('casas_db',JSON.stringify(db));
 
-  // Enviar a Google Sheets
+  // Enviar a Google Sheets + Supabase
   try{
     await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({...fd})});
+    sbFetch('/rest/v1/reportes',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({...fd,ofrenda:parseFloat(fd.ofrenda||0)})}).catch(()=>{});
     st.className='send-status ok';
     st.innerHTML='<span>✅ Reporte guardado en el dashboard</span>';
   }catch(err){

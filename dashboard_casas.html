@@ -459,8 +459,17 @@ function svCfg(){
   localStorage.setItem('casas_cfg',JSON.stringify(cfg));
   fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
     body:JSON.stringify({action:'saveCfg',data:JSON.stringify(cfg)})}).catch(()=>{});
+  sbUpsert('config',[{key:'casas_cfg',value:cfg}]);
 }
 const SHEETS_URL='https://script.google.com/macros/s/AKfycby99g4iUpEOGdEpeHjV39DjQoQraeGZsnBFEtKt01-Lj2ud-dc0D9JSHaHvDDBuRu_m/exec';
+const SB_URL='https://mhshzqpofuggsfsuyxhd.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1oc2h6cXBvZnVnZ3Nmc3V5eGhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0ODI4OTcsImV4cCI6MjEwMjA1ODg5N30.XdjChmP9YfzNuNcltAz1oPpv09rmtrVL3lqcrPEkLlM';
+function sbFetch(path,opts={}){
+  return fetch(SB_URL+path,{...opts,headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json',...(opts.headers||{})}});
+}
+function sbUpsert(table,data){
+  sbFetch('/rest/v1/'+table,{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(data)}).catch(()=>{});
+}
 const COLORS=['#059669','#3b82f6','#f59e0b','#8b5cf6','#f43f5e','#06b6d4','#84cc16','#f97316','#ec4899','#6366f1','#14b8a6','#eab308','#ef4444','#a855f7'];
 
 let db=JSON.parse(localStorage.getItem('casas_db')||'[]');
@@ -470,7 +479,11 @@ let wk=0, ch={};
 function sv(){localStorage.setItem('casas_db',JSON.stringify(db));}
 const clave=n=>(n||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
 function getAlias(){return JSON.parse(localStorage.getItem('lideres_alias')||'{}');}
-function saveAlias(a){localStorage.setItem('lideres_alias',JSON.stringify(a));}
+function saveAlias(a){
+  localStorage.setItem('lideres_alias',JSON.stringify(a));
+  const rows=Object.entries(a).map(([k,v])=>({clave:k,valor:v}));
+  if(rows.length)sbUpsert('alias',rows);
+}
 function resolverNombre(raw){const a=getAlias();const k=clave(raw||'');const v=a[k];return v!==undefined?v:raw;}
 function resolverNombres(raw){const r=resolverNombre(raw);return Array.isArray(r)?r:[r];}
 
@@ -905,7 +918,8 @@ async function procIA(){
     const data=await res.json();
     const raw=data.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
     const p=JSON.parse(raw);
-    db.push({...p,id:Date.now(),ts:new Date().toISOString()});
+    const recIA={...p,id:Date.now(),ts:new Date().toISOString()};
+    db.push(recIA);sbUpsert('reportes',[{...recIA,ofrenda:parseFloat(recIA.ofrenda||0)}]);
     sv();st.style.display='none';cerrarM('mi');
     document.getElementById('wa-t').value='';
     renderAll();
@@ -918,7 +932,8 @@ function guardarMan(){
   if(!ca||!cel||!li||!te||!fe){alert('Completa los campos obligatorios (*)');return;}
   const atts=document.getElementById('ma').value.split('\n').filter(l=>l.trim()).map(l=>{const nvo=l.includes('🆕')||l.toLowerCase().includes('nuevo');const nom=l.replace('🆕','').replace(/nuevo/gi,'').replace(/\s*\([^)]*\)/,'').trim();const dist=(l.match(/\(([^)]+)\)/)||[])[1]||'';return{nombre:nom,distrito:dist,nuevo:nvo};}).filter(a=>a.nombre);
   const newRec={id:Date.now(),ts:new Date().toISOString(),casa:ca,celula:cel,lider:li,tema:te,fecha:fe,hora:document.getElementById('mh').value,dir:document.getElementById('md2').value.trim(),modalidad:document.getElementById('mmod').value,nueva:document.getElementById('mnv').value,obs:'',asistentes:atts};
-  if(window._editIdx!=null){db[window._editIdx]={...db[window._editIdx],...newRec};window._editIdx=null;}else{db.push(newRec);}
+  if(window._editIdx!=null){db[window._editIdx]={...db[window._editIdx],...newRec};window._editIdx=null;}
+  else{db.push(newRec);sbUpsert('reportes',[{...newRec,ofrenda:parseFloat(newRec.ofrenda||0)}]);}
   sv();cerrarM('mi');renderAll();
   ['ml','mt','md2','ma','mcel'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('mc').value='';document.getElementById('mf').value=new Date().toISOString().split('T')[0];
@@ -997,7 +1012,10 @@ function limpiar(){if(!confirm('¿Eliminar todos los datos?'))return;db=[];sv();
 // ══ LÍDERES ══
 let lidFiltro='todos';
 function getLideres(){return JSON.parse(localStorage.getItem('lideres_reg')||'[]');}
-function saveLideres(l){localStorage.setItem('lideres_reg',JSON.stringify(l));}
+function saveLideres(l){
+  localStorage.setItem('lideres_reg',JSON.stringify(l));
+  sbUpsert('lideres',l.map(x=>({nombre:x.nombre,casa:x.casa||'Sin casa'})));
+}
 
 function agregarLider(){
   const casa=document.getElementById('lid-casa-sel').value;
@@ -1347,7 +1365,44 @@ document.getElementById('mf').value=new Date().toISOString().split('T')[0];
 // lid-casa-sel via refreshSelects()
 renderAll();
 syncSheets();
-verificarBackupAuto();cargarConfigSheets();
+async function cargarDesdeSupabase(){
+  try{
+    // Config
+    const cfgR=await sbFetch('/rest/v1/config?key=eq.casas_cfg&select=value');
+    if(cfgR.ok){
+      const cfgData=await cfgR.json();
+      if(cfgData.length&&cfgData[0].value){
+        const remote=cfgData[0].value;
+        if(remote.casas&&remote.casas.length){
+          CASAS.length=0;remote.casas.forEach(c=>CASAS.push(c));
+          Object.keys(EM).forEach(k=>delete EM[k]);Object.assign(EM,remote.em||{});
+          cfg.casas=CASAS;cfg.em=EM;
+          localStorage.setItem('casas_cfg',JSON.stringify(cfg));
+          refreshSelects();
+        }
+      }
+    }
+    // Líderes
+    const lidR=await sbFetch('/rest/v1/lideres?select=nombre,casa&order=nombre');
+    if(lidR.ok){
+      const lids=await lidR.json();
+      if(lids.length){localStorage.setItem('lideres_reg',JSON.stringify(lids));}
+    }
+    // Alias
+    const aliasR=await sbFetch('/rest/v1/alias?select=clave,valor');
+    if(aliasR.ok){
+      const rows=await aliasR.json();
+      if(rows.length){
+        const map={};
+        rows.forEach(r=>{map[r.clave]=r.valor;});
+        localStorage.setItem('lideres_alias',JSON.stringify(map));
+      }
+    }
+    renderLideres();badges();
+  }catch(e){}
+}
+
+verificarBackupAuto();cargarConfigSheets();cargarDesdeSupabase();
 </script>
 
 <!-- ══ MODAL VALIDACIÓN LÍDERES ══ -->
