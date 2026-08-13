@@ -452,11 +452,10 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
 <script>
 const CASAS_DEFAULT=['AMOR','GOZO','PAZ','PACIENCIA','BENIGNIDAD','TEMPLANZA','FE','BONDAD','MANSEDUMBRE','MISERICORDIA','GRACIA','PODER','PROSPERIDAD','REMANENTE'];
 const EM_DEFAULT={AMOR:'❤️',GOZO:'😊',PAZ:'🕊️',PACIENCIA:'⏳',BENIGNIDAD:'🌿',TEMPLANZA:'⚖️',FE:'🙏',BONDAD:'💛',MANSEDUMBRE:'🌸',MISERICORDIA:'🤝',GRACIA:'✨',PODER:'⚡',PROSPERIDAD:'🌱',REMANENTE:'🔥'};
-let cfg=JSON.parse(localStorage.getItem('casas_cfg')||'null')||{casas:[...CASAS_DEFAULT],em:{...EM_DEFAULT}};
+let cfg={casas:[...CASAS_DEFAULT],em:{...EM_DEFAULT}};
 const CASAS=cfg.casas;
 const EM=cfg.em;
 function svCfg(){
-  localStorage.setItem('casas_cfg',JSON.stringify(cfg));
   fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},
     body:JSON.stringify({action:'saveCfg',data:JSON.stringify(cfg)})}).catch(()=>{});
   sbUpsert('config',[{key:'casas_cfg',value:cfg}]);
@@ -472,15 +471,16 @@ function sbUpsert(table,data){
 }
 const COLORS=['#059669','#3b82f6','#f59e0b','#8b5cf6','#f43f5e','#06b6d4','#84cc16','#f97316','#ec4899','#6366f1','#14b8a6','#eab308','#ef4444','#a855f7'];
 
-let db=JSON.parse(localStorage.getItem('casas_db')||'[]');
+let db=[];
 // Limpiar fechas ISO que puedan tener T05:00:00.000Z
 db=db.map(r=>({...r,fecha:r.fecha?r.fecha.toString().split('T')[0]:r.fecha}));
 let wk=0, ch={};
-function sv(){localStorage.setItem('casas_db',JSON.stringify(db));}
+function sv(){}
 const clave=n=>(n||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
-function getAlias(){return JSON.parse(localStorage.getItem('lideres_alias')||'{}');}
+let _alias={};
+function getAlias(){return _alias;}
 function saveAlias(a){
-  localStorage.setItem('lideres_alias',JSON.stringify(a));
+  _alias=a;
   const rows=Object.entries(a).map(([k,v])=>({clave:k,valor:v}));
   if(rows.length)sbUpsert('alias',rows);
 }
@@ -880,7 +880,10 @@ function verDet(i){
 function eliminar(i){
   if(!confirm('¿Eliminar este reporte? Esta acción no se puede deshacer.')) return;
   const reg=db[i];
-  if(reg&&reg._sh&&reg.id){const _del=new Set(JSON.parse(localStorage.getItem('casas_deleted_ids')||'[]'));_del.add(reg.id);localStorage.setItem('casas_deleted_ids',JSON.stringify([..._del]));}
+  if(reg&&reg.id){
+    sbFetch('/rest/v1/reportes?id=eq.'+reg.id,{method:'PATCH',
+      headers:{'Prefer':'return=minimal'},body:JSON.stringify({deleted:true})}).catch(()=>{});
+  }
   db.splice(i,1);
   sv();
   // Actualiza todas las secciones
@@ -955,7 +958,7 @@ async function syncSupabase(){
   const lbl1=document.getElementById('sync-lbl'),lbl2=document.getElementById('sync-lbl2');
   lbl1.textContent='Cargando...';lbl2.textContent='Cargando...';
   try{
-    const r=await sbFetch('/rest/v1/reportes?select=*&order=fecha.desc',{
+    const r=await sbFetch('/rest/v1/reportes?select=*&deleted=is.false&order=fecha.desc',{
       headers:{'Range':'0-4999'}
     });
     if(!r.ok)throw new Error('HTTP '+r.status);
@@ -965,7 +968,6 @@ async function syncSupabase(){
       setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
       syncSupabase();return;
     }
-    const delIds=new Set(JSON.parse(localStorage.getItem('casas_deleted_ids')||'[]'));
     const nuevos=rows.filter(r=>r.casa).map(r=>({
       ...r,
       casa:(r.casa||'').toUpperCase().trim(),
@@ -976,7 +978,7 @@ async function syncSupabase(){
       asistentes:Array.isArray(r.asistentes)?r.asistentes:parsAtt((r.asistentes||'').toString()),
       ofrenda:parseFloat(r.ofrenda||0),
       _sb:true
-    })).filter(r=>!delIds.has(String(r.id)));
+    }));
     db=db.filter(r=>!r._sb);
     nuevos.forEach(n=>{
       db=db.filter(r=>!(r.casa===n.casa&&r.lider===n.lider&&r.fecha===n.fecha&&r.celula===n.celula&&!r._sb));
@@ -1012,7 +1014,7 @@ function syncSheets(){
         const cn=(r['Casa Nueva']||r['Casa_Nueva']||'').toString().trim();
         return{id:stableId([(r['Casa']||'').toString().toUpperCase().trim(),normNombre(r['Líder']||r['Lider']||''),normFecha((r['Fecha']||'').toString()),r['Célula']||r['Celula']||''].join('|')),ts:r['Timestamp']||'',casa:(r['Casa']||'').toString().toUpperCase().trim(),celula:r['Célula']||r['Celula']||'',lider:normNombre(r['Líder']||r['Lider']||''),tema:r['Tema']||'',fecha:normFecha((r['Fecha']||'').toString()),hora:r['Hora']||'',dir:r['Dirección']||r['Direccion']||'',modalidad:(r['Modalidad']||'presencial').toString().toLowerCase().trim(),nueva:['sí','si','yes','1','true'].includes(cn.toLowerCase())?'si':'no',obs:r['Observaciones']||'',ofrenda:r['Ofrenda']||'',asistentes:parsAtt((r['Lista Asistentes']||r['Lista_Asistentes']||'').toString()),_sh:true};
       }).filter(r=>r.casa);
-      const delIds=new Set(JSON.parse(localStorage.getItem('casas_deleted_ids')||'[]'));const nuevosFilt=nuevos.filter(n=>!delIds.has(n.id));db=db.filter(r=>!r._sh);nuevosFilt.forEach(n=>{db=db.filter(r=>!(r.casa===n.casa&&r.lider===n.lider&&r.fecha===n.fecha&&r.celula===n.celula));});db=[...db,...nuevosFilt];sv();renderAll();
+      const nuevosFilt=nuevos;db=db.filter(r=>!r._sh);nuevosFilt.forEach(n=>{db=db.filter(r=>!(r.casa===n.casa&&r.lider===n.lider&&r.fecha===n.fecha&&r.celula===n.celula));});db=[...db,...nuevosFilt];sv();renderAll();
       lbl1.textContent='✅ '+nuevos.length+' registros';lbl2.textContent='✅ '+nuevos.length;
       setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
     }catch(e){lbl1.textContent='⚠️ Error';lbl2.textContent='⚠️ Error';setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);}
@@ -1064,9 +1066,10 @@ function limpiar(){if(!confirm('¿Eliminar todos los datos?'))return;db=[];sv();
 
 // ══ LÍDERES ══
 let lidFiltro='todos';
-function getLideres(){return JSON.parse(localStorage.getItem('lideres_reg')||'[]');}
+let _lids=[];
+function getLideres(){return _lids;}
 function saveLideres(l){
-  localStorage.setItem('lideres_reg',JSON.stringify(l));
+  _lids=l;
   sbUpsert('lideres',l.map(x=>({nombre:x.nombre,casa:x.casa||'Sin casa'})));
 }
 
@@ -1368,7 +1371,7 @@ function hacerRespaldo(manual=false){
   URL.revokeObjectURL(url);
   fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'backup',generado:new Date().toISOString(),total:db.length,datos:db})}).catch(()=>{});
   const ts=new Date().toISOString();
-  localStorage.setItem(BACKUP_KEY,ts);
+  sbUpsert('config',[{key:'ultimo_backup',value:{ts}}]);
   actualizarLblBackup(ts);
   const t=document.createElement('div');t.className='bkp-toast';t.textContent='✅ Respaldo descargado: respaldo_celulas_'+fecha+'.json';
   document.body.appendChild(t);setTimeout(()=>t.remove(),4000);
@@ -1394,7 +1397,6 @@ function cargarConfigSheets(){
       CASAS.length=0;remote.casas.forEach(c=>CASAS.push(c));
       Object.keys(EM).forEach(k=>delete EM[k]);Object.assign(EM,remote.em||{});
       cfg.casas=CASAS;cfg.em=EM;
-      localStorage.setItem('casas_cfg',JSON.stringify(cfg));
       refreshSelects();renderAll();
     }catch(e){}
   };
@@ -1404,12 +1406,18 @@ function cargarConfigSheets(){
   document.body.appendChild(sc);
 }
 
-function verificarBackupAuto(){
-  const ts=localStorage.getItem(BACKUP_KEY);
-  actualizarLblBackup(ts);
-  if(!ts||((Date.now()-new Date(ts).getTime())/(1000*60*60*24))>=BACKUP_DIAS){
-    document.getElementById('bkp-notif').style.display='flex';
-  }
+async function verificarBackupAuto(){
+  try{
+    const r=await sbFetch('/rest/v1/config?key=eq.ultimo_backup&select=value');
+    if(r.ok){
+      const data=await r.json();
+      const ts=data.length?data[0].value?.ts:null;
+      actualizarLblBackup(ts);
+      if(!ts||((Date.now()-new Date(ts).getTime())/(1000*60*60*24))>=BACKUP_DIAS){
+        document.getElementById('bkp-notif').style.display='flex';
+      }
+    }
+  }catch(e){document.getElementById('bkp-notif').style.display='flex';}
 }
 
 // INIT
@@ -1430,7 +1438,6 @@ async function cargarDesdeSupabase(){
           CASAS.length=0;remote.casas.forEach(c=>CASAS.push(c));
           Object.keys(EM).forEach(k=>delete EM[k]);Object.assign(EM,remote.em||{});
           cfg.casas=CASAS;cfg.em=EM;
-          localStorage.setItem('casas_cfg',JSON.stringify(cfg));
           refreshSelects();
         }
       }
@@ -1439,7 +1446,7 @@ async function cargarDesdeSupabase(){
     const lidR=await sbFetch('/rest/v1/lideres?select=nombre,casa&order=nombre');
     if(lidR.ok){
       const lids=await lidR.json();
-      if(lids.length){localStorage.setItem('lideres_reg',JSON.stringify(lids));}
+      if(lids.length){_lids=lids;}
     }
     // Alias
     const aliasR=await sbFetch('/rest/v1/alias?select=clave,valor');
@@ -1448,7 +1455,7 @@ async function cargarDesdeSupabase(){
       if(rows.length){
         const map={};
         rows.forEach(r=>{map[r.clave]=r.valor;});
-        localStorage.setItem('lideres_alias',JSON.stringify(map));
+        _alias=map;
       }
     }
     renderLideres();badges();

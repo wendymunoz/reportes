@@ -322,9 +322,8 @@ textarea{resize:none;font-size:13px;line-height:1.6;}
 <script>
 const CASAS_DEFAULT=['AMOR','GOZO','PAZ','PACIENCIA','BENIGNIDAD','TEMPLANZA','FE','BONDAD','MANSEDUMBRE','MISERICORDIA','GRACIA','PODER','PROSPERIDAD','REMANENTE'];
 const EMOJIS_DEFAULT={AMOR:'❤️',GOZO:'😊',PAZ:'🕊️',PACIENCIA:'⏳',BENIGNIDAD:'🌿',TEMPLANZA:'⚖️',FE:'🙏',BONDAD:'💛',MANSEDUMBRE:'🌸',MISERICORDIA:'🤝',GRACIA:'✨',PODER:'⚡',PROSPERIDAD:'🌱',REMANENTE:'🔥'};
-const _cfg=JSON.parse(localStorage.getItem('casas_cfg')||'null')||{casas:[...CASAS_DEFAULT],em:{...EMOJIS_DEFAULT}};
-const CASAS=_cfg.casas;
-const EMOJIS=_cfg.em;
+const CASAS=[...CASAS_DEFAULT];
+const EMOJIS={...EMOJIS_DEFAULT};
 const SHEETS_URL='https://script.google.com/macros/s/AKfycby99g4iUpEOGdEpeHjV39DjQoQraeGZsnBFEtKt01-Lj2ud-dc0D9JSHaHvDDBuRu_m/exec';
 const SB_URL='https://mhshzqpofuggsfsuyxhd.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1oc2h6cXBvZnVnZ3Nmc3V5eGhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0ODI4OTcsImV4cCI6MjEwMjA1ODg5N30.XdjChmP9YfzNuNcltAz1oPpv09rmtrVL3lqcrPEkLlM';
@@ -359,7 +358,6 @@ function cargarConfigSheets(){
       if(!remote||!Array.isArray(remote.casas)||!remote.casas.length)return;
       CASAS.length=0;remote.casas.forEach(c=>CASAS.push(c));
       Object.keys(EMOJIS).forEach(k=>delete EMOJIS[k]);Object.assign(EMOJIS,remote.em||{});
-      localStorage.setItem('casas_cfg',JSON.stringify({casas:[...CASAS],em:{...EMOJIS}}));
       buildCasaList();
     }catch(e){}
   };
@@ -379,7 +377,6 @@ cargarConfigSheets();
     if(!remote.casas||!remote.casas.length)return;
     CASAS.length=0;remote.casas.forEach(c=>CASAS.push(c));
     Object.keys(EMOJIS).forEach(k=>delete EMOJIS[k]);Object.assign(EMOJIS,remote.em||{});
-    localStorage.setItem('casas_cfg',JSON.stringify({casas:[...CASAS],em:{...EMOJIS}}));
     buildCasaList();
   }catch(e){}
 })();
@@ -602,10 +599,6 @@ async function enviar(){
   const st=document.getElementById('send-status');
   st.style.display='flex'; st.className='send-status sending';
   st.innerHTML='<div class="spin-s"></div><span>Enviando al dashboard...</span>';
-
-  // Guardar localStorage respaldo
-  const db=JSON.parse(localStorage.getItem('casas_db')||'[]');
-  db.push({...fd}); localStorage.setItem('casas_db',JSON.stringify(db));
 
   // Enviar a Google Sheets + Supabase
   try{
