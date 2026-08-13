@@ -202,7 +202,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
     <button class="sb-btn" id="nb-config" onclick="goPage('config',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Configuración</button>
     <div class="sb-grp">Acciones</div>
     <button class="sb-btn" onclick="abrirM('mi')"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Ingresar reporte</button>
-    <button class="sb-btn" onclick="syncSheets()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg><span id="sync-lbl">Sincronizar</span></button>
+    <button class="sb-btn" onclick="syncSupabase()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg><span id="sync-lbl">Sincronizar</span></button>
     <button class="sb-btn" onclick="demo()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>Cargar demo</button>
     <button class="sb-btn" onclick="limpiar()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>Limpiar datos</button>
     <div class="sb-grp">Exportar</div>
@@ -223,7 +223,7 @@ body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--txt);min-hei
       <span class="wk-lbl" id="wkl">—</span>
       <button class="wk-btn" onclick="cSem(1)">›</button>
     </div>
-    <button class="btn btn-sync btn-sm" onclick="syncSheets()"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg><span id="sync-lbl2">Sincronizar</span></button>
+    <button class="btn btn-sync btn-sm" onclick="syncSupabase()"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg><span id="sync-lbl2">Sincronizar</span></button>
     <button class="btn btn-p btn-sm" onclick="abrirM('mi')"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Nuevo reporte</button>
   </div>
 </div>
@@ -937,6 +937,48 @@ function guardarMan(){
   sv();cerrarM('mi');renderAll();
   ['ml','mt','md2','ma','mcel'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('mc').value='';document.getElementById('mf').value=new Date().toISOString().split('T')[0];
+}
+
+// SYNC SUPABASE — fuente primaria de datos
+async function syncSupabase(){
+  const lbl1=document.getElementById('sync-lbl'),lbl2=document.getElementById('sync-lbl2');
+  lbl1.textContent='Cargando...';lbl2.textContent='Cargando...';
+  try{
+    const r=await sbFetch('/rest/v1/reportes?select=*&order=fecha.desc',{
+      headers:{'Range':'0-4999'}
+    });
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const rows=await r.json();
+    if(!rows.length){
+      lbl1.textContent='Sin datos';lbl2.textContent='Sin datos';
+      setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
+      syncSupabase();return;
+    }
+    const delIds=new Set(JSON.parse(localStorage.getItem('casas_deleted_ids')||'[]'));
+    const nuevos=rows.filter(r=>r.casa).map(r=>({
+      ...r,
+      casa:(r.casa||'').toUpperCase().trim(),
+      lider:normNombre(r.lider||''),
+      fecha:normFecha((r.fecha||'').toString()),
+      modalidad:(r.modalidad||'presencial').toLowerCase().trim(),
+      nueva:['sí','si','yes','1','true'].includes((r.nueva||'').toLowerCase())?'si':'no',
+      asistentes:Array.isArray(r.asistentes)?r.asistentes:parsAtt((r.asistentes||'').toString()),
+      ofrenda:parseFloat(r.ofrenda||0),
+      _sb:true
+    })).filter(r=>!delIds.has(String(r.id)));
+    db=db.filter(r=>!r._sb);
+    nuevos.forEach(n=>{
+      db=db.filter(r=>!(r.casa===n.casa&&r.lider===n.lider&&r.fecha===n.fecha&&r.celula===n.celula&&!r._sb));
+    });
+    db=[...db,...nuevos];
+    sv();renderAll();
+    lbl1.textContent='✅ '+nuevos.length+' registros';
+    lbl2.textContent='✅ '+nuevos.length;
+    setTimeout(()=>{lbl1.textContent='Sincronizar';lbl2.textContent='Sincronizar';},3000);
+  }catch(e){
+    // Supabase no disponible: usar Sheets
+    syncSheets();
+  }
 }
 
 // SYNC SHEETS — JSONP para bypass CORS con Apps Script
