@@ -610,8 +610,9 @@ async function enviar(){
   // Enviar a Google Sheets + Supabase
   try{
     await fetch(SHEETS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({...fd})});
-    sbFetch('/rest/v1/reportes',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
-      body:JSON.stringify({...fd,ofrenda:parseFloat(fd.ofrenda||0)})}).catch(()=>{});
+    sbFetch('/rest/v1/reportes',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=representation'},
+      body:JSON.stringify({id:fd.id,ts:fd.ts,casa:fd.casa,celula:fd.celula,lider:fd.lider,tema:fd.tema,fecha:fd.fecha,hora:fd.hora,dir:fd.dir,modalidad:fd.modalidad,nueva:fd.nueva,obs:fd.obs||'',asistentes:fd.asistentes||[],ofrenda:parseFloat(fd.ofrenda||0)})}
+    ).then(r=>{if(!r.ok)r.json().then(e=>console.error('[SB]',r.status,e));else r.json().then(d=>console.log('[SB] OK',d));}).catch(e=>console.error('[SB] fetch error',e));
     st.className='send-status ok';
     st.innerHTML='<span>✅ Reporte guardado en el dashboard</span>';
   }catch(err){
